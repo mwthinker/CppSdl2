@@ -1,8 +1,6 @@
 #include "textureatlas.h"
 #include "logger.h"
 
-#include <iostream>
-
 namespace sdl {
 
 	void TextureAtlas::uploadSdlSurfaceToTexture(SDL_Surface* image, SDL_Rect dstRec, Texture& texture) {

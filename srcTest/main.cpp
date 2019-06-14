@@ -1,9 +1,10 @@
 #include "testwindow.h"
 #include "testwindow2.h"
-#include "definitions.h"
+#include "types.h"
 
 #include <sdl/sprite.h>
 #include <sdl/sound.h>
+#include <sdl/logger.h>
 #include <sdl/textureatlas.h>
 
 #include <iostream>
@@ -40,7 +41,7 @@ void testLoadTextureAtlas() {
 	SDL_FreeSurface(c);
 	SDL_FreeSurface(d);
 
-	std::cout << "\ntestLoadTextureAtlas() sucsessfully!\n";
+	std::cout << "\ntestLoadTextureAtlas() successfully!\n";
 }
 
 // Test to load directly to graphic memory. And draw the total texture and the newly added sprite.

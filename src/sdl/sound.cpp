@@ -1,7 +1,6 @@
 #include "sound.h"
 #include "logger.h"
 
-#include <iostream>
 #include <algorithm>
 
 namespace sdl {

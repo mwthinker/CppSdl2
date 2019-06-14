@@ -4,7 +4,7 @@
 #include <sdl/opengl.h>
 #include <sdl/shader.h>
 
-#include "definitions.h"
+#include "types.h"
 
 #include <string>
 

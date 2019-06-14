@@ -1,7 +1,7 @@
 #ifndef TESTSHADER2_H
 #define TESTSHADER2_H
 
-#include "definitions.h"
+#include "types.h"
 
 #include <sdl/opengl.h>
 #include <sdl/shader.h>

@@ -5,7 +5,6 @@
 
 #include <SDL_image.h>
 
-#include <iostream>
 #include <algorithm>
 #include <tuple>
 #include <cassert>

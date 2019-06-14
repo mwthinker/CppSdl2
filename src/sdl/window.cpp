@@ -6,7 +6,6 @@
 #include <SDL_image.h>
 
 #include <chrono>
-#include <iostream>
 #include <sstream>
 #include <stdexcept>
 

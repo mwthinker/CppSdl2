@@ -58,10 +58,10 @@ set(SOURCES
 add_library(CppSdl2 ${SOURCES})
 
 find_package(GLEW CONFIG REQUIRED)
-find_package(sdl2 CONFIG REQUIRED)
-find_package(sdl2-image CONFIG REQUIRED)
-find_package(sdl2-mixer CONFIG REQUIRED)
-find_package(sdl2-ttf CONFIG REQUIRED)
+find_package(SDL2 CONFIG REQUIRED)
+find_package(SDL2-image CONFIG REQUIRED)
+find_package(SDL2-mixer CONFIG REQUIRED)
+find_package(SDL2-ttf CONFIG REQUIRED)
 
 find_package(spdlog CONFIG REQUIRED)
 
@@ -72,7 +72,7 @@ target_include_directories(CppSdl2
 
 target_link_libraries(CppSdl2
 	PUBLIC
-		SDL2::SDL2 SDL2::SDL2main
+		SDL2::SDL2 SDL2::SDL2main SDL2::SDL2-static
 		SDL2::SDL2_image
 		SDL2::SDL2_ttf
 		SDL2::SDL2_mixer
@@ -84,9 +84,11 @@ message(STATUS "CppSdl2Test is available to add: -DCppSdl2Test=1")
 option(CppSdl2Test "Add CppSdl2Test project." OFF)
 
 if (CppSdl2Test)
+	find_package(glm CONFIG REQUIRED)
+
 	set(SOURCES_TEST
 		srcTest/batchtriangles.h
-		srcTest/definitions.h
+		srcTest/types.h
 		srcTest/main.cpp
 		srcTest/testshader.cpp
 		srcTest/testshader.h
@@ -99,7 +101,11 @@ if (CppSdl2Test)
 	
 	add_executable(CppSdl2Test ${SOURCES_TEST})
 
-	target_link_libraries(CppSdl2Test CppSdl2)	
+	target_link_libraries(CppSdl2Test
+		PRIVATE
+			CppSdl2
+			glm
+	)
 	
 	file(COPY dataTest/. DESTINATION ${CMAKE_CURRENT_BINARY_DIR}) # Copy data to build folder.
 endif ()

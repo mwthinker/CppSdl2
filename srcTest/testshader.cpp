@@ -1,5 +1,5 @@
 #include "testshader.h"
-#include "definitions.h"
+#include "types.h"
 
 TestShader::TestShader() {
     aPosIndex_ = -1;

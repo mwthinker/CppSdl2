@@ -1,5 +1,5 @@
 #include "testshader2.h"
-#include "definitions.h"
+#include "types.h"
 
 #include <sdl/window.h>
 

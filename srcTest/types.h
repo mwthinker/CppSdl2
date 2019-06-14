@@ -1,5 +1,5 @@
-#ifndef DEFINITIONS_H
-#define DEFINITIONS_H
+#ifndef TYPES_H
+#define TYPES_H
 
 #include <glm/glm.hpp>
 #include <glm/mat4x2.hpp>
@@ -11,4 +11,4 @@ using Vec2 = glm::vec2;
 using Vec3 = glm::vec3;
 using Vec4 = glm::vec4;
 
-#endif // DEFINITIONS_H
+#endif // TYPES_H

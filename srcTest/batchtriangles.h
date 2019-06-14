@@ -7,13 +7,12 @@
 #include <sdl/batch.h>
 #include <sdl/sprite.h>
 #include <sdl/window.h>
-
-#include <iostream>
+#include <sdl/logger.h>
 
 class BatchTriangles : public sdl::Batch<TestShader2> {
 public:
 	BatchTriangles(const std::shared_ptr<TestShader2>& shader, int maxVertexes) : Batch(GL_TRIANGLES, GL_DYNAMIC_DRAW, shader, maxVertexes) {
-		std::cout << getVboSizeInMiB() << " Mib\n";
+		sdl::logger()->info("[BatchTriangles] {} Mib\n", getVboSizeInMiB());
 	}
 
 	BatchTriangles(const std::shared_ptr<TestShader2>& shader) : Batch(GL_TRIANGLES, shader) {

@@ -3,7 +3,7 @@
 
 #include "testshader2.h"
 #include "batchtriangles.h"
-#include "definitions.h"
+#include "types.h"
 
 #include <sdl/window.h>
 #include <sdl/textureatlas.h>

@@ -37,7 +37,7 @@ namespace sdl {
 			*this = std::move(other);
 		}
 
-		Batch& operator=(const Batch&& batch) {
+		Batch& operator=(const Batch&& other) {
 			mode_ = other.mode_;
 			usage_ = other.usage_;
 			shader_ = other.shader_;
@@ -169,7 +169,7 @@ namespace sdl {
 					data_.insert(data_.end(), begin, end);
 					index_ += end - begin;
 				} else {
-					logger()->"[Batch] VertexData is static, data can't be modified." << std::endl;
+					logger()->error("[Batch] VertexData is static, data can't be modified.");
 				}
 			}
 		}
