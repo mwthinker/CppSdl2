@@ -134,8 +134,8 @@ void TestWindow::eventUpdate(const SDL_Event& windowEvent) {
 		case SDL_KEYDOWN:
 			switch (windowEvent.key.keysym.sym) {
 				case SDLK_c:
-					for (auto gamepad : sdl::GameController::getGameControllers()) {
-						std::cout << gamepad->getName() << std::endl;
+					for (auto& gamepad : gameControllers_) {
+						std::cout << gamepad.getName() << "\n";
 					}
 					break;
 				case SDLK_SPACE:
@@ -167,7 +167,7 @@ void TestWindow::eventUpdate(const SDL_Event& windowEvent) {
 			std::cout << "Timestamp: " << windowEvent.cdevice.timestamp << std::endl;
 			std::cout << "Type: " << windowEvent.cdevice.type << std::endl;
 			std::cout << "Which: " << windowEvent.cdevice.which << std::endl;
-			sdl::GameController::addController(windowEvent.cdevice.which);
+			gameControllers_.push_back(sdl::GameController::addController(windowEvent.cdevice.which));
 			break;
 		case SDL_CONTROLLERDEVICEREMOVED:
 			std::cout << "SDL_CONTROLLERDEVICEREMOVED" << std::endl;
@@ -175,7 +175,7 @@ void TestWindow::eventUpdate(const SDL_Event& windowEvent) {
 			std::cout << "Timestamp: " << windowEvent.cdevice.timestamp << std::endl;
 			std::cout << "Type: " << windowEvent.cdevice.type << std::endl;
 			std::cout << "Which: " << windowEvent.cdevice.which << std::endl;
-			sdl::GameController::removeController(windowEvent.cdevice.which);
+			removeGamepad(windowEvent.cdevice.which);
 			break;
 		case SDL_CONTROLLERBUTTONDOWN:
 			printGameControllerButton(windowEvent.cbutton.button);
@@ -213,6 +213,18 @@ void TestWindow::resize(int w, int h) {
 	shader_->setProjectionMatrixU(glm::ortho(-0.5f * sprite_.getWidth(), 0.5f * sprite_.getHeight(), -0.5f * sprite_.getHeight(), 0.5f * sprite_.getHeight()));
 }
 
+void TestWindow::removeGamepad(SDL_JoystickID instanceId) {
+	auto it = std::find_if(gameControllers_.begin(), gameControllers_.end(), [instanceId](const sdl::GameController& gameController) {
+		return gameController == instanceId;
+	});
+	if (it != gameControllers_.end()) {
+		gameControllers_.erase(it);
+		std::cout << "Gamepad removed: " << instanceId << "\n";
+	} else {
+		std::cout << "Gamepad faild to be removed: " << instanceId << "\n";
+	}
+}
+
 void TestWindow::initPreLoop() {
 	setLoopSleepingTime(10);
 
@@ -238,5 +250,5 @@ void TestWindow::initPreLoop() {
 	//buffer1_.addVertexData(drawText_);
 	//buffer1_.uploadToGraphicCard();
 
-	sdl::GameController::loadAddGameControllerMappings("gamecontrollerdb.txt");
+	sdl::GameController::loadGameControllerMappings("gamecontrollerdb.txt");
 }

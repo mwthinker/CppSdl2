@@ -7,8 +7,10 @@
 #include <sdl/window.h>
 #include <sdl/sprite.h>
 #include <sdl/text.h>
+#include <sdl/gamecontroller.h>
 
 #include <functional>
+#include <vector>
 
 class TestWindow : public sdl::Window {
 public:
@@ -32,15 +34,18 @@ private:
 
 	void resize(int w, int h);
 
+	void removeGamepad(SDL_JoystickID instanceId);
+
 	bool focus_;
 	sdl::Sprite sprite_;
-	sdl::Sprite sprite2_;	
+	sdl::Sprite sprite2_;
 	int controllerEvent_;
 	
 	std::function<void()> func_;
 	std::shared_ptr<BatchTriangles> batch_;
 
 	std::shared_ptr<TestShader> shader_;
+	std::vector<sdl::GameController> gameControllers_;
 };
 
 #endif // TESTWINDOW_H

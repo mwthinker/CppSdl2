@@ -1,14 +1,14 @@
 #ifndef CPPSDL2_SDL_FONT_H
 #define CPPSDL2_SDL_FONT_H
 
-#include "initttf.h"
-
 #include <string>
 #include <memory>
 
+#include <SDL_ttf.h>
+
 namespace sdl {
 
-	class Font : public InitTtf {
+	class Font {
 	public:
 		Font() noexcept;
 

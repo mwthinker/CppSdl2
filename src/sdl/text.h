@@ -1,7 +1,6 @@
 #ifndef CPPSDL2_SDL_TEXT_H
 #define CPPSDL2_SDL_TEXT_H
 
-#include "initttf.h"
 #include "font.h"
 #include "texture.h"
 
@@ -9,7 +8,7 @@
 
 namespace sdl {
 
-	class Text : public InitTtf {
+	class Text {
 	public:
 		// Create a empty text object.
 		Text();

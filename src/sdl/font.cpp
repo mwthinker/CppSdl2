@@ -3,6 +3,8 @@
 
 #include <string>
 
+#include <SDL_ttf.h>
+
 namespace sdl {
 
 	Font::Font() noexcept : characterSize_(0) {

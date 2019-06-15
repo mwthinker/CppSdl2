@@ -1,11 +1,11 @@
 #ifndef CPPSDL2_SDL_SOUND_H
 #define CPPSDL2_SDL_SOUND_H
 
-#include "initmixer.h"
-
 #include <string>
 #include <map>
 #include <memory>
+
+#include <SDL_mixer.h>
 
 namespace sdl {
 
@@ -60,7 +60,7 @@ namespace sdl {
 		bool isValid() const;
 
 	private:
-		struct SoundBuffer : public InitMixer {
+		struct SoundBuffer {
 			SoundBuffer(const std::string& filename);
 			~SoundBuffer();
 

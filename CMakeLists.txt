@@ -24,12 +24,8 @@ set(SOURCES
 	src/sdl/font.h
 	src/sdl/gamecontroller.cpp
 	src/sdl/gamecontroller.h
-	src/sdl/initmixer.cpp
-	src/sdl/initmixer.h
 	src/sdl/initsdl.cpp
 	src/sdl/initsdl.h
-	src/sdl/initttf.cpp
-	src/sdl/initttf.h
 	src/sdl/logger.h
 	src/sdl/music.cpp
 	src/sdl/music.h

@@ -6,6 +6,7 @@
 #include <sdl/sound.h>
 #include <sdl/logger.h>
 #include <sdl/textureatlas.h>
+#include <sdl/initsdl.h>
 
 #include <iostream>
 #include <cassert>
@@ -115,6 +116,8 @@ void testBatchWindow() {
 }
 
 int main(int argc, char** argv) {
+	sdl::InitSdl sdl;
+
 	testLoadTextureAtlas();
 	testLoadTextureAtlas2();
 	testBatchWindow();

@@ -1,19 +1,20 @@
 #ifndef CPPSDL2_SDL_WINDOW_H
 #define CPPSDL2_SDL_WINDOW_H
 
-#include "initsdl.h"
 #include "opengl.h"
 
 #include <string>
 #include <functional>
 #include <utility>
 
+#include <SDL.h>
+
 namespace sdl {
 
 	// Create a window which handle all user input. The graphic is rendered using OpenGL.
 	// The OpenGL view port is the whole window size and the model view is the same size as
 	// the window and origo is on the left down side.
-	class Window : public InitSdl {
+	class Window {
 	public:
 		Window();
 
