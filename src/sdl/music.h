@@ -1,10 +1,10 @@
 #ifndef CPPSDL2_SDL_MUSIC_H
 #define CPPSDL2_SDL_MUSIC_H
 
-#include "initmixer.h"
-
 #include <string>
 #include <memory>
+
+#include <SDL_mixer.h>
 
 namespace sdl {
 
@@ -66,7 +66,7 @@ namespace sdl {
 		class MusicBuffer;
 		typedef std::shared_ptr<MusicBuffer> MusicBufferPtr;
 
-		class MusicBuffer : public InitMixer {
+		class MusicBuffer {
 		public:
 			MusicBuffer(const std::string& filename);
 			~MusicBuffer();

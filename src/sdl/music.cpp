@@ -25,7 +25,7 @@ namespace sdl {
 		Mix_PausedMusic();
 	}
 
-	void Music::resume() {		
+	void Music::resume() {
 		Mix_ResumeMusic();
 	}
 
