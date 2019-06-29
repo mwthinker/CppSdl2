@@ -14,28 +14,28 @@ TestShader::TestShader() {
     uIsTexIndex_ = -1;
 }
 
-TestShader::TestShader(std::string vShader, std::string fShader) {
-    shader_.bindAttribute("aPos");
-    shader_.bindAttribute("aTex");
-    shader_.loadAndLinkFromFile(vShader, fShader);
+TestShader::TestShader(const std::string& vShader, const std::string& fShader) {
+	shaderProgram_.bindAttribute("aPos");
+	shaderProgram_.bindAttribute("aTex");
+	shaderProgram_.loadAndLinkFromFile(vShader, fShader);
 
-    shader_.useProgram();
+	shaderProgram_.useProgram();
 
     // Collect the vertex buffer attributes indexes.
-    aPosIndex_ = shader_.getAttributeLocation("aPos");
-    aTexIndex_ = shader_.getAttributeLocation("aTex");
+    aPosIndex_ = shaderProgram_.getAttributeLocation("aPos");
+    aTexIndex_ = shaderProgram_.getAttributeLocation("aTex");
 
     // Collect the vertex buffer uniforms indexes.
-    uProjIndex_ = shader_.getUniformLocation("uProj");
-    uModelIndex_ = shader_.getUniformLocation("uModel");
+    uProjIndex_ = shaderProgram_.getUniformLocation("uProj");
+    uModelIndex_ = shaderProgram_.getUniformLocation("uModel");
 
     // Collect the fragment buffer uniforms indexes.
-    uColorIndex_ = shader_.getUniformLocation("uColor");
-    uIsTexIndex_ = shader_.getUniformLocation("uIsTexture");
+    uColorIndex_ = shaderProgram_.getUniformLocation("uColor");
+    uIsTexIndex_ = shaderProgram_.getUniformLocation("uIsTexture");
 }
 
 void TestShader::useProgram() const {
-	shader_.useProgram();
+	shaderProgram_.useProgram();
 }
 
 void TestShader::setVertexAttribPointer() const {
@@ -49,27 +49,27 @@ void TestShader::setVertexAttribPointer() const {
 // Uniforms. -------------------------------------------
 
 void TestShader::setProjectionMatrixU(const Mat44& matrix) const {
-	shader_.useProgram();
+	shaderProgram_.useProgram();
     glUniformMatrix4fv(uProjIndex_, 1, false, glm::value_ptr(matrix));
 }
 
 void TestShader::setModelMatrixU(const Mat44& matrix) const {
-	shader_.useProgram();
+	shaderProgram_.useProgram();
     glUniformMatrix4fv(uModelIndex_, 1, false, glm::value_ptr(matrix));
 }
 
 void TestShader::setColorU(float red, float green, float blue, float alpha) const {
-	shader_.useProgram();
+	shaderProgram_.useProgram();
     glUniform4f(uColorIndex_, red, green, blue, alpha);
 }
 
 void TestShader::setColorU(const Color& color) const {
-	shader_.useProgram();
+	shaderProgram_.useProgram();
     glUniform4f(uColorIndex_, color.r, color.g, color.b, color.a);
 }
 
 void TestShader::setTextureU(bool texture) const {
-	shader_.useProgram();
+	shaderProgram_.useProgram();
     if (texture) {
         glUniform1f(uIsTexIndex_, 1);
     } else {

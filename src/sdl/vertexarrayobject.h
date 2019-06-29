@@ -3,33 +3,29 @@
 
 #include "opengl.h"
 
-#include <memory>
-
 namespace sdl {
 
 	class VertexArrayObject {
 	public:
-		VertexArrayObject();
+		VertexArrayObject() noexcept;
 
-		virtual ~VertexArrayObject();
+		~VertexArrayObject();
+
+		VertexArrayObject(const VertexArrayObject&) = delete;
+		VertexArrayObject& operator=(const VertexArrayObject&) = delete;
+
+		VertexArrayObject(VertexArrayObject&& other) noexcept;
+		VertexArrayObject& operator=(VertexArrayObject&& other) noexcept;
+
+		void create();
 
 		void bind() const;
 
-		void unbind() const;
-
-		virtual void useProgram() const = 0;
+		static void unbind();
 
 	private:
-		enum class VaoSupported {NOT_SUPPORTED, SUPPORTED, CHECK_SUPPORTED};
-
-		virtual void setVertexAttribPointer() const = 0;
-		virtual void bindBuffer() const = 0;
-
-		static GLuint currentVertexArrayObject;
-
-		// Keeps the external interface const.
-		mutable VaoSupported vaoSupported_;
-		std::shared_ptr<GLuint> vao_;
+		bool created_;
+		GLuint vao_;
 	};
 
 } // Namespace mw.

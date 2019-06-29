@@ -4,7 +4,7 @@
 #include "types.h"
 
 #include <sdl/opengl.h>
-#include <sdl/shader.h>
+#include <sdl/shaderprogram.h>
 
 #include <string>
 
@@ -25,7 +25,7 @@ public:
 	public:
 		Vertex() = default;
 
-		Vertex(GLfloat x, GLfloat y) : pos_(x, y), color_(1, 1, 1, 1), texture_(0) {
+		Vertex(GLfloat x, GLfloat y) : pos_(x, y), tex_(0, 0), color_(1, 1, 1, 1), texture_(0) {
 		}
 
 		Vertex(GLfloat x, GLfloat y, GLfloat xTex, GLfloat yTex) : pos_(x, y), tex_(xTex, yTex), color_(1, 1, 1, 1), texture_(1.f) {
@@ -38,7 +38,7 @@ public:
 	};
 
 private:
-	sdl::ShaderObject shader_;
+	sdl::ShaderProgram shader_;
 
 	int aPosIndex_;
 	int aTexIndex_;

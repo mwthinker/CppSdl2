@@ -2,64 +2,58 @@
 #include "vertexbufferobject.h"
 
 #include "window.h"
+#include "logger.h"
 
 namespace sdl {
 
-	GLuint VertexArrayObject::currentVertexArrayObject = -1;
-
-	VertexArrayObject::VertexArrayObject() : vaoSupported_(VaoSupported::CHECK_SUPPORTED), vao_(std::make_shared<GLuint>(0)) {
+	VertexArrayObject::VertexArrayObject() noexcept
+		: created_(false), vao_(0) {
 	}
 
 	VertexArrayObject::~VertexArrayObject() {
-		if (currentVertexArrayObject == *vao_) {
-			currentVertexArrayObject = 0;
-		}
-		if (*vao_ > 0) {
-			glDeleteVertexArrays(1, &*vao_);
+		if (created_) {
+			glDeleteVertexArrays(1, &vao_);
+			logger()->debug("[VertexArrayObject] Deleted vao: {}", vao_);
 			checkGlError();
 		}
-		*vao_ = 0;
+	}
+
+	VertexArrayObject::VertexArrayObject(VertexArrayObject&& other) noexcept
+		: created_(other.created_), vao_(other.vao_) {
+
+		other.created_ = false;
+	}
+	
+	VertexArrayObject& VertexArrayObject::operator=(VertexArrayObject&& other) noexcept {
+		vao_ = other.vao_;
+		
+		other.created_ = false;
+		return *this;
+	}
+
+	void VertexArrayObject::create() {
+		if (!created_) {
+			created_ = true;
+			glGenVertexArrays(1, &vao_);
+			glBindVertexArray(vao_);
+			checkGlError();
+		} else {
+			logger()->warn("[VertexArrayObject] tried to create, but vao was already exists");
+		}
 	}
 
 	void VertexArrayObject::bind() const {
-		useProgram();
-		switch (vaoSupported_) {
-			case VaoSupported::CHECK_SUPPORTED:
-				if (Window::getOpenGlMajorVersion() >= 3) {
-					vaoSupported_ = VaoSupported::SUPPORTED;
-					// Fall trough to next case.
-				} else {
-					vaoSupported_ = VaoSupported::NOT_SUPPORTED;
-					bindBuffer();
-					setVertexAttribPointer();
-					break;
-				}
-			case VaoSupported::SUPPORTED:
-				if (*vao_ == 0) { // Create the vertex array only the first time.
-					glGenVertexArrays(1, &*vao_);
-					glBindVertexArray(*vao_);
-					checkGlError();
-					// Remove the block to unneeded calls to buffer changes.
-					VertexBufferObject::setIgnoreCurrentBind(true);
-					bindBuffer();
-					// Restore the block.
-					VertexBufferObject::setIgnoreCurrentBind(false);
-					currentVertexArrayObject = *vao_;
-					setVertexAttribPointer();
-				} else {
-					glBindVertexArray(*vao_);
-					checkGlError();
-				}
-				break;
-			case VaoSupported::NOT_SUPPORTED:
-				bindBuffer();
-				setVertexAttribPointer();
-				break;
+		if (created_) {
+			glBindVertexArray(vao_);
+			checkGlError();
+		} else {
+			logger()->debug("[VertexArrayObject] ");
 		}
 	}
 
-	void VertexArrayObject::unbind() const {
+	void VertexArrayObject::unbind() {
 		glBindVertexArray(0);
+		logger()->debug("[VertexArrayObject] Unbind vao");
 	}
 
 } // Namespace mw.

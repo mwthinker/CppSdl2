@@ -1,5 +1,5 @@
-#ifndef CPPSDL2_SDL_SHADER_H
-#define CPPSDL2_SDL_SHADER_H
+#ifndef CPPSDL2_SDL_SHADERPROGRAM_H
+#define CPPSDL2_SDL_SHADERPROGRAM_H
 
 #include "opengl.h"
 
@@ -9,18 +9,18 @@
 
 namespace sdl {
 
-	class ShaderObject {
+	class ShaderProgram {
 	public:
 		// Create an empty non linked shader.
-		ShaderObject();
+		ShaderProgram();
 
-		ShaderObject(const ShaderObject& sprite) = delete;
-		ShaderObject& operator=(const ShaderObject& sprite) = delete;
+		ShaderProgram(const ShaderProgram& sprite) = delete;
+		ShaderProgram& operator=(const ShaderProgram& sprite) = delete;
 
-		ShaderObject(ShaderObject&& sprite) noexcept;
-		ShaderObject& operator=(ShaderObject&& sprite) noexcept;
+		ShaderProgram(ShaderProgram&& sprite) noexcept;
+		ShaderProgram& operator=(ShaderProgram&& sprite) noexcept;
 
-		~ShaderObject();
+		~ShaderProgram();
 
 		// Bind the attribute to the shader.
 		// Must be called before linking the shader in order for the attribute to
@@ -63,7 +63,7 @@ namespace sdl {
 	private:
 		static int currentProgramId;
 		
-		mutable std::map<std::string, int> attributes_;
+		std::map<std::string, int> attributes_;
 		mutable std::map<std::string, int> uniforms_;
 
 		int location_;
@@ -73,4 +73,4 @@ namespace sdl {
 
 } // Namespace sdl.
 
-#endif // CPPSDL2_SDL_SHADER_H
+#endif // CPPSDL2_SDL_SHADERPROGRAM_H

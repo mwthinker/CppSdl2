@@ -3,66 +3,53 @@
 
 #include "opengl.h"
 
-#include <memory>
-
 namespace sdl {
 
 	class VertexBufferObject {
 	public:
 		// Create a empty vertex buffer object.
-		VertexBufferObject();
-		
-		bool operator==(const VertexBufferObject& shader) const;
+		VertexBufferObject() noexcept;
 
-		bool operator!=(const VertexBufferObject& shader) const;
+		~VertexBufferObject();
 
+		VertexBufferObject(const VertexBufferObject&) = delete;
+		VertexBufferObject& operator=(const VertexBufferObject&) = delete;
+
+		VertexBufferObject(VertexBufferObject&& other) noexcept;
+		VertexBufferObject& operator=(VertexBufferObject&& other) noexcept;
+				
 		// Generates an id and bind the buffer data to the graphic card. The buffer is then unbind.
 		// Will only bind for the first call to this function.
-		void bindBufferData(GLenum target, GLsizeiptr size, const GLvoid* data, GLenum usage);
+		void bindData(GLenum target, GLsizeiptr size, const GLvoid* data, GLenum usage);
 
 		// Replaces the data in the buffer. The current buffer is binded.
 		// Will replace data if the buffer exists on the graphic card.
-		void bindBufferSubData(GLsizeiptr offset, GLsizeiptr size, const GLvoid* data) const;
+		void bindSubData(GLsizeiptr offset, GLsizeiptr size, const GLvoid* data) const;
 
 		// Bind the current vertex buffer with the initial target.
-		void bindBuffer() const;
+		void bind() const;
 
 		// Unbind the current vertex buffer.
-		void unbindBuffer() const;
+		void unbind() const;
 
 		// Return the size in bytes for the current data.
-		GLsizeiptr getSize() const;
+		GLsizeiptr getSize() const noexcept;
 
 		// Return the target specified.
-		GLenum getTarget() const;
-
-		static void setIgnoreCurrentBind(bool activate);
-		static bool getIgnoreCurrentBind();
+		GLenum getTarget() const noexcept;
 
 	private:
-		static int currentBufferIdBinded;
-		static bool ignoreCurrentIdBinded;
-
-		class Data {
-		public:
-			Data();
-			~Data();
-
-			GLuint vboId_;
-			int windowInstance_;
-			GLsizeiptr size_;
-			GLenum target_;
-		};
-
-		std::shared_ptr<Data> data_;
+		GLuint vboId_;
+		GLsizeiptr size_;
+		GLenum target_;
 	};
 
-	inline bool VertexBufferObject::operator==(const VertexBufferObject& vbo) const {
-		return data_ == vbo.data_;
+	inline GLsizeiptr VertexBufferObject::getSize() const noexcept {
+		return size_;
 	}
-
-	inline bool VertexBufferObject::operator!=(const VertexBufferObject& other) const {
-		return !(*this == other);
+	
+	inline GLenum VertexBufferObject::getTarget() const noexcept {
+		return target_;
 	}
 
 } // Namespace sdl.

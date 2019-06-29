@@ -2,7 +2,7 @@
 #define TESTSHADER_H
 
 #include <sdl/opengl.h>
-#include <sdl/shader.h>
+#include <sdl/shaderprogram.h>
 
 #include "types.h"
 
@@ -11,7 +11,7 @@
 class TestShader {
 public:
     TestShader();
-    TestShader(std::string vShader, std::string fShader);
+    TestShader(const std::string& vShader, const std::string& fShader);
 
 	static constexpr unsigned int vertexSizeInBytes() {
 		return vertexSizeInFloat() * sizeof(GLfloat);
@@ -34,7 +34,7 @@ public:
     void setTextureU(bool texture) const;
 
 private:
-    sdl::ShaderObject shader_;
+    sdl::ShaderProgram shaderProgram_;
 
     int aPosIndex_;
     int aTexIndex_;

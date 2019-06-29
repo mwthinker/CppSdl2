@@ -78,7 +78,8 @@ void TestWindow::update(double deltaTime) {
 	Mat44 m = glm::ortho(-0.5f * sprite_.getWidth(), 0.5f * sprite_.getHeight(), -0.5f * sprite_.getHeight(), 0.5f * sprite_.getHeight());
 	//Mat44 m = Mat44() sdl::getScaleMatrix44<float>(sprite_.getWidth(), sprite_.getHeight())*mw::getTranslateMatrix44<float>(0.5, 0.5);
 	//Mat44 m2 = m * sdl::getTranslateMatrix44<float>(getWidth() * 0.5f, getHeight() * 0.5f) * mw::getScaleMatrix44<float>(sprite2_.getWidth(), sprite2_.getHeight());
-	
+	//glm::translate(m, )
+
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
@@ -93,7 +94,7 @@ void TestWindow::update(double deltaTime) {
 	//shader_->setModelMatrixU(m2);
 	//data1_->drawTRIANGLES();
 	shader_->setColorU(1, 0, 0);
-	shader_->setModelMatrixU(m);
+	//shader_->setModelMatrixU(m2);
 	
 	//drawText_->draw();
 	

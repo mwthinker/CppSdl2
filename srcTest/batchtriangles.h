@@ -6,24 +6,31 @@
 #include <glm/gtc/constants.hpp>
 #include <sdl/batch.h>
 #include <sdl/sprite.h>
-#include <sdl/window.h>
 #include <sdl/logger.h>
 
-class BatchTriangles : public sdl::Batch<TestShader2> {
+class BatchTriangles {
 public:
-	BatchTriangles(const std::shared_ptr<TestShader2>& shader, int maxVertexes) : Batch(GL_TRIANGLES, GL_DYNAMIC_DRAW, shader, maxVertexes) {
-		sdl::logger()->info("[BatchTriangles] {} Mib\n", getVboSizeInMiB());
+	BatchTriangles(const std::shared_ptr<TestShader2>& shader, int maxVertexes)
+		: shader_(shader), batch_(GL_TRIANGLES, GL_DYNAMIC_DRAW, maxVertexes) {
+		
+		sdl::logger()->info("[BatchTriangles] {} Mib\n", batch_.getVboSizeInMiB());
 	}
 
-	BatchTriangles(const std::shared_ptr<TestShader2>& shader) : Batch(GL_TRIANGLES, shader) {
+	BatchTriangles(const std::shared_ptr<TestShader2>& shader)
+		: shader_(shader), batch_(GL_TRIANGLES) {
+
 	}
 
 	virtual ~BatchTriangles() = default;
 
+	void uploadToGraphicCard() {
+		batch_.uploadToGraphicCard();
+	}
+
 	void addTriangle(const TestShader2::Vertex& v1, const TestShader2::Vertex& v2, const TestShader2::Vertex& v3) {
-		Batch::add(v1);
-		Batch::add(v2);
-		Batch::add(v3);
+		batch_.add(v1);
+		batch_.add(v2);
+		batch_.add(v3);
 	}
 
 	void addRectangle(float x, float y, float w, float h) {
@@ -69,7 +76,7 @@ public:
 	}
 
 	void addCircle(float x, float y, float outerRadius, float innerRadius, const int iterations = 40) {
-		constexpr float PI = glm::pi<GLfloat>();
+		constexpr auto PI = glm::pi<GLfloat>();
 
 		TestShader2::Vertex v1(x + innerRadius, y);
 		TestShader2::Vertex v4(x + outerRadius, y);
@@ -83,48 +90,23 @@ public:
 		}
 	}
 
-	void draw() const override {
-		if (sdl::Window::getOpenGlMajorVersion() >= 2) {
-			sdl::Batch<TestShader2>::draw();
-		} else {
-			int i = 0;
-			int nbr = 0;
-			bool lastTexture = true;
-			for (const TestShader2::Vertex& v : *this) {
-				bool texture = v.texture_ > 0.5f;
-				if (i == 0) {
-					lastTexture = texture;
-					if (lastTexture) {
-						glEnable(GL_TEXTURE_2D);
-					}
-					glBegin(GL_TRIANGLES);
-				} else if (nbr == 0 && lastTexture != texture) {
-					glEnd();
-					lastTexture = texture;
-					if (lastTexture) {
-						glEnable(GL_TEXTURE_2D);
-					} else {
-						glDisable(GL_TEXTURE_2D);
-					}
-					glBegin(GL_TRIANGLES);
-				}
-				
-				if (texture) {
-					glTexCoord2f(v.tex_.x, v.tex_.y);
-				}
-				glVertex2f(v.pos_.x, v.pos_.y);
-				glColor4f(v.color_.r, v.color_.g, v.color_.b, v.color_.a);
-				
-				nbr = (nbr + 1) % 3;
-				++i;
-			}
-			glEnd();
-			if (lastTexture) {
-				glDisable(GL_TEXTURE_2D);
-			}
-		}
+	void init() {
+		shader_->useProgram();
+		vao_.create();
+		batch_.bindBuffer();
+		shader_->setVertexAttribPointer();
 	}
 
+	void draw() const {
+		shader_->useProgram();
+		vao_.bind();
+		batch_.draw();
+	}
+
+private:
+	std::shared_ptr<TestShader2> shader_;
+	sdl::Batch<TestShader2::Vertex> batch_;
+	sdl::VertexArrayObject vao_;
 };
 
 #endif // BATCHTRIANGLES_H

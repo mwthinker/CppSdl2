@@ -1,4 +1,4 @@
-#include "shader.h"
+#include "shaderprogram.h"
 #include "opengl.h"
 #include "window.h"
 #include "logger.h"
@@ -8,7 +8,7 @@
 
 namespace sdl {
 
-	int ShaderObject::currentProgramId = 0;
+	int ShaderProgram::currentProgramId = 0;
 
 	namespace {		
 
@@ -47,14 +47,14 @@ namespace sdl {
 
 	}
 
-	ShaderObject::ShaderObject() :
+	ShaderProgram::ShaderProgram() :
 		location_(0),
 		programObjectId_(0),
 		windowInstance_(0) {
 
 	}
 
-	ShaderObject::ShaderObject(ShaderObject&& other) noexcept :
+	ShaderProgram::ShaderProgram(ShaderProgram&& other) noexcept :
 		attributes_(std::move(other.attributes_)),
 		uniforms_(std::move(other.uniforms_)),
 		location_(other.location_),
@@ -66,7 +66,7 @@ namespace sdl {
 		other.windowInstance_ = -1;
 	}
 
-	ShaderObject& ShaderObject::operator=(ShaderObject&& other) noexcept {
+	ShaderProgram& ShaderProgram::operator=(ShaderProgram&& other) noexcept {
 		attributes_ = std::move(other.attributes_);
 		uniforms_ = std::move(other.uniforms_);
 		location_ = other.location_;
@@ -79,7 +79,7 @@ namespace sdl {
 		return *this;
 	}
 
-	ShaderObject::~ShaderObject() {
+	ShaderProgram::~ShaderProgram() {
 		// Opengl program loaded? And the opengl context active?
 		if (programObjectId_ != 0 && windowInstance_ == Window::getInstanceId()) {
 			// Is called if the program is valid and therefore need to be cleaned up.
@@ -89,13 +89,13 @@ namespace sdl {
 		}
 	}
 
-	void ShaderObject::bindAttribute(const std::string& attribute) {
+	void ShaderProgram::bindAttribute(const std::string& attribute) {
 		if (programObjectId_ == 0) {
 			attributes_[attribute] = location_;
 		}
 	}
 
-	int ShaderObject::getAttributeLocation(const std::string& attribute) const {
+	int ShaderProgram::getAttributeLocation(const std::string& attribute) const {
 		auto it = attributes_.find(attribute);
 		if (it != attributes_.end()) {
 			return it->second;
@@ -103,7 +103,7 @@ namespace sdl {
 		return -1;
 	}
 
-	int ShaderObject::getUniformLocation(const std::string& uniform) const {
+	int ShaderProgram::getUniformLocation(const std::string& uniform) const {
 		if (programObjectId_ != 0) {
 			auto it = uniforms_.find(uniform);
 
@@ -121,18 +121,18 @@ namespace sdl {
 		return -1;
 	}
 
-	bool ShaderObject::loadAndLinkFromFile(const std::string& vShaderFile, const std::string& gShaderFile, const std::string& fShaderFile) {
+	bool ShaderProgram::loadAndLinkFromFile(const std::string& vShaderFile, const std::string& gShaderFile, const std::string& fShaderFile) {
 		if (programObjectId_ == 0) {
 			return loadAndLink(loadFromFile(vShaderFile), loadFromFile(gShaderFile), loadFromFile(fShaderFile));
 		}
 		return false;
 	}
 
-	bool ShaderObject::loadAndLinkFromFile(const std::string& vShaderFile, const std::string& fShaderFile) {
+	bool ShaderProgram::loadAndLinkFromFile(const std::string& vShaderFile, const std::string& fShaderFile) {
 		return loadAndLinkFromFile(vShaderFile, "", fShaderFile);
 	}
 
-	bool ShaderObject::loadAndLink(const std::string& vShader, const std::string& gShader, const std::string& fShader) {
+	bool ShaderProgram::loadAndLink(const std::string& vShader, const std::string& gShader, const std::string& fShader) {
 		if (programObjectId_ == 0) {
 			programObjectId_ = glCreateProgram();
 			checkGlError();
@@ -180,11 +180,11 @@ namespace sdl {
 		return false;
 	}
 
-	bool ShaderObject::loadAndLink(const std::string& vShader, const std::string& fShader) {
+	bool ShaderProgram::loadAndLink(const std::string& vShader, const std::string& fShader) {
 		return loadAndLink(vShader, "", fShader);
 	}
 
-	void ShaderObject::useProgram() const {
+	void ShaderProgram::useProgram() const {
 		if (programObjectId_ != 0 && currentProgramId != programObjectId_) {
 			glUseProgram(programObjectId_);
 			checkGlError();

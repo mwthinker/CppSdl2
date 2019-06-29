@@ -101,8 +101,8 @@ void testLoadTextureAtlas2() {
 }
 
 void testBatchWindow() {
-	// Test opengl version 1 to 4
-	for (int i = 1; i <= 4; ++i) {
+	// Test opengl versions.
+	for (int i = 2; i <= 4; ++i) {
 		try {
 			TestWindow2 w(i, 1);
 			std::stringstream stream;

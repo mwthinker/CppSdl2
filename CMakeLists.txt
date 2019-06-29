@@ -31,8 +31,8 @@ set(SOURCES
 	src/sdl/music.h
 	src/sdl/opengl.cpp
 	src/sdl/opengl.h
-	src/sdl/shader.cpp
-	src/sdl/shader.h
+	src/sdl/shaderprogram.cpp
+	src/sdl/shaderprogram.h
 	src/sdl/sound.cpp
 	src/sdl/sound.h
 	src/sdl/sprite.cpp

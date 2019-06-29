@@ -5,7 +5,7 @@ namespace sdl {
 
 	namespace {
 
-		const char* errorString(GLenum error) {
+		constexpr const char* errorString(GLenum error) {
 			switch (error) {
 				case GL_INVALID_ENUM:
 					return "GL_INVALID_ENUM";
