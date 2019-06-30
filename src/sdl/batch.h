@@ -19,27 +19,27 @@ namespace sdl {
 		Batch() : mode_(0), usage_(0), index_(0),
 			uploadedIndex_(0) {
 
-			IS_VERTEX_POD<Vertex>();
+			IS_VERTEX_STANDARD_LAYOUT<Vertex>();
 		}
 
 		Batch(GLenum mode, GLenum usage, size_t maxVertexes) :
 			mode_(mode), usage_(usage), index_(0),
 			uploadedIndex_(0), data_(usage == GL_STATIC_DRAW ? 0 : maxVertexes) {
 
-			IS_VERTEX_POD<Vertex>();
+			IS_VERTEX_STANDARD_LAYOUT<Vertex>();
 		}
 
 		Batch(GLenum mode) :
 			mode_(mode), usage_(GL_STATIC_DRAW), index_(0),
 			uploadedIndex_(0) {
 
-			IS_VERTEX_POD<Vertex>();
+			IS_VERTEX_STANDARD_LAYOUT<Vertex>();
 		}
 
 		~Batch() = default;
 
 		Batch(const Batch&& other) noexcept {
-			IS_VERTEX_POD<Vertex>();
+			IS_VERTEX_STANDARD_LAYOUT<Vertex>();
 
 			*this = std::move(other);
 		}
@@ -184,13 +184,13 @@ namespace sdl {
 		}
 
 		template<class Vertex>
-		constexpr void IS_VERTEX_POD() {
-			static_assert(std::is_pod<Vertex>(),
-				"Vertex type must be a POD type.");
+		constexpr void IS_VERTEX_STANDARD_LAYOUT() {
+			static_assert(std::is_standard_layout<Vertex>(),
+				"Vertex type must be a type of standard layout.");
 		}
 
-		const GLenum usage_;
-		const GLenum mode_;
+		GLenum usage_;
+		GLenum mode_;
 		GLsizei index_;
 		size_t uploadedIndex_;
 		std::vector<Vertex> data_;		
