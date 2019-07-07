@@ -124,10 +124,8 @@ namespace sdl {
 			firstCallBind_ = false;
 			if (imageData_->preLoadSurface_ != nullptr) {
 				imageData_->loadImageToGraphic();
-				imageData_->windowInstance_ = Window::getInstanceId();
 			} else {
 				glBindTexture(GL_TEXTURE_2D, imageData_->texture_);
-				imageData_->windowInstance_ = Window::getInstanceId();
 				checkGlError();
 			}
 		} else {
@@ -153,11 +151,11 @@ namespace sdl {
 	}
 	
 	Texture::ImageData::ImageData(std::function<void()> filter) :
-		preLoadSurface_(0), texture_(0), filter_(filter), windowInstance_(0) {
+		preLoadSurface_(0), texture_(0), filter_(filter) {
 	}
 
 	Texture::ImageData::ImageData(SDL_Surface* surface, std::function<void()> filter) :
-		preLoadSurface_(surface), texture_(0), filter_(filter), windowInstance_(0) {
+		preLoadSurface_(surface), texture_(0), filter_(filter) {
 	}
 
 	void Texture::ImageData::loadImageToGraphic() const {
@@ -177,7 +175,7 @@ namespace sdl {
 
 	Texture::ImageData::~ImageData() {
 		// Opengl texture? And the opengl context active?
-		if (texture_ != 0 && windowInstance_ == Window::getInstanceId()) {
+		if (texture_ != 0) {
 			// Is called if the opengl texture is valid and therefore need to be cleaned up.
 			glDeleteTextures(1, &texture_);
 		}

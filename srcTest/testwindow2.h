@@ -10,8 +10,7 @@
 
 class TestWindow2 : public sdl::Window {
 public:
-	TestWindow2(int majorGlVersion, int minorGlVersion) : textureAtlas_(2048, 2048) {
-		Window::setOpenGlVersion(majorGlVersion, minorGlVersion);
+	TestWindow2(int majorGlVersion, int minorGlVersion) : Window(majorGlVersion, minorGlVersion), textureAtlas_(2048, 2048) {
 	}
 
 private:

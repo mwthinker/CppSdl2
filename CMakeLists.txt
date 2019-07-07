@@ -18,6 +18,11 @@ project(CppSdl2
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
+set(IMGUI_SOURCE
+	src/sdl/imguiwindow.h
+	src/sdl/imguiwindow.cpp
+)
+
 set(SOURCES
 	src/sdl/batch.h
 	src/sdl/font.cpp
@@ -51,8 +56,6 @@ set(SOURCES
 	src/sdl/window.h
 )
 
-add_library(CppSdl2 ${SOURCES})
-
 find_package(GLEW CONFIG REQUIRED)
 find_package(SDL2 CONFIG REQUIRED)
 find_package(SDL2-image CONFIG REQUIRED)
@@ -60,6 +63,18 @@ find_package(SDL2-mixer CONFIG REQUIRED)
 find_package(SDL2-ttf CONFIG REQUIRED)
 
 find_package(spdlog CONFIG REQUIRED)
+
+option(CppSdl2ImGui "Add ImGui as dependencie: -CppSdl2ImGui=1" OFF)
+set(ImGuiLib "")
+if (CppSdl2ImGui)
+	find_package(imgui CONFIG REQUIRED)
+	
+	set(SOURCES "${SOURCES};${IMGUI_SOURCE}")
+	set(ImGuiLib "imgui::imgui")
+endif ()
+
+add_library(CppSdl2 ${SOURCES})
+message(status ${SOURCES})
 
 target_include_directories(CppSdl2
 	PUBLIC
@@ -74,6 +89,7 @@ target_link_libraries(CppSdl2
 		SDL2::SDL2_mixer
 		GLEW::GLEW
 		spdlog::spdlog
+		${ImGuiLib}
 )
 
 message(STATUS "CppSdl2Test is available to add: -DCppSdl2Test=1")

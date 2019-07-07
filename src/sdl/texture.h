@@ -114,7 +114,6 @@ namespace sdl {
 			mutable SDL_Surface* preLoadSurface_;
 			mutable GLuint texture_;
 			std::function<void()> filter_;
-			int windowInstance_;
 		};
 		
 		std::shared_ptr<ImageData> imageData_;

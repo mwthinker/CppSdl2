@@ -66,11 +66,10 @@ namespace {
 
 }
 
-TestWindow::TestWindow(sdl::Sprite sprite) : sprite_(sprite) {
+TestWindow::TestWindow(sdl::Sprite sprite) : Window(2, 1), sprite_(sprite) {
 	sdl::Window::setWindowSize(512, 512);
 	sdl::Window::setTitle("Test");
 	sdl::Window::setIcon("tetris.bmp");
-	sdl::Window::setOpenGlVersion(2,1);
 	controllerEvent_ = 0;
 }
 

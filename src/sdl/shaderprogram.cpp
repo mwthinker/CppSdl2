@@ -81,7 +81,7 @@ namespace sdl {
 
 	ShaderProgram::~ShaderProgram() {
 		// Opengl program loaded? And the opengl context active?
-		if (programObjectId_ != 0 && windowInstance_ == Window::getInstanceId()) {
+		if (programObjectId_ != 0) {
 			// Is called if the program is valid and therefore need to be cleaned up.
 			glDeleteProgram(programObjectId_);
 			checkGlError();
@@ -136,7 +136,6 @@ namespace sdl {
 		if (programObjectId_ == 0) {
 			programObjectId_ = glCreateProgram();
 			checkGlError();
-			windowInstance_ = Window::getInstanceId();
 			
 			if (programObjectId_ == 0) {
 				return false;

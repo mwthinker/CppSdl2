@@ -18,6 +18,8 @@ namespace sdl {
 	public:
 		Window();
 
+		Window(int majorVersionGl, int minorVersionGl);
+
 		virtual ~Window();
 
 		Window(const Window&) = delete;
@@ -45,25 +47,13 @@ namespace sdl {
 
 		// Make the program to quit as soon as the current frame is finished.
 		// I.e. the loop in startLoop() will be made to stop and startLoop() will return.
-		void quit() {
-			quit_ = true;
-		}
+		void quit();
 
 		// The id for the windows. Is the same as calling SDL_GetWindowID.
-		Uint32 getId() const {
-			return SDL_GetWindowID(window_);
-		}
+		Uint32 getId() const;
 
 		// Return the window pointer. Use with care.
-		SDL_Window* getSdlWindow() const {
-			return window_;
-		}
-
-		// Return the number, first instance of an active window return 1 next 3, etc.
-		// Each even number represent that the last window with the odd number was closed.
-		static int getInstanceId() {
-			return nbrCurrentInstance;
-		}
+		SDL_Window* getSdlWindow() const;
 
 		void setPosition(int x, int y);
 
@@ -71,17 +61,15 @@ namespace sdl {
 
 		void setResizeable(bool resizable);
 
-		void setIcon(std::string icon);
+		void setIcon(const std::string& icon);
 
-		void setTitle(std::string title);
+		void setTitle(const std::string& title);
 
 		void setWindowSize(int width, int height);
 
-		void setOpenGlVersion(int majorVersion, int minorVersion);
+		int getOpenGlMajorVersion() const;
 
-		static int getOpenGlMajorVersion();
-
-		static int getOpenGlMinorVersion();
+		int getOpenGlMinorVersion() const;
 
 		void setGlClear(GLbitfield glBitfield);
 
@@ -91,9 +79,7 @@ namespace sdl {
 		// not effect anything, is plattform dependent.
 		void setLoopSleepingTime(int sleepingTime);
 		
-		int getLoopSleepingTime() const {
-			return sleepingTime_;
-		}
+		int getLoopSleepingTime() const;
 
 	protected:
 		virtual void initOpenGl();
@@ -111,6 +97,8 @@ namespace sdl {
 		virtual void eventUpdate(const SDL_Event& windowEvent) {
 		}
 
+		void runLoop();
+
 		void setupOpenGlContext();
 
 		SDL_Window* window_;
@@ -127,16 +115,27 @@ namespace sdl {
 		SDL_Surface* icon_;
 		int sleepingTime_;
 
-		static int majorVersionGl, minorVersionGl;
-		static int nbrCurrentInstance;
+		const int majorVersionGl_, minorVersionGl_;
 	};
 
-	inline int Window::getOpenGlMajorVersion() {
-		return majorVersionGl;
+	inline void Window::quit() {
+		quit_ = true;
 	}
 
-	inline int Window::getOpenGlMinorVersion() {
-		return minorVersionGl;
+	inline Uint32 Window::getId() const {
+		return SDL_GetWindowID(window_);
+	}
+
+	inline SDL_Window* Window::getSdlWindow() const {
+		return window_;
+	}
+
+	inline int Window::getOpenGlMajorVersion() const {
+		return majorVersionGl_;
+	}
+
+	inline int Window::getOpenGlMinorVersion() const {
+		return minorVersionGl_;
 	}
 
 	inline void Window::setGlClear(GLbitfield glBitfield) {
@@ -149,6 +148,10 @@ namespace sdl {
 
 	inline void Window::setLoopSleepingTime(int sleepingTime) {
 		sleepingTime_ = sleepingTime;
+	}
+
+	inline int Window::getLoopSleepingTime() const {
+		return sleepingTime_;
 	}
 
 } // Namespace sdl.
