@@ -120,18 +120,20 @@ namespace sdl {
 	}
 
 	void Texture::bindTexture() const {
-		if (firstCallBind_) {
-			firstCallBind_ = false;
-			if (imageData_->preLoadSurface_ != nullptr) {
-				imageData_->loadImageToGraphic();
+		if (imageData_ != nullptr) {
+			if (firstCallBind_) {
+				firstCallBind_ = false;
+				if (imageData_->preLoadSurface_ != nullptr) {
+					imageData_->loadImageToGraphic();
+				} else {
+					glBindTexture(GL_TEXTURE_2D, imageData_->texture_);
+					checkGlError();
+				}
 			} else {
-				glBindTexture(GL_TEXTURE_2D, imageData_->texture_);
-				checkGlError();
-			}
-		} else {
-			if (imageData_->texture_ != 0) {
-				glBindTexture(GL_TEXTURE_2D, imageData_->texture_);
-				checkGlError();
+				if (imageData_->texture_ != 0) {
+					glBindTexture(GL_TEXTURE_2D, imageData_->texture_);
+					checkGlError();
+				}
 			}
 		}
 	}

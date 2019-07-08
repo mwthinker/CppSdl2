@@ -39,6 +39,8 @@ namespace sdl {
 
 		std::pair<int, int> getSize() const;
 
+		std::pair<int, int> getDrawableSize() const;
+
 		// Return the current windows width in pixels.
 		int getWidth() const;
 

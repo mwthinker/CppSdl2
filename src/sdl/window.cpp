@@ -136,7 +136,7 @@ namespace sdl {
 			}
 
 			auto currentTime = std::chrono::high_resolution_clock::now();
-			std::chrono::duration<double> delta = currentTime - time;
+			auto delta = currentTime - time;
 			time = currentTime;
 			update(delta.count());
 
@@ -218,6 +218,17 @@ namespace sdl {
 		std::pair<int, int> pair;
 		if (window_) {
 			SDL_GetWindowSize(window_, &pair.first, &pair.second);
+		} else {
+			pair.first = width_;
+			pair.second = height_;
+		}
+		return pair;
+	}
+
+	std::pair<int, int> Window::getDrawableSize() const {
+		std::pair<int, int> pair;
+		if (window_) {
+			SDL_GL_GetDrawableSize(window_, &pair.first, &pair.second);
 		} else {
 			pair.first = width_;
 			pair.second = height_;

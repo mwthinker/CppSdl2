@@ -1,14 +1,10 @@
 #include "shaderprogram.h"
-#include "opengl.h"
-#include "window.h"
 #include "logger.h"
 
 #include <fstream>
 #include <sstream>
 
 namespace sdl {
-
-	int ShaderProgram::currentProgramId = 0;
 
 	namespace {		
 
@@ -49,8 +45,7 @@ namespace sdl {
 
 	ShaderProgram::ShaderProgram() :
 		location_(0),
-		programObjectId_(0),
-		windowInstance_(0) {
+		programObjectId_(0) {
 
 	}
 
@@ -58,12 +53,10 @@ namespace sdl {
 		attributes_(std::move(other.attributes_)),
 		uniforms_(std::move(other.uniforms_)),
 		location_(other.location_),
-		programObjectId_(other.programObjectId_),
-		windowInstance_(other.windowInstance_)
+		programObjectId_(other.programObjectId_)
 	{
 		other.location_ = -1;
-		other.programObjectId_ = -1;
-		other.windowInstance_ = -1;
+		other.programObjectId_ = 0;
 	}
 
 	ShaderProgram& ShaderProgram::operator=(ShaderProgram&& other) noexcept {
@@ -71,11 +64,9 @@ namespace sdl {
 		uniforms_ = std::move(other.uniforms_);
 		location_ = other.location_;
 		programObjectId_ = other.programObjectId_;
-		windowInstance_ = other.windowInstance_;
 
 		other.location_ = -1;
-		other.programObjectId_ = -1;
-		other.windowInstance_ = -1;
+		other.programObjectId_ = 0;
 		return *this;
 	}
 
@@ -85,7 +76,6 @@ namespace sdl {
 			// Is called if the program is valid and therefore need to be cleaned up.
 			glDeleteProgram(programObjectId_);
 			checkGlError();
-			currentProgramId = 0;
 		}
 	}
 
@@ -184,10 +174,9 @@ namespace sdl {
 	}
 
 	void ShaderProgram::useProgram() const {
-		if (programObjectId_ != 0 && currentProgramId != programObjectId_) {
+		if (programObjectId_ != 0) {
 			glUseProgram(programObjectId_);
 			checkGlError();
-			currentProgramId = programObjectId_;
 		}
 	}
 

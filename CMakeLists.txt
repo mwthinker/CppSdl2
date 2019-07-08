@@ -19,6 +19,8 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 set(IMGUI_SOURCE
+	src/sdl/imguishader.cpp
+	src/sdl/imguishader.h
 	src/sdl/imguiwindow.h
 	src/sdl/imguiwindow.cpp
 )
@@ -89,6 +91,7 @@ target_link_libraries(CppSdl2
 		SDL2::SDL2_mixer
 		GLEW::GLEW
 		spdlog::spdlog
+		glm
 		${ImGuiLib}
 )
 
@@ -102,6 +105,8 @@ if (CppSdl2Test)
 		srcTest/batchtriangles.h
 		srcTest/types.h
 		srcTest/main.cpp
+		srcTest/testimguiwindow.cpp
+		srcTest/testimguiwindow.h
 		srcTest/testshader.cpp
 		srcTest/testshader.h
 		srcTest/testshader2.h
