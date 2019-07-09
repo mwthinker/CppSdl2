@@ -49,14 +49,12 @@ namespace sdl {
 			usage_ = other.usage_;
 			index_ = other.index_;
 			vbo_ = std::move(other.vbo_);
-			vao_ = std::move(other.vao_);
 			data_ = std::move(other.data_);
 
 			other.mode_ = 0;
 			other.usage_ = 0;
 			other.index_ = 0;
 			other.vbo_ = VertexBufferObject();
-			other.vao_ = VertexArrayObject();
 			return *this;
 		}
 
@@ -183,9 +181,9 @@ namespace sdl {
 				"The function only accepts random access iterator.");
 		}
 
-		template<class Vertex>
+		template<class VertexType>
 		constexpr void IS_VERTEX_STANDARD_LAYOUT() {
-			static_assert(std::is_standard_layout<Vertex>(),
+			static_assert(std::is_standard_layout<VertexType>(),
 				"Vertex type must be a type of standard layout.");
 		}
 
