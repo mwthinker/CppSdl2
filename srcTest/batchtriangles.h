@@ -76,7 +76,7 @@ public:
 	}
 
 	void addCircle(float x, float y, float outerRadius, float innerRadius, const int iterations = 40) {
-		constexpr auto PI = glm::pi<GLfloat>();
+		const auto PI = glm::pi<GLfloat>();s
 
 		TestShader2::Vertex v1(x + innerRadius, y);
 		TestShader2::Vertex v4(x + outerRadius, y);

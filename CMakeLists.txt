@@ -53,13 +53,15 @@ set(SOURCES
 
 add_library(CppSdl2 ${SOURCES})
 
-find_package(GLEW CONFIG REQUIRED)
+find_package(GLEW REQUIRED)
 find_package(SDL2 CONFIG REQUIRED)
 find_package(SDL2-image CONFIG REQUIRED)
 find_package(SDL2-mixer CONFIG REQUIRED)
 find_package(SDL2-ttf CONFIG REQUIRED)
 
 find_package(spdlog CONFIG REQUIRED)
+find_package(OpenGL REQUIRED)
+
 
 target_include_directories(CppSdl2
 	PUBLIC
@@ -73,6 +75,7 @@ target_link_libraries(CppSdl2
 		SDL2::SDL2_ttf
 		SDL2::SDL2_mixer
 		GLEW::GLEW
+		${OPENGL_LIBRARIES}
 		spdlog::spdlog
 )
 
