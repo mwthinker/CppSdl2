@@ -63,7 +63,7 @@ find_package(SDL2 CONFIG REQUIRED)
 find_package(SDL2-image CONFIG REQUIRED)
 find_package(SDL2-mixer CONFIG REQUIRED)
 find_package(SDL2-ttf CONFIG REQUIRED)
-
+find_package(glm CONFIG REQUIRED)
 find_package(spdlog CONFIG REQUIRED)
 
 option(CppSdl2ImGui "Add ImGui as dependencie: -CppSdl2ImGui=1" OFF)
@@ -76,7 +76,6 @@ if (CppSdl2ImGui)
 endif ()
 
 add_library(CppSdl2 ${SOURCES})
-message(status ${SOURCES})
 
 target_include_directories(CppSdl2
 	PUBLIC
@@ -99,8 +98,6 @@ message(STATUS "CppSdl2Test is available to add: -DCppSdl2Test=1")
 option(CppSdl2Test "Add CppSdl2Test project." OFF)
 
 if (CppSdl2Test)
-	find_package(glm CONFIG REQUIRED)
-
 	set(SOURCES_TEST
 		srcTest/batchtriangles.h
 		srcTest/types.h
@@ -121,7 +118,6 @@ if (CppSdl2Test)
 	target_link_libraries(CppSdl2Test
 		PRIVATE
 			CppSdl2
-			glm
 	)
 	
 	file(COPY dataTest/. DESTINATION ${CMAKE_CURRENT_BINARY_DIR}) # Copy data to build folder.
