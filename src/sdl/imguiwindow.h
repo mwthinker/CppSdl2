@@ -56,7 +56,6 @@ namespace sdl {
 			GLenum lastClipOrigin;
 #endif
 		};
-		void resizeViewport(int width, int height);
 
 		// ImGui SDL2 specific code.
 		bool ImGui_ImplSDL2_ProcessEvent(const SDL_Event& sdlEvent);

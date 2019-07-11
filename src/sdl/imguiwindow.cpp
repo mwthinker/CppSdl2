@@ -132,20 +132,14 @@ namespace sdl {
 	}	
 
 	void ImGuiWindow::update(double deltaTime) {
-		ImVec4 clear_color = {0.45f, 0.55f, 0.60f, 1.00f};
-		auto context = SDL_GL_GetCurrentContext();
-
 		// Start the Dear ImGui frame
 		ImGui_ImplOpenGL3_NewFrame();
 		ImGui_ImplSDL2_NewFrame(deltaTime);
 		ImGui::NewFrame();
 	
-		//ImGui::PushFont(defaultFont_);
-		ImGui::ShowDemoWindow(&showDemoWindow_);
-		//ImGui::PopFont();
-
-		const ImGuiWindowFlags ImGuiNoWindow = ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoMove;
-		const ImGuiWindowFlags ImGuiInnerWindow = ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove;
+		if (showDemoWindow_) {
+            ImGui::ShowDemoWindow(&showDemoWindow_);
+        }
 
 		ImGui::Render();
 		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
@@ -158,15 +152,11 @@ namespace sdl {
 			case SDL_WINDOWEVENT:
 				switch (windowEvent.window.event) {
 					case SDL_WINDOWEVENT_RESIZED:
-						resizeViewport(windowEvent.window.data1, windowEvent.window.data2);
+                        glViewport(0, 0, windowEvent.window.data1, windowEvent.window.data2);
 						break;
 				}
 				break;
 		}
-	}
-
-	void ImGuiWindow::resizeViewport(int width, int height) {
-		glViewport(0, 0, width, height);
 	}
 
 	// You can read the io.WantCaptureMouse, io.WantCaptureKeyboard flags to tell if dear imgui wants to use your inputs.
