@@ -11,10 +11,6 @@ namespace sdl {
 
 	namespace {
 
-		const ImGuiWindowFlags ImGuiNoWindow = ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoMove;
-
-		const ImGuiWindowFlags ImGuiNoWindow2 = ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove;
-
 		/*
 		bool ComboAi(const char* name, int& item, const std::vector<Ai>& ais, ImGuiComboFlags flags = 0) {
 			int oldItem = item;
@@ -98,7 +94,7 @@ namespace sdl {
 	}
 
 	ImGuiWindow::ImGuiWindow() : imGuiFontTexture_(0),
-		imGuiVboHandle_(0), mousePressed_{false, false, false}, clipboardTextData_(0), showDemoWindow_(true),
+		imGuiVboHandle_(0), mousePressed_{false, false, false}, clipboardTextData_(nullptr), showDemoWindow_(true),
 		initiatedOpenGl_(false), initiatedSdl_(false), mouseCursors_{nullptr} {
 
 		for (auto& cursor : mouseCursors_) {
@@ -107,6 +103,10 @@ namespace sdl {
 	}
 
 	ImGuiWindow::~ImGuiWindow() {
+        if (clipboardTextData_) {
+            SDL_free(clipboardTextData_);
+        }
+
 		if (initiatedOpenGl_) {
 			ImGui_ImplOpenGL3_Shutdown();
 		}
@@ -140,6 +140,8 @@ namespace sdl {
 		if (showDemoWindow_) {
             ImGui::ShowDemoWindow(&showDemoWindow_);
         }
+
+        updateImGui(deltaTime);
 
 		ImGui::Render();
 		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
@@ -237,8 +239,7 @@ namespace sdl {
 
 		io.UserData = this;
 		io.SetClipboardTextFn = [](void* thisPointer, const char* text) {
-			auto window = static_cast<ImGuiWindow*>(thisPointer);
-			window->ImGui_ImplSDL2_SetClipboardText(text);
+            SDL_SetClipboardText(text);
 		};
 		io.GetClipboardTextFn = [](void* thisPointer) -> const char* {
 			auto window = static_cast<ImGuiWindow*>(thisPointer);
@@ -360,10 +361,10 @@ namespace sdl {
 	// OpenGL3 Render function.
 	// (this used to be set in io.RenderDrawListsFn and called by ImGui::Render(), but you can now call this directly from your main loop)
 	// Note that this implementation is little overcomplicated because we are saving/setting up/restoring every OpenGL state explicitly, in order to be able to run within any OpenGL engine that doesn't do so.
-	void ImGuiWindow::ImGui_ImplOpenGL3_RenderDrawData(ImDrawData* draw_data) {
+	void ImGuiWindow::ImGui_ImplOpenGL3_RenderDrawData(ImDrawData* drawData) {
 		// Avoid rendering when minimized, scale coordinates for retina displays (screen coordinates != framebuffer coordinates)
-		int fbWidth = (int) (draw_data->DisplaySize.x * draw_data->FramebufferScale.x);
-		int fbHeight = (int) (draw_data->DisplaySize.y * draw_data->FramebufferScale.y);
+		int fbWidth = (int) (drawData->DisplaySize.x * drawData->FramebufferScale.x);
+		int fbHeight = (int) (drawData->DisplaySize.y * drawData->FramebufferScale.y);
 		if (fbWidth <= 0 || fbHeight <= 0) {
 			return;
 		}
@@ -382,11 +383,11 @@ namespace sdl {
 #endif
 
 		// Setup viewport, orthographic projection matrix
-		// Our visible imgui space lies from draw_data->DisplayPos (top left) to draw_data->DisplayPos+data_data->DisplaySize (bottom right). DisplayMin is typically (0,0) for single viewport apps.
+		// Our visible imgui space lies from drawData->DisplayPos (top left) to drawData->DisplayPos+data_data->DisplaySize (bottom right). DisplayMin is typically (0,0) for single viewport apps.
 		glViewport(0, 0, (GLsizei) fbWidth, (GLsizei) fbHeight);
 
-		const auto projMatrix = glm::ortho(draw_data->DisplayPos.x, draw_data->DisplayPos.x + draw_data->DisplaySize.x,
-			draw_data->DisplayPos.y + draw_data->DisplaySize.y, draw_data->DisplayPos.y);
+		const auto projMatrix = glm::ortho(drawData->DisplayPos.x, drawData->DisplayPos.x + drawData->DisplaySize.x,
+			drawData->DisplayPos.y + drawData->DisplaySize.y, drawData->DisplayPos.y);
 
 		shader.useProgram();
 		shader.setMatrix(projMatrix);
@@ -406,12 +407,12 @@ namespace sdl {
 		shader.setVertexAttribPointer();
 
 		// Will project scissor/clipping rectangles into framebuffer space
-		ImVec2 clipOff = draw_data->DisplayPos;         // (0,0) unless using multi-viewports
-		ImVec2 clipScale = draw_data->FramebufferScale; // (1,1) unless using retina display which are often (2,2)
+		ImVec2 clipOff = drawData->DisplayPos;         // (0,0) unless using multi-viewports
+		ImVec2 clipScale = drawData->FramebufferScale; // (1,1) unless using retina display which are often (2,2)
 
 		// Render command lists
-		for (int n = 0; n < draw_data->CmdListsCount; n++) {
-			const ImDrawList* cmd_list = draw_data->CmdLists[n];
+		for (int n = 0; n < drawData->CmdListsCount; n++) {
+			const ImDrawList* cmd_list = drawData->CmdLists[n];
 			size_t idxBufferOffset = 0;
 
 			//imguiVbo.bindData()
@@ -496,8 +497,8 @@ namespace sdl {
 		glGetIntegerv(GL_ARRAY_BUFFER_BINDING, &lastArrayBuffer);
 
 		// Parse GLSL version string
-		int glsl_version = getGlslVersion(sdl::Window::getOpenGlMajorVersion(), sdl::Window::getOpenGlMinorVersion());
-		auto [vertexShader, fragmentShader] = getShader(glsl_version);
+		auto glslVersion = getGlslVersion(sdl::Window::getOpenGlMajorVersion(), sdl::Window::getOpenGlMinorVersion());
+		auto [vertexShader, fragmentShader] = getShader(glslVersion);
 
 		shader = sdl::ImGuiShader(vertexShader, fragmentShader);
 
@@ -615,25 +616,21 @@ namespace sdl {
 		return clipboardTextData_;
 	}
 
-	void ImGuiWindow::ImGui_ImplSDL2_SetClipboardText(const char* text) {
-		SDL_SetClipboardText(text);
-	}
-
 	void ImGuiWindow::ImGui_ImplSDL2_UpdateMouseCursor() {
 		ImGuiIO& io = ImGui::GetIO();
 		if (io.ConfigFlags & ImGuiConfigFlags_NoMouseCursorChange) {
 			return;
 		}
 
-		ImGuiMouseCursor imgui_cursor = ImGui::GetMouseCursor();
-		if (io.MouseDrawCursor || imgui_cursor == ImGuiMouseCursor_None) {
+		ImGuiMouseCursor imGuiCursor = ImGui::GetMouseCursor();
+		if (io.MouseDrawCursor || imGuiCursor == ImGuiMouseCursor_None) {
 			// Hide OS mouse cursor if imgui is drawing it or if it wants no cursor
 			SDL_ShowCursor(SDL_FALSE);
 		} else {
 			// Show OS mouse cursor
-			SDL_SetCursor(mouseCursors_[imgui_cursor] ? mouseCursors_[imgui_cursor] : mouseCursors_[ImGuiMouseCursor_Arrow]);
+			SDL_SetCursor(mouseCursors_[imGuiCursor] ? mouseCursors_[imGuiCursor] : mouseCursors_[ImGuiMouseCursor_Arrow]);
 			SDL_ShowCursor(SDL_TRUE);
 		}
 	}
 
-} // Namespace tetris.
+} // Namespace sdl.

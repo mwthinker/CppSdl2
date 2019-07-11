@@ -5,6 +5,7 @@
 #include "imguishader.h"
 
 #include <imgui.h>
+#include <array>
 
 namespace sdl {
 
@@ -26,6 +27,8 @@ namespace sdl {
 		virtual void eventUpdate(const SDL_Event& windowEvent) override;
 
 	private:
+        virtual void updateImGui(double deltaTime) {};
+
 		struct GLState {
 			GLenum lastActiveTexture;
 
@@ -67,10 +70,9 @@ namespace sdl {
 		bool ImGui_ImplOpenGL3_Init();
 		void ImGui_ImplOpenGL3_Shutdown();
 		void ImGui_ImplOpenGL3_NewFrame();
-		void ImGui_ImplOpenGL3_RenderDrawData(ImDrawData* draw_data);
+		void ImGui_ImplOpenGL3_RenderDrawData(ImDrawData* drawData);
 		void ImGui_ImplSDL2_UpdateMousePosAndButtons();
 		const char* ImGui_ImplSDL2_GetClipboardText();
-		void ImGui_ImplSDL2_SetClipboardText(const char* text);
 		void ImGui_ImplSDL2_UpdateMouseCursor();
 
 		// ImGui specific code.
@@ -86,7 +88,7 @@ namespace sdl {
 		bool initiatedOpenGl_;
 		bool initiatedSdl_;
 
-		bool mousePressed_[3];
+		std::array<bool, 3> mousePressed_;
 		
 		GLState glState_;
 		GLuint imGuiFontTexture_;
@@ -94,8 +96,8 @@ namespace sdl {
 		GLuint imGuiElementsHandle_;
 		
 		sdl::ImGuiShader shader;
-		
-		SDL_Cursor* mouseCursors_[ImGuiMouseCursor_COUNT];
+
+        std::array<SDL_Cursor*, ImGuiMouseCursor_COUNT> mouseCursors_;
 		char* clipboardTextData_;
 	};
 
