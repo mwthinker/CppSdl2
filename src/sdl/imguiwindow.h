@@ -26,6 +26,8 @@ namespace sdl {
 
 		virtual void eventUpdate(const SDL_Event& windowEvent) override;
 
+		const ImGuiShader& getImGuiShader() const;
+
 	private:
         virtual void updateImGui(double deltaTime) {};
 
@@ -95,7 +97,7 @@ namespace sdl {
 		GLuint imGuiVboHandle_;
 		GLuint imGuiElementsHandle_;
 		
-		sdl::ImGuiShader shader;
+		sdl::ImGuiShader shader_;
 
         std::array<SDL_Cursor*, ImGuiMouseCursor_COUNT> mouseCursors_;
 		char* clipboardTextData_;
@@ -107,6 +109,10 @@ namespace sdl {
 
 	inline void ImGuiWindow::setShowDemoWindow(bool show) {
 		showDemoWindow_ = show;
+	}
+
+    inline const ImGuiShader& ImGuiWindow::getImGuiShader() const {
+	    return shader_;
 	}
 
 } // Namespace tetris.

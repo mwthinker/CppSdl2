@@ -389,9 +389,9 @@ namespace sdl {
 		const auto projMatrix = glm::ortho(drawData->DisplayPos.x, drawData->DisplayPos.x + drawData->DisplaySize.x,
 			drawData->DisplayPos.y + drawData->DisplaySize.y, drawData->DisplayPos.y);
 
-		shader.useProgram();
-		shader.setMatrix(projMatrix);
-		shader.setTexture(false);
+        shader_.useProgram();
+        shader_.setMatrix(projMatrix);
+        shader_.setTexture(false);
 
 #ifdef GL_SAMPLER_BINDING
 		glBindSampler(0, 0); // We use combined texture/sampler state. Applications using GL 3.3 may set that otherwise.
@@ -404,7 +404,7 @@ namespace sdl {
 		vao.bind();
 
 		glBindBuffer(GL_ARRAY_BUFFER, imGuiVboHandle_);
-		shader.setVertexAttribPointer();
+        shader_.setVertexAttribPointer();
 
 		// Will project scissor/clipping rectangles into framebuffer space
 		ImVec2 clipOff = drawData->DisplayPos;         // (0,0) unless using multi-viewports
@@ -500,7 +500,7 @@ namespace sdl {
 		auto glslVersion = getGlslVersion(sdl::Window::getOpenGlMajorVersion(), sdl::Window::getOpenGlMinorVersion());
 		auto [vertexShader, fragmentShader] = getShader(glslVersion);
 
-		shader = sdl::ImGuiShader(vertexShader, fragmentShader);
+        shader_ = sdl::ImGuiShader(vertexShader, fragmentShader);
 
 		// Create buffers
 		glGenBuffers(1, &imGuiVboHandle_);
@@ -525,7 +525,7 @@ namespace sdl {
 		imGuiVboHandle_ = 0;
 		imGuiElementsHandle_ = 0;
 
-		shader = sdl::ImGuiShader();
+        shader_ = sdl::ImGuiShader();
 		ImGui_ImplOpenGL3_DestroyFontsTexture();
 	}
 
