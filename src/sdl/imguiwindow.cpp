@@ -34,7 +34,7 @@ namespace sdl {
 
 		constexpr const GLchar* getVertexShaderGlsl_330() {
 			return
-				"#version 330\n"
+				"#version 330 core\n"
 				"uniform mat4 ProjMtx;\n"
 				"in vec2 Position;\n"
 				"in vec2 UV;\n"
@@ -51,7 +51,7 @@ namespace sdl {
 
 		constexpr const GLchar* getFragmentShaderGlsl_330() {
 			return
-				"#version 330\n"
+				"#version 330 core\n"
 				"uniform sampler2D Texture;\n"
 				"in vec2 Frag_UV;\n"
 				"in vec4 Frag_Color;\n"

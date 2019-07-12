@@ -50,6 +50,7 @@ namespace sdl {
 			logger()->warn("[Window] Warning: Unable to set VSync! SDL Error: ", SDL_GetError());
 		}
 
+        logger()->info("[Window] Setup OpenGl version: {}.{}", majorVersionGl_, minorVersionGl_);
 		if (char* version = (char*) glGetString(GL_VERSION)) {
 			logger()->info("[Window] GL_VERSION: {}", version);
 			logger()->info("[Window] GL_SHADING_LANGUAGE_VERSION: {}", (char*) glGetString(GL_SHADING_LANGUAGE_VERSION));
