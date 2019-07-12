@@ -41,7 +41,7 @@ namespace sdl {
 
 	void Window::setupOpenGlContext() {
 		glContext_ = SDL_GL_CreateContext(window_);
-		if (SDL_GL_CreateContext == 0) {
+		if (glContext_ == 0) {
 			logger()->error("[Window] SDL_GL_CreateContext failed: ", SDL_GetError());
 			throw std::exception();
 		}

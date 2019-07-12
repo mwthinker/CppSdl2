@@ -24,6 +24,9 @@ private:
     void update(double deltaTime) override;
 
 	void eventUpdate(const SDL_Event& windowEvent) override;
+
+    std::shared_ptr<TestShader2> shader_;
+    std::shared_ptr<BatchTriangles> batch_;
 };
 
 #endif // TESTIMGUIWINDOW_H

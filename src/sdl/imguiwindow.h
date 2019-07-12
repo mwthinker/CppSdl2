@@ -98,7 +98,6 @@ namespace sdl {
 		GLuint imGuiElementsHandle_;
 		
 		sdl::ImGuiShader shader_;
-
         std::array<SDL_Cursor*, ImGuiMouseCursor_COUNT> mouseCursors_;
 		char* clipboardTextData_;
 	};

@@ -99,6 +99,7 @@ option(CppSdl2Test "Add CppSdl2Test project." OFF)
 
 if (CppSdl2Test)
 	set(SOURCES_TEST
+		srcTest/batchtriangles.cpp
 		srcTest/batchtriangles.h
 		srcTest/types.h
 		srcTest/main.cpp

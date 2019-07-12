@@ -50,7 +50,7 @@ namespace sdl {
 	}
 
 	void ImGuiShader::setTexture(bool useTexture) const {
-		glUniform1i(uTextureIndex_, (int)useTexture);
+		glUniform1i(uTextureIndex_, (int) useTexture);
 	}
 
 } // Namespace sdl.

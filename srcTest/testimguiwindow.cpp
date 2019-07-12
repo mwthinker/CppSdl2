@@ -26,6 +26,12 @@ void TestImGuiWindow::eventUpdate(const SDL_Event& windowEvent) {
 
 void TestImGuiWindow::update(double deltaTime) {
 	ImGuiWindow::update(deltaTime);
+
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    batch_->draw();
+
+    glDisable(GL_BLEND);
 }
 
 void TestImGuiWindow::initOpenGl() {
@@ -34,4 +40,19 @@ void TestImGuiWindow::initOpenGl() {
 
 void TestImGuiWindow::initPreLoop() {
 	ImGuiWindow::initPreLoop();
+    shader_ = std::make_shared<TestShader2>("testShader2_2_1.ver.glsl", "testShader2_2_1.fra.glsl");
+    batch_ = std::make_shared<BatchTriangles>(shader_);
+
+    shader_->setModelMatrix(Mat44(1));
+    shader_->setProjectionMatrix(Mat44(1));
+
+
+    batch_->addRectangle(0.1f, 0.4f, 0.2f, 0.2f);
+    batch_->addTriangle(TestShader2::Vertex(0, 0), TestShader2::Vertex(0.3f, 0), TestShader2::Vertex(0.3f, 0.3f));
+    batch_->addCircle(-0.5f, 0.5f, 0.3f, 40);
+    batch_->addRectangle(TestShader2::Vertex(-0.3f, -0.2f), TestShader2::Vertex(0, 0), TestShader2::Vertex(0.f, 0.1f), TestShader2::Vertex(-0.2f, 0.2f));
+    batch_->addHexagon(-0.1f, 0.1f, 0.3f);
+    batch_->uploadToGraphicCard();
+    batch_->init();
+    sdl::checkGlError();
 }
