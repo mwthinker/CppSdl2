@@ -40,7 +40,7 @@ void TestImGuiWindow::initOpenGl() {
 
 void TestImGuiWindow::initPreLoop() {
 	ImGuiWindow::initPreLoop();
-    shader_ = std::make_shared<TestShader2>("testShader2_2_1.ver.glsl", "testShader2_2_1.fra.glsl");
+    shader_ = std::make_shared<TestShader2>("testShader2_330.ver.glsl", "testShader2_330.fra.glsl");
     batch_ = std::make_shared<BatchTriangles>(shader_);
 
     shader_->setModelMatrix(Mat44(1));
