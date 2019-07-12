@@ -6,28 +6,54 @@
 
 namespace sdl {
 
-	namespace {		
+	namespace {
+
+        enum class LogError {
+            PROGRAM_ERROR,
+            SHADER_ERROR
+	    };
+
+        template <LogError TYPE>
+        void logError(GLuint objectId, const char* shaderString, const char* errorHeader) {
+            GLint infoLen = 0;
+            if constexpr(TYPE == LogError::PROGRAM_ERROR) {
+                glGetProgramiv(objectId, GL_INFO_LOG_LENGTH, &infoLen);
+            } else {
+                glGetShaderiv(objectId, GL_INFO_LOG_LENGTH, &infoLen);
+            }
+            if (infoLen > 1) {
+                char message[256]; // A arbitrary value big enough to contain message.
+                GLsizei size;
+                if constexpr(TYPE == LogError::PROGRAM_ERROR) {
+                    glGetProgramInfoLog(objectId, sizeof(message), &size, message);
+                } else {
+                    glGetShaderInfoLog(objectId, sizeof(message), &size, message);
+                }
+                std::string str;
+                str.append(message, message + size);
+                logger()->error("[Shader] {}, {}: {}", shaderString, errorHeader, str);
+            }
+        }
 
 		GLuint loadShader(GLuint program, GLenum type, const GLchar* shaderSrc) {
 			GLuint shader= glCreateShader(type);
+			if (shader == 0) {
+                logger()->error("[Shader] Failed to create shader: ", shaderSrc);
+                return 0;
+			}
 			glShaderSource(shader, 1, &shaderSrc, 0);
 			checkGlError();
 			glCompileShader(shader);
+
+			GLint compileStatus;
+            glGetShaderiv(shader, GL_COMPILE_STATUS, &compileStatus);
+            if (compileStatus == GL_FALSE) {
+                logError<LogError::SHADER_ERROR>(shader, shaderSrc, "Failed to compile shader: ");
+                return 0;
+            }
 			checkGlError();
 			glAttachShader(program, shader);
 			checkGlError();
-#if _DEBUG
-			GLint infoLen = 0;
-			glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &infoLen);
-			if (infoLen > 1) {
-				char message[256]; // A arbitrary value big enough to contain message.
-				GLsizei size;
-				glGetShaderInfoLog(shader, sizeof(message), &size, message);
-				std::string str;
-				str.append(message, message + size);
-				logger()->error("[Shader] {} , error loading shader: {}", shaderSrc, str);
-			}
-#endif // _DEBUG
 			return shader;
 		}
 
@@ -53,9 +79,9 @@ namespace sdl {
 		attributes_(std::move(other.attributes_)),
 		uniforms_(std::move(other.uniforms_)),
 		location_(other.location_),
-		programObjectId_(other.programObjectId_)
-	{
-		other.location_ = -1;
+		programObjectId_(other.programObjectId_) {
+
+	    other.location_ = -1;
 		other.programObjectId_ = 0;
 	}
 
@@ -128,37 +154,32 @@ namespace sdl {
 			checkGlError();
 			
 			if (programObjectId_ == 0) {
+                logger()->error("[Shader] Failed to create program");
 				return false;
 			}
 
-			loadShader(programObjectId_, GL_VERTEX_SHADER, vShader.c_str());
-			if (!gShader.empty()) {
-				loadShader(programObjectId_, GL_GEOMETRY_SHADER, gShader.c_str());
+			if (0 == loadShader(programObjectId_, GL_VERTEX_SHADER, vShader.c_str())) {
+			    return false;
 			}
-			loadShader(programObjectId_, GL_FRAGMENT_SHADER, fShader.c_str());
+			if (!gShader.empty() && 0 == loadShader(programObjectId_, GL_GEOMETRY_SHADER, gShader.c_str())) {
+                return false;
+			}
+			if (0 == loadShader(programObjectId_, GL_FRAGMENT_SHADER, fShader.c_str())) {
+                return false;
+			}
 
 			// Bind all attributes.
-			for (auto& pair : attributes_) {
-				glBindAttribLocation(programObjectId_, location_, pair.first.c_str());
+			for (auto& [name, location] : attributes_) {
+				glBindAttribLocation(programObjectId_, location_, name.c_str());
 				checkGlError();
-				pair.second = location_++;
+                location = location_++;
 			}
 
 			glLinkProgram(programObjectId_);
-
 			GLint linked;
 			glGetProgramiv(programObjectId_, GL_LINK_STATUS, &linked);
-			if (!linked) {
-				GLint infoLen = 0;
-				glGetProgramiv(programObjectId_, GL_INFO_LOG_LENGTH, &infoLen);
-				if (infoLen > 1) {
-					char message[256];
-					GLsizei size;
-					glGetProgramInfoLog(programObjectId_, sizeof(message), &size, message);
-					std::string str;
-					str.append(message, message + size);
-					logger()->error("[Shader] Error linking program: {}", str);
-				}
+			if (linked == GL_FALSE) {
+                logError<LogError::PROGRAM_ERROR>(programObjectId_,"", "Error linking program");
 				glDeleteProgram(programObjectId_);
 				return false;
 			}
