@@ -64,6 +64,12 @@ namespace sdl {
 			return SDL_CreateRGBSurface(0, w, h, 32, rmask, gmask, bmask, amask);
 		}
 
+		SDL_Surface* createSurface(int w, int h, uint8_t r, uint8_t g, uint8_t b, uint8_t a) {
+			SDL_Surface* s = createSurface(w, h);
+			SDL_FillRect(s, 0, SDL_MapRGB(s->format, r, g, b));
+			return s;
+		}
+
 	} // Namespace helper.
 
 	namespace {
@@ -95,6 +101,14 @@ namespace sdl {
 
 	Texture::Texture(int width, int height, const std::function<void()>& filter) :
 		Texture(helper::createSurface(width, height)) {
+	}
+
+	Texture::Texture(int width, int height, uint8_t r, uint8_t g, uint8_t b, const std::function<void()>& filter) :
+		Texture(width, width, r, g, b, 255, filter) {
+	}
+
+	Texture::Texture(int width, int height, uint8_t r, uint8_t g, uint8_t b, uint8_t a, const std::function<void()>& filter) :
+		Texture(helper::createSurface(width, height, r, g, b, a)) {
 	}
 
 	Texture::Texture(Texture&& texture) noexcept :
