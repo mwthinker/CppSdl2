@@ -129,11 +129,11 @@ namespace sdl {
 
 		ImGui_ImplSDL2_Init();
 		ImGui_ImplOpenGL3_Init();
-	}	
+		ImGui_ImplOpenGL3_NewFrame();
+	}
 
 	void ImGuiWindow::update(double deltaTime) {
 		// Start the Dear ImGui frame
-		ImGui_ImplOpenGL3_NewFrame();
 		ImGui_ImplSDL2_NewFrame(deltaTime);
 		ImGui::NewFrame();
 	
