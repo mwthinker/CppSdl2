@@ -1,4 +1,5 @@
 #include "vertexbufferobject.h"
+#include "logger.h"
 
 namespace sdl {
 
@@ -47,6 +48,8 @@ namespace sdl {
 			glBindBuffer(target, vboId_);
 			glBufferData(target, size, data, usage);
 			checkGlError();
+		} else {
+			logger()->warn("[VertexBufferObject] BindData failed, already binded");
 		}
 	}
 
@@ -55,6 +58,8 @@ namespace sdl {
 			glBindBuffer(target_, vboId_);
 			glBufferSubData(target_, offset, size, data);
 			checkGlError();
+		} else {
+			logger()->warn("[VertexBufferObject] bindSubData failed, data not binded");
 		}
 	}
 
@@ -62,6 +67,8 @@ namespace sdl {
 		if (vboId_ != 0) {
 			glBindBuffer(target_, vboId_);
 			checkGlError();
+		} else {
+			logger()->warn("[VertexBufferObject] bind failed, bindData must be called first");
 		}
 	}
 
