@@ -66,7 +66,7 @@ namespace sdl {
 
 		SDL_Surface* createSurface(int w, int h, uint8_t r, uint8_t g, uint8_t b, uint8_t a) {
 			SDL_Surface* s = createSurface(w, h);
-			SDL_FillRect(s, 0, SDL_MapRGB(s->format, r, g, b));
+			SDL_FillRect(s, 0, SDL_MapRGBA(s->format, r, g, b, a));
 			return s;
 		}
 
@@ -101,10 +101,6 @@ namespace sdl {
 
 	Texture::Texture(int width, int height, const std::function<void()>& filter) :
 		Texture(helper::createSurface(width, height)) {
-	}
-
-	Texture::Texture(int width, int height, uint8_t r, uint8_t g, uint8_t b, const std::function<void()>& filter) :
-		Texture(width, width, r, g, b, 255, filter) {
 	}
 
 	Texture::Texture(int width, int height, uint8_t r, uint8_t g, uint8_t b, uint8_t a, const std::function<void()>& filter) :

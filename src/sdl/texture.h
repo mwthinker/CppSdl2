@@ -45,13 +45,8 @@ namespace sdl {
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 		});
 
-		// Create a filled rgb texture.
-		explicit Texture(int width, int height, uint8_t r = 255, uint8_t g = 255, uint8_t b = 255, const std::function<void()>& filter = []() {
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-		});
-
-		explicit Texture(int width, int height, uint8_t r = 255, uint8_t g = 255, uint8_t b = 255, uint8_t a = 255, const std::function<void()> & filter = []() {
+		// Create a filled rgba texture.
+		explicit Texture(int width, int height, uint8_t, uint8_t g, uint8_t b, uint8_t a = 255, const std::function<void()> & filter = []() {
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 		});
