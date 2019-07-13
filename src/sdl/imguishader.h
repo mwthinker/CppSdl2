@@ -12,6 +12,12 @@ namespace sdl {
 		ImGuiShader();
 		ImGuiShader(const GLchar* vShade, const GLchar* fShader);
 
+		ImGuiShader(const ImGuiShader& sprite) = delete;
+		ImGuiShader& operator=(const ImGuiShader& sprite) = delete;
+
+		ImGuiShader(ImGuiShader&& other) noexcept;
+		ImGuiShader& operator=(ImGuiShader&& other) noexcept;
+
 		void useProgram() const;
 
 		void setVertexAttribPointer() const;
