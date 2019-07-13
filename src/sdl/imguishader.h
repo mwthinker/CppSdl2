@@ -12,8 +12,8 @@ namespace sdl {
 		ImGuiShader();
 		ImGuiShader(const GLchar* vShade, const GLchar* fShader);
 
-		ImGuiShader(const ImGuiShader& sprite) = delete;
-		ImGuiShader& operator=(const ImGuiShader& sprite) = delete;
+		ImGuiShader(const ImGuiShader&) = delete;
+		ImGuiShader& operator=(const ImGuiShader&) = delete;
 
 		ImGuiShader(ImGuiShader&& other) noexcept;
 		ImGuiShader& operator=(ImGuiShader&& other) noexcept;
@@ -24,7 +24,7 @@ namespace sdl {
 
 		void setMatrix(const glm::mat4x4& matrix) const;
 
-		void setTexture(bool useTexture) const;
+		void setTextureId(GLint textureId) const;
 
 	private:
 		sdl::ShaderProgram shader_;

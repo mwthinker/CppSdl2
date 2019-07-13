@@ -117,8 +117,8 @@ namespace sdl {
 		glUniformMatrix4fv(uMatrixIndex_, 1, GL_FALSE, glm::value_ptr(matrix));
 	}
 
-	void ImGuiShader::setTexture(bool useTexture) const {
-		glUniform1i(uTextureIndex_, (int) useTexture);
+	void ImGuiShader::setTextureId(GLint textureId) const {
+		glUniform1i(uTextureIndex_, textureId);
 	}
 
 } // Namespace sdl.

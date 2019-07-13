@@ -391,7 +391,7 @@ namespace sdl {
 
         shader_.useProgram();
         shader_.setMatrix(projMatrix);
-        shader_.setTexture(false);
+        shader_.setTextureId(0);
 
 #ifdef GL_SAMPLER_BINDING
 		glBindSampler(0, 0); // We use combined texture/sampler state. Applications using GL 3.3 may set that otherwise.
