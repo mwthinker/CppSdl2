@@ -145,6 +145,7 @@ void runAll() {
 	testLoadTextureAtlas();
 	testLoadTextureAtlas2();
 	testBatchWindow();
+	testImGuiWindow();
 }
 
 int main(int argc, char** argv) {
@@ -171,8 +172,9 @@ int main(int argc, char** argv) {
 		} else {
 			std::cout << "Incorrect argument " << code << "\n";
 		}
+	} else {
+		runAll();
 	}
-	runAll();
 
 	return 0;
 }

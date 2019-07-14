@@ -32,7 +32,7 @@ BatchTriangles::BatchTriangles(const std::shared_ptr<TestShader2>& shader, int m
 }
 
 BatchTriangles::BatchTriangles(const std::shared_ptr<TestShader2>& shader)
-    : shader_(shader), batch_(GL_TRIANGLES) {
+    : shader_(shader), batch_(GL_TRIANGLES, GL_STATIC_DRAW) {
 
 }
 
