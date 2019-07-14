@@ -64,6 +64,12 @@ namespace sdl {
 			return SDL_CreateRGBSurface(0, w, h, 32, rmask, gmask, bmask, amask);
 		}
 
+		SDL_Surface* createSurface(int w, int h, uint8_t r, uint8_t g, uint8_t b, uint8_t a) {
+			SDL_Surface* s = createSurface(w, h);
+			SDL_FillRect(s, 0, SDL_MapRGBA(s->format, r, g, b, a));
+			return s;
+		}
+
 	} // Namespace helper.
 
 	namespace {
@@ -97,6 +103,10 @@ namespace sdl {
 		Texture(helper::createSurface(width, height)) {
 	}
 
+	Texture::Texture(int width, int height, uint8_t r, uint8_t g, uint8_t b, uint8_t a, const std::function<void()>& filter) :
+		Texture(helper::createSurface(width, height, r, g, b, a)) {
+	}
+
 	Texture::Texture(Texture&& texture) noexcept :
 		imageData_(std::move(texture.imageData_)),
 		firstCallBind_(texture.firstCallBind_),
@@ -120,20 +130,20 @@ namespace sdl {
 	}
 
 	void Texture::bindTexture() const {
-		if (firstCallBind_) {
-			firstCallBind_ = false;
-			if (imageData_->preLoadSurface_ != nullptr) {
-				imageData_->loadImageToGraphic();
-				imageData_->windowInstance_ = Window::getInstanceId();
+		if (imageData_ != nullptr) {
+			if (firstCallBind_) {
+				firstCallBind_ = false;
+				if (imageData_->preLoadSurface_ != nullptr) {
+					imageData_->loadImageToGraphic();
+				} else {
+					glBindTexture(GL_TEXTURE_2D, imageData_->texture_);
+					checkGlError();
+				}
 			} else {
-				glBindTexture(GL_TEXTURE_2D, imageData_->texture_);
-				imageData_->windowInstance_ = Window::getInstanceId();
-				checkGlError();
-			}
-		} else {
-			if (imageData_->texture_ != 0) {
-				glBindTexture(GL_TEXTURE_2D, imageData_->texture_);
-				checkGlError();
+				if (imageData_->texture_ != 0) {
+					glBindTexture(GL_TEXTURE_2D, imageData_->texture_);
+					checkGlError();
+				}
 			}
 		}
 	}
@@ -153,11 +163,11 @@ namespace sdl {
 	}
 	
 	Texture::ImageData::ImageData(std::function<void()> filter) :
-		preLoadSurface_(0), texture_(0), filter_(filter), windowInstance_(0) {
+		preLoadSurface_(0), texture_(0), filter_(filter) {
 	}
 
 	Texture::ImageData::ImageData(SDL_Surface* surface, std::function<void()> filter) :
-		preLoadSurface_(surface), texture_(0), filter_(filter), windowInstance_(0) {
+		preLoadSurface_(surface), texture_(0), filter_(filter) {
 	}
 
 	void Texture::ImageData::loadImageToGraphic() const {
@@ -177,7 +187,7 @@ namespace sdl {
 
 	Texture::ImageData::~ImageData() {
 		// Opengl texture? And the opengl context active?
-		if (texture_ != 0 && windowInstance_ == Window::getInstanceId()) {
+		if (texture_ != 0) {
 			// Is called if the opengl texture is valid and therefore need to be cleaned up.
 			glDeleteTextures(1, &texture_);
 		}

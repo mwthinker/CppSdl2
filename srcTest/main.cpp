@@ -1,5 +1,9 @@
 #include "testwindow.h"
 #include "testwindow2.h"
+
+#if IMGUI_LIB
+#include "testimguiwindow.h"
+#endif // IMGUI_LIB
 #include "types.h"
 
 #include <sdl/sprite.h>
@@ -115,12 +119,60 @@ void testBatchWindow() {
 	}
 }
 
-int main(int argc, char** argv) {
-	sdl::InitSdl sdl;
+void testImGuiWindow() {
+#if IMGUI_LIB
+	TestImGuiWindow w;
+	w.startLoop();
+#endif // IMGUI_LIB
+}
 
+void showHelp(const std::string& programName) {
+	std::cout << "Usage: " << programName << "\n";	
+	std::cout << "\t" << programName << " -1  " << "\n";
+	std::cout << "\t" << programName << " -2  " << "\n";
+	std::cout << "\t" << programName << " -3  " << "\n";
+	std::cout << "\t" << programName << " -4  " << "\n";
+	std::cout << "\n";
+	std::cout << "Options:\n";
+	std::cout << "\t" << "-h --help                show this help" << "\n";
+	std::cout << "\t" << "-1                       testLoadTextureAtlas" << "\n";
+	std::cout << "\t" << "-1                       testLoadTextureAtlas2" << "\n";
+	std::cout << "\t" << "-1                       testBatchWindow" << "\n";
+	std::cout << "\t" << "-1                       testImGuiWindow" << "\n";
+}
+
+void runAll() {
 	testLoadTextureAtlas();
 	testLoadTextureAtlas2();
 	testBatchWindow();
+}
+
+int main(int argc, char** argv) {
+	sdl::InitSdl sdl;
+	   
+	if (argc >= 2) {
+		std::string programName = *argv;
+		std::string code(*(argv + 1));
+		if (code == "-h" || code == "--help") {
+			showHelp(programName);
+			return 0;
+		} else if (code == "-1") {
+			testLoadTextureAtlas();
+			return 0;
+		} else if (code == "-2") {
+			testLoadTextureAtlas2();
+			return 0;
+		} else if (code == "-3") {
+			testBatchWindow();
+			return 0;
+		} else if (code == "-4") {
+			testImGuiWindow();
+			return 0;
+		} else {
+			std::cout << "Incorrect argument " << code << "\n";
+		}
+	}
+	runAll();
 
 	return 0;
 }

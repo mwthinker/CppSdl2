@@ -3,7 +3,6 @@
 
 #include "opengl.h"
 
-#include <memory>
 #include <string>
 #include <map>
 
@@ -61,14 +60,11 @@ namespace sdl {
 		}
 
 	private:
-		static int currentProgramId;
-		
 		std::map<std::string, int> attributes_;
 		mutable std::map<std::string, int> uniforms_;
 
 		int location_;
 		GLuint programObjectId_;
-		int windowInstance_;
 	};
 
 } // Namespace sdl.

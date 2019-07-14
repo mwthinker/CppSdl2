@@ -10,7 +10,7 @@ namespace sdl {
 	Font::Font() noexcept : characterSize_(0) {
 	}
 
-	Font::Font(Font&& font) noexcept : fontData_(std::move(fontData_)), characterSize_(font.characterSize_) {
+	Font::Font(Font&& font) noexcept : fontData_(std::move(font.fontData_)), characterSize_(font.characterSize_) {
 		font.characterSize_ = 0;
 	}
 	

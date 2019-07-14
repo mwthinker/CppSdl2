@@ -5,3 +5,6 @@ vcpkg install sdl2:x64-windows
 vcpkg install glew:x64-windows
 vcpkg install spdlog:x64-windows
 vcpkg install glm:x64-windows
+
+# Optional
+vcpkg install imgui:x64-windows

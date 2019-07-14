@@ -23,23 +23,25 @@ namespace sdl {
 			}
 			glGetError(); // Ignore, silly error which glew may cause.
 		}
+
+		constexpr int DEFAULT_MAJOR_VERSION_GL = 3;
+		constexpr int DEFAULT_MINOR_VERSION_GL = 3;
 	}
 
-	int Window::nbrCurrentInstance = 0;
+	Window::Window() : Window(DEFAULT_MAJOR_VERSION_GL, DEFAULT_MINOR_VERSION_GL) {
+	}
 
-	int Window::majorVersionGl = 2;
-	int Window::minorVersionGl = 1;
-
-	Window::Window() : window_(nullptr), x_(-1), y_(-1), icon_(nullptr), width_(800), height_(800),
+	Window::Window(int majorVersionGl, int minorVersionGl) : window_(nullptr), x_(-1), y_(-1), icon_(nullptr), width_(800), height_(800),
 		title_(""), resizable_(true), bordered_(true), fullScreen_(false), sleepingTime_(-1), quit_(false),
-		glContext_(nullptr), glBitfield_(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT) {
+		glContext_(nullptr), glBitfield_(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT),
+		majorVersionGl_(majorVersionGl), minorVersionGl_(minorVersionGl) {
 
 		logger()->info("[Window] Creating Window");
 	}
 
 	void Window::setupOpenGlContext() {
 		glContext_ = SDL_GL_CreateContext(window_);
-		if (SDL_GL_CreateContext == 0) {
+		if (glContext_ == 0) {
 			logger()->error("[Window] SDL_GL_CreateContext failed: ", SDL_GetError());
 			throw std::exception();
 		}
@@ -48,6 +50,7 @@ namespace sdl {
 			logger()->warn("[Window] Warning: Unable to set VSync! SDL Error: ", SDL_GetError());
 		}
 
+        logger()->info("[Window] Setup OpenGl version: {}.{}", majorVersionGl_, minorVersionGl_);
 		if (char* version = (char*) glGetString(GL_VERSION)) {
 			logger()->info("[Window] GL_VERSION: {}", version);
 			logger()->info("[Window] GL_SHADING_LANGUAGE_VERSION: {}", (char*) glGetString(GL_SHADING_LANGUAGE_VERSION));
@@ -62,14 +65,9 @@ namespace sdl {
 	Window::~Window() {
 		if (icon_) {
 			SDL_FreeSurface(icon_);
-			icon_ = nullptr;
 		}
 
 		if (window_ != nullptr) {
-			// A passive way to signal the textures that the current
-			// OpenGL context is not active.
-			++nbrCurrentInstance;
-
 			// Clean up current OpenGL context and the window.
 			SDL_GL_DeleteContext(glContext_);
 			SDL_GL_UnloadLibrary();
@@ -78,7 +76,7 @@ namespace sdl {
 	}
 
 	void Window::startLoop() {
-		logger()->info("[Window] Loop starting");
+		logger()->info("[Window] Init loop");
 		if (!window_) {
 			Uint32 flags = SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL;
 			if (resizable_) {
@@ -105,7 +103,7 @@ namespace sdl {
 				flags
 			);
 
-			if (window_ == 0) {
+			if (window_ == nullptr) {
 				logger()->error("[Window] SDL_CreateWindow failed: {}", SDL_GetError());
 				throw std::exception();
 			} else {
@@ -113,39 +111,41 @@ namespace sdl {
 			}
 
 			if (icon_) {
+				logger()->debug("[Window] Windows icon updated");
 				SDL_SetWindowIcon(window_, icon_);
 				SDL_FreeSurface(icon_);
 				icon_ = nullptr;
 			}
-
 			quit_ = false;
 
 			setupOpenGlContext();
-			++nbrCurrentInstance;
-
 			initPreLoop();
-			
-			auto time = std::chrono::high_resolution_clock::now();
-			while (!quit_) {
-				glClear(glBitfield_);
-				
-				SDL_Event eventSDL;
-				while (SDL_PollEvent(&eventSDL)) {
-					eventUpdate(eventSDL);
-				}
-
-				auto currentTime = std::chrono::high_resolution_clock::now();
-				std::chrono::duration<double> delta = currentTime - time;
-				time = currentTime;
-				update(delta.count());
-
-				if (sleepingTime_ >= 0) {
-					SDL_Delay(sleepingTime_);
-				}
-				SDL_GL_SwapWindow(window_);
-			}
+			runLoop();
 		}
 		logger()->info("[Window] Loop ended");
+	}
+
+	void Window::runLoop() {
+		logger()->info("[Window] Loop starting");
+		auto time = std::chrono::high_resolution_clock::now();
+		while (!quit_) {
+			glClear(glBitfield_);
+				
+			SDL_Event eventSDL;
+			while (SDL_PollEvent(&eventSDL)) {
+				eventUpdate(eventSDL);
+			}
+
+			auto currentTime = std::chrono::high_resolution_clock::now();
+			auto delta = currentTime - time;
+			time = currentTime;
+			update(delta.count());
+
+			if (sleepingTime_ >= 0) {
+				SDL_Delay(sleepingTime_);
+			}
+			SDL_GL_SwapWindow(window_);
+		}
 	}
 
 	void Window::setBordered(bool bordered) {
@@ -182,7 +182,7 @@ namespace sdl {
 		}
 	}
 
-	void Window::setIcon(std::string icon) {
+	void Window::setIcon(const std::string& icon) {
 		if (icon_) {
 			SDL_FreeSurface(icon_);
 			icon_ = nullptr;
@@ -197,7 +197,7 @@ namespace sdl {
 		}
 	}
 
-	void Window::setTitle(std::string title) {
+	void Window::setTitle(const std::string& title) {
 		if (window_) {
 			logger()->info("[Window] tile named to {}", title);
 			SDL_SetWindowTitle(window_, title.c_str());
@@ -226,9 +226,20 @@ namespace sdl {
 		return pair;
 	}
 
+	std::pair<int, int> Window::getDrawableSize() const {
+		std::pair<int, int> pair;
+		if (window_) {
+			SDL_GL_GetDrawableSize(window_, &pair.first, &pair.second);
+		} else {
+			pair.first = width_;
+			pair.second = height_;
+		}
+		return pair;
+	}
+
 	void Window::setWindowSize(int width, int height) {
 		if (window_) {
-			logger()->info("[Window] setWindowSize: (w, h) = ({}, {})", width, height);
+			logger()->info("[Window] Resizing: (w, h) = ({}, {})", width, height);
 			SDL_SetWindowSize(window_, width, height);
 		} else {
 			width_ = width;
@@ -267,24 +278,16 @@ namespace sdl {
 			fullScreen_ = fullScreen;
 		}
 	}
-
-	void Window::setOpenGlVersion(int majorVersion, int minorVersion) {
-		if (!window_) {
-			// Can only change opengl version before window creation.
-			majorVersionGl = majorVersion;
-			minorVersionGl = minorVersion;
-		}
-	}
-
+	
 	void Window::initOpenGl() {
 		SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
-		SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, majorVersionGl);
-		SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, minorVersionGl);
+		SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, majorVersionGl_);
+		SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, minorVersionGl_);
 		SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
 
 		if (SDL_GL_LoadLibrary(0) != 0) {
 			logger()->error("[Window] SDL_GL_LoadLibrary failed {}", SDL_GetError());
-			logger()->error("[Window] Failed to load OpenGL version {}.{}", majorVersionGl, minorVersionGl);
+			logger()->error("[Window] Failed to load OpenGL version {}.{}", majorVersionGl_, minorVersionGl_);
 			throw std::exception();
 		}
 	}

@@ -10,6 +10,8 @@
 *.layout
 *.depend
 /build*
+/.idea/
+/cmake-build-debug/
 
 #################
 ## Eclipse
