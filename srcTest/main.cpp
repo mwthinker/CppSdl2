@@ -1,6 +1,9 @@
 #include "testwindow.h"
 #include "testwindow2.h"
+
+#if IMGUI_LIB
 #include "testimguiwindow.h"
+#endif // IMGUI_LIB
 #include "types.h"
 
 #include <sdl/sprite.h>
@@ -117,8 +120,10 @@ void testBatchWindow() {
 }
 
 void testImGuiWindow() {
+#if IMGUI_LIB
 	TestImGuiWindow w;
 	w.startLoop();
+#endif // IMGUI_LIB
 }
 
 void showHelp(const std::string& programName) {

@@ -66,7 +66,8 @@ find_package(SDL2-ttf CONFIG REQUIRED)
 find_package(glm CONFIG REQUIRED)
 find_package(spdlog CONFIG REQUIRED)
 
-option(CppSdl2ImGui "Add ImGui as dependencie: -CppSdl2ImGui=1" OFF)
+message(STATUS "Add ImGui as dependencie: -CppSdl2ImGui=1")
+option(CppSdl2ImGui "Add ImGui as dependencie" OFF)
 set(ImGuiLib "")
 if (CppSdl2ImGui)
 	find_package(imgui CONFIG REQUIRED)
@@ -98,13 +99,16 @@ message(STATUS "CppSdl2Test is available to add: -DCppSdl2Test=1")
 option(CppSdl2Test "Add CppSdl2Test project." OFF)
 
 if (CppSdl2Test)
+	set(IMGUI_SOURCE_TEST
+		srcTest/testimguiwindow.cpp
+		srcTest/testimguiwindow.h
+	)
+
 	set(SOURCES_TEST
 		srcTest/batchtriangles.cpp
 		srcTest/batchtriangles.h
 		srcTest/types.h
 		srcTest/main.cpp
-		srcTest/testimguiwindow.cpp
-		srcTest/testimguiwindow.h
 		srcTest/testshader.cpp
 		srcTest/testshader.h
 		srcTest/testshader2.h
@@ -113,6 +117,11 @@ if (CppSdl2Test)
 		srcTest/testwindow.cpp
 		srcTest/testwindow.h
 	)
+
+	if (CppSdl2ImGui)
+		set(SOURCES_TEST "${SOURCES_TEST};${IMGUI_SOURCE_TEST}")
+		add_compile_definitions(IMGUI_LIB)
+	endif ()
 	
 	add_executable(CppSdl2Test ${SOURCES_TEST})
 
