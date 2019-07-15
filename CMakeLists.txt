@@ -5,7 +5,7 @@ if(DEFINED ENV{VCPKG_ROOT} AND NOT DEFINED CMAKE_TOOLCHAIN_FILE)
 	set(CMAKE_TOOLCHAIN_FILE "${VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake"
 		CACHE STRING ""
 	)
-	message(STATUS "Use VCPKG CMAKE_TOOLCHAIN_FILE")
+	message(STATUS "Use VCPKG CMAKE_TOOLCHAIN_FILE: ${CMAKE_TOOLCHAIN_FILE}")
 endif()
 
 project(CppSdl2
@@ -66,7 +66,7 @@ find_package(SDL2-ttf CONFIG REQUIRED)
 find_package(glm CONFIG REQUIRED)
 find_package(spdlog CONFIG REQUIRED)
 
-message(STATUS "Add ImGui as dependencie: -CppSdl2ImGui=1")
+message(STATUS "Add ImGui as dependencie: -DCppSdl2ImGui=1")
 option(CppSdl2ImGui "Add ImGui as dependencie" OFF)
 set(ImGuiLib "")
 if (CppSdl2ImGui)

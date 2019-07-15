@@ -2,7 +2,6 @@
 #define CPPSDL2_SDL_BATCH_H
 
 #include "vertexbufferobject.h"
-#include "vertexarrayobject.h"
 #include "logger.h"
 
 #include <algorithm>
