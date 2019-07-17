@@ -121,4 +121,3 @@ void BatchTriangles::draw() const {
     vao_.bind();
     batch_.draw();
 }
-

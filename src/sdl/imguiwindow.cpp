@@ -237,7 +237,6 @@ namespace sdl {
 		io.KeyMap[ImGuiKey_Y] = SDL_SCANCODE_Y;
 		io.KeyMap[ImGuiKey_Z] = SDL_SCANCODE_Z;
 
-		io.UserData = this;
 		io.SetClipboardTextFn = [](void* thisPointer, const char* text) {
             SDL_SetClipboardText(text);
 		};
@@ -246,7 +245,7 @@ namespace sdl {
 			return window->ImGui_ImplSDL2_GetClipboardText();
 		};
 		
-		io.ClipboardUserData = nullptr;
+		io.ClipboardUserData = this;
 
 		mouseCursors_[ImGuiMouseCursor_Arrow] = SDL_CreateSystemCursor(SDL_SYSTEM_CURSOR_ARROW);
 		mouseCursors_[ImGuiMouseCursor_TextInput] = SDL_CreateSystemCursor(SDL_SYSTEM_CURSOR_IBEAM);
@@ -267,12 +266,6 @@ namespace sdl {
 	}
 
 	void ImGuiWindow::ImGui_ImplSDL2_Shutdown() {
-		// Destroy last known clipboard data
-		if (clipboardTextData_) {
-			SDL_free(clipboardTextData_);
-		}
-		clipboardTextData_ = nullptr;
-
 		// Destroy SDL mouse cursors.
 		for (auto& cursor : mouseCursors_) {
 			SDL_FreeCursor(cursor);
@@ -289,7 +282,7 @@ namespace sdl {
 		auto [displayW, displayH] = getDrawableSize();		
 		io.DisplaySize = {(float) w, (float) h};
 		if (w > 0 && h > 0) {
-			io.DisplayFramebufferScale = {(float)displayW / w, (float)displayH / h };
+			io.DisplayFramebufferScale = {(float) displayW / w, (float) displayH / h };
 		}
 		io.DeltaTime = (float) deltaTime;
 		ImGui_ImplSDL2_UpdateMousePosAndButtons();
