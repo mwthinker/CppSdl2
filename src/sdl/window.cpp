@@ -139,7 +139,7 @@ namespace sdl {
 			auto currentTime = std::chrono::high_resolution_clock::now();
 			auto delta = currentTime - time;
 			time = currentTime;
-			update(delta.count());
+			update(std::chrono::duration<double>(delta).count());
 
 			if (sleepingTime_ >= 0) {
 				SDL_Delay(sleepingTime_);
