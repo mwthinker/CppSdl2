@@ -172,7 +172,7 @@ namespace sdl {
 
 	void Texture::ImageData::loadImageToGraphic() const {
 		// Current surface is valid?
-		if (preLoadSurface_ != 0) {
+		if (preLoadSurface_ != nullptr) {
 			helper::flipVertical(preLoadSurface_); // SDL and opengl uses different orientations.
 			texture_ = sdlGlLoadTexture(preLoadSurface_); // Load to texture.
 			SDL_FreeSurface(preLoadSurface_);
@@ -186,9 +186,8 @@ namespace sdl {
 	}
 
 	Texture::ImageData::~ImageData() {
-		// Opengl texture? And the opengl context active?
+		// Opengl texture?
 		if (texture_ != 0) {
-			// Is called if the opengl texture is valid and therefore need to be cleaned up.
 			glDeleteTextures(1, &texture_);
 		}
 

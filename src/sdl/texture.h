@@ -91,8 +91,6 @@ namespace sdl {
 		}
 
 	private:
-		//void loadTexture()
-
 		// The texture object takes over the ownership of the surface and is responsible of deallocation.
 		// Not safe to use surface outside this class after calling the constuctor.
 		explicit Texture(SDL_Surface* surface, const std::function<void()>& filter = []() {
