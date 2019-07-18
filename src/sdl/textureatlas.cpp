@@ -29,38 +29,34 @@ namespace sdl {
 		// Image doesn't fit?
 		if (image->w > width || image->h > height) {
 			// Image to large!
-			return 0;
+			return nullptr;
 		}
 		root = std::make_shared<Node>(0, 0, width, height);
 		return root->insert(image, border);
 	}
 
-	TextureAtlas::Node::Node(int x, int y, int w, int h) : image_(0) {
-		rect_.x = x;
-		rect_.y = y;
-		rect_.w = w;
-		rect_.h = h;
+	TextureAtlas::Node::Node(int x, int y, int w, int h) : image_(nullptr), rect_{x, y, w, h} {
 	}
 
 	std::shared_ptr<TextureAtlas::Node> TextureAtlas::Node::insert(SDL_Surface* image, int border) {
 		// Is not a leaf!
 		if (left_ != 0 && right_ != 0) {
 			auto node = left_->insert(image, border);
-			if (node != 0) {
+			if (node != nullptr) {
 				// Image inserted.
 				return node;
 			}
 			// Image didn't fit, try the other node.
 			return right_->insert(image, border);
 		} else {
-			if (image_ != 0) {
+			if (image_ != nullptr) {
 				// Node is already filled!
-				return 0;
+				return nullptr;
 			}
 			
 			if (image->w + 2 * border > rect_.w || image->h + 2 * border > rect_.h) {
 				// Image to large!
-				return 0;
+				return nullptr;
 			}
 
 			// Fits perfectly?
@@ -119,7 +115,7 @@ namespace sdl {
 		auto it = images_.find(key);
 		if (it == images_.end()) {
 			SDL_Surface* image = IMG_Load(filename.c_str());
-			if (image != 0) {
+			if (image != nullptr) {
 				Sprite sprite = add(image, border, key);
 				SDL_FreeSurface(image);
 				return sprite;
