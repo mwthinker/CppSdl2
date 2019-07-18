@@ -78,9 +78,9 @@ namespace sdl {
 		void ImGui_ImplSDL2_UpdateMouseCursor();
 
 		// ImGui specific code.
-		bool ImGui_ImplOpenGL3_CreateFontsTexture();
+		void ImGui_ImplOpenGL3_CreateFontsTexture();
 		void ImGui_ImplOpenGL3_DestroyFontsTexture();
-		bool ImGui_ImplOpenGL3_CreateDeviceObjects();
+		void ImGui_ImplOpenGL3_CreateDeviceObjects();
 		void ImGui_ImplOpenGL3_DestroyDeviceObjects();
 		void backupGlState();
 		void restoreGlState();

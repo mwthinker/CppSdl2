@@ -149,7 +149,7 @@ void runAll() {
 }
 
 int main(int argc, char** argv) {
-	sdl::InitSdl sdl;
+	sdl::InitSdl sdl(SDL_INIT_VIDEO | SDL_INIT_AUDIO | SDL_INIT_GAMECONTROLLER);
 	   
 	if (argc >= 2) {
 		std::string programName = *argv;

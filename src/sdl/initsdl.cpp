@@ -7,36 +7,38 @@
 
 namespace sdl {
 
-	InitSdl::InitSdl(Uint32 flags) {
-		if (nbrOfInstances < 1) {
+	InitSdl::InitSdl(Uint32 flags) : flags_(flags) {
+		if (flags & SDL_INIT_VIDEO) {
 			initSdl();
+		}
+		if (flags & SDL_INIT_AUDIO) {
 			initMixer();
-			initTtf();
+		}
+		if (flags & SDL_INIT_GAMECONTROLLER) {
 			initJoystick();
 		}
-		++nbrOfInstances;
 	}
 
 	InitSdl::~InitSdl() {
-		--nbrOfInstances;
-		if (nbrOfInstances < 1) {
+		if (flags_ & SDL_INIT_GAMECONTROLLER) {
 			SDL_JoystickEventState(SDL_DISABLE);
-			TTF_Quit();
+		}
+		if (flags_ & SDL_INIT_AUDIO) {
 			Mix_AllocateChannels(0);
 			Mix_CloseAudio();
+		}
+		if (flags_ & SDL_INIT_VIDEO) {
+			TTF_Quit();
 			SDL_Quit();
 		}
 	}
 
 	void InitSdl::initSdl() {
-		if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO | SDL_INIT_GAMECONTROLLER)) {
+		if (SDL_Init(flags_)) {
 			logger()->error("[InitSdl] Unable to init SDL: {}", SDL_GetError());
-		}
-	}
-
-	void InitSdl::initTtf() {
-		if (!TTF_WasInit() && TTF_Init() == -1) {
-			logger()->error("[InitTtf] InitTtf failed");
+			if (!TTF_WasInit() && TTF_Init() == -1) {
+				logger()->error("[InitTtf] InitTtf failed");
+			}
 		}
 	}
 
@@ -51,7 +53,5 @@ namespace sdl {
 	void InitSdl::initJoystick() {
 		SDL_JoystickEventState(SDL_ENABLE);
 	}
-
-	int InitSdl::nbrOfInstances = 0;
 
 } // Namespace sdl.

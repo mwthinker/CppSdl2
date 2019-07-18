@@ -7,19 +7,22 @@ namespace sdl {
 
 	class InitSdl {
 	public:
-		InitSdl(Uint32 flags = SDL_INIT_VIDEO | SDL_INIT_AUDIO | SDL_INIT_GAMECONTROLLER);
+		InitSdl(Uint32 flags = SDL_INIT_VIDEO);
 		~InitSdl();
 		
 		InitSdl(const InitSdl&) = delete;
 		InitSdl& operator=(const InitSdl&) = delete;
 
+		Uint32 getFlags() const {
+			return flags_;
+		}
+
 	private:
 		void initSdl();
 		void initMixer();
-		void initTtf();
 		void initJoystick();
 
-		static int nbrOfInstances;
+		Uint32 flags_;
 	};
 
 } // Namespace sdl.

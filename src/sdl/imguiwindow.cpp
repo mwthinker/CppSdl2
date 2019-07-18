@@ -447,7 +447,7 @@ namespace sdl {
 		restoreGlState();
 	}
 
-	bool ImGuiWindow::ImGui_ImplOpenGL3_CreateFontsTexture() {
+	void ImGuiWindow::ImGui_ImplOpenGL3_CreateFontsTexture() {
 		// Build texture atlas
 		ImGuiIO& io = ImGui::GetIO();
 		unsigned char* pixels;
@@ -471,7 +471,6 @@ namespace sdl {
 
 		// Restore state
 		glBindTexture(GL_TEXTURE_2D, lastTexture);
-		return true;
 	}
 
 	void ImGuiWindow::ImGui_ImplOpenGL3_DestroyFontsTexture() {
@@ -483,7 +482,7 @@ namespace sdl {
 		}
 	}
 
-	bool ImGuiWindow::ImGui_ImplOpenGL3_CreateDeviceObjects() {
+	void ImGuiWindow::ImGui_ImplOpenGL3_CreateDeviceObjects() {
 		// Backup GL state
 		GLint lastTexture, lastArrayBuffer;
 		glGetIntegerv(GL_TEXTURE_BINDING_2D, &lastTexture);
@@ -504,7 +503,6 @@ namespace sdl {
 		// Restore modified GL state
 		glBindTexture(GL_TEXTURE_2D, lastTexture);
 		glBindBuffer(GL_ARRAY_BUFFER, lastArrayBuffer);
-		return true;
 	}
 
 	void ImGuiWindow::ImGui_ImplOpenGL3_DestroyDeviceObjects() {
