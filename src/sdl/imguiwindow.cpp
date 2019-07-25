@@ -94,7 +94,7 @@ namespace sdl {
 	}
 
 	ImGuiWindow::ImGuiWindow() : imGuiFontTexture_(0),
-		imGuiVboHandle_(0), mousePressed_{false, false, false}, clipboardTextData_(nullptr), showDemoWindow_(true),
+		mousePressed_{false, false, false}, clipboardTextData_(nullptr), showDemoWindow_(true),
 		initiatedOpenGl_(false), initiatedSdl_(false), mouseCursors_{nullptr} {
 
 		for (auto& cursor : mouseCursors_) {
@@ -396,7 +396,7 @@ namespace sdl {
 		vao.create();
 		vao.bind();
 
-		glBindBuffer(GL_ARRAY_BUFFER, imGuiVboHandle_);
+        imGuiVbo_.bind();
         shader_.setVertexAttribPointer();
 
 		// Will project scissor/clipping rectangles into framebuffer space
@@ -408,12 +408,8 @@ namespace sdl {
 			const ImDrawList* cmd_list = drawData->CmdLists[n];
 			size_t idxBufferOffset = 0;
 
-			//imguiVbo.bindData()
-			glBindBuffer(GL_ARRAY_BUFFER, imGuiVboHandle_);
-			glBufferData(GL_ARRAY_BUFFER, (GLsizeiptr)cmd_list->VtxBuffer.Size * sizeof(ImDrawVert), (const GLvoid*)cmd_list->VtxBuffer.Data, GL_STREAM_DRAW);
-
-			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, imGuiElementsHandle_);
-			glBufferData(GL_ELEMENT_ARRAY_BUFFER, (GLsizeiptr)cmd_list->IdxBuffer.Size * sizeof(ImDrawIdx), (const GLvoid*)cmd_list->IdxBuffer.Data, GL_STREAM_DRAW);
+            imGuiVbo_.bindData(GL_ARRAY_BUFFER, (GLsizeiptr)cmd_list->VtxBuffer.Size * sizeof(ImDrawVert), (const GLvoid*)cmd_list->VtxBuffer.Data, GL_STREAM_DRAW);
+            imGuiElementsVbo_.bindData(GL_ELEMENT_ARRAY_BUFFER, (GLsizeiptr)cmd_list->IdxBuffer.Size * sizeof(ImDrawIdx), (const GLvoid*)cmd_list->IdxBuffer.Data, GL_STREAM_DRAW);
 
 			for (int cmd_i = 0; cmd_i < cmd_list->CmdBuffer.Size; cmd_i++) {
 				const ImDrawCmd* pcmd = &cmd_list->CmdBuffer[cmd_i];
@@ -495,8 +491,8 @@ namespace sdl {
         shader_ = sdl::ImGuiShader(vertexShader, fragmentShader);
 
 		// Create buffers
-		glGenBuffers(1, &imGuiVboHandle_);
-		glGenBuffers(1, &imGuiElementsHandle_);
+        imGuiVbo_.generate();
+        imGuiElementsVbo_.generate();
 
 		ImGui_ImplOpenGL3_CreateFontsTexture();
 
@@ -506,15 +502,7 @@ namespace sdl {
 	}
 
 	void ImGuiWindow::ImGui_ImplOpenGL3_DestroyDeviceObjects() {
-		if (imGuiVboHandle_) {
-			glDeleteBuffers(1, &imGuiVboHandle_);
-		}
-		if (imGuiElementsHandle_) {
-			glDeleteBuffers(1, &imGuiElementsHandle_);
-		}
 
-		imGuiVboHandle_ = 0;
-		imGuiElementsHandle_ = 0;
 
         shader_ = sdl::ImGuiShader();
 		ImGui_ImplOpenGL3_DestroyFontsTexture();

@@ -9,14 +9,9 @@ namespace sdl {
 	}
 
 	VertexBufferObject::~VertexBufferObject() {
-		// Opengl buffer loaded? And the opengl context active?
 		if (vboId_ != 0) {
-			// Is called if the buffer is valid and therefore need to be cleaned up.
 			glDeleteBuffers(1, &vboId_);
 			checkGlError();
-			vboId_ = 0;
-			size_ = 0;
-			target_ = 0;
 		}
 	}
 
@@ -40,27 +35,30 @@ namespace sdl {
 	}
 
 	void VertexBufferObject::bindData(GLenum target, GLsizeiptr size, const GLvoid* data, GLenum usage) {
-		if (vboId_ == 0) {
-			target_ = target;
-			size_ = size;
-			
-			glGenBuffers(1, &vboId_);
-			glBindBuffer(target, vboId_);
-			glBufferData(target, size, data, usage);
-			checkGlError();
-		} else {
-			logger()->warn("[VertexBufferObject] BindData failed, already binded");
-		}
+        target_ = target;
+        size_ = size;
+
+        generate();
+        glBindBuffer(target, vboId_);
+        glBufferData(target, size, data, usage);
+        checkGlError();
 	}
 
 	void VertexBufferObject::bindSubData(GLsizeiptr offset, GLsizeiptr size, const GLvoid* data) const {
-		if (vboId_ != 0) {
+		if (vboId_ != 0 && target_ != 0) {
 			glBindBuffer(target_, vboId_);
 			glBufferSubData(target_, offset, size, data);
 			checkGlError();
 		} else {
-			logger()->warn("[VertexBufferObject] bindSubData failed, data not binded");
+		    logger()->warn("[VertexBufferObject] Calling bindSubData failed, must call bindData first");
 		}
+	}
+
+    void VertexBufferObject::generate() {
+        if (vboId_ == 0) {
+            glGenBuffers(1, &vboId_);
+            checkGlError();
+        }
 	}
 
 	void VertexBufferObject::bind() const {

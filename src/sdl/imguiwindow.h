@@ -3,6 +3,7 @@
 
 #include "window.h"
 #include "imguishader.h"
+#include "vertexbufferobject.h"
 
 #include <imgui.h>
 #include <array>
@@ -94,8 +95,8 @@ namespace sdl {
 		
 		GLState glState_;
 		GLuint imGuiFontTexture_;
-		GLuint imGuiVboHandle_;
-		GLuint imGuiElementsHandle_;
+		VertexBufferObject imGuiVbo_;
+        VertexBufferObject imGuiElementsVbo_;
 		
 		sdl::ImGuiShader shader_;
         std::array<SDL_Cursor*, ImGuiMouseCursor_COUNT> mouseCursors_;
