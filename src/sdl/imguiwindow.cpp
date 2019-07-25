@@ -133,7 +133,7 @@ namespace sdl {
 	}
 
 	void ImGuiWindow::update(double deltaTime) {
-        preImGuiUpdate(deltaTime);
+        imGuiPreUpdate(deltaTime);
 
 		ImGui_ImplSDL2_NewFrame(deltaTime);
 		ImGui::NewFrame();
@@ -142,12 +142,12 @@ namespace sdl {
             ImGui::ShowDemoWindow(&showDemoWindow_);
         }
 
-        updateImGui(deltaTime);
+        imGuiUpdate(deltaTime);
 
 		ImGui::Render();
 		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
-        postImGuiUpdate(deltaTime);
+        imGuiPostUpdate(deltaTime);
 	}
 
 	void ImGuiWindow::eventUpdate(const SDL_Event& windowEvent) {

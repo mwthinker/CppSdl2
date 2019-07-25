@@ -30,9 +30,9 @@ namespace sdl {
 	private:
         virtual void update(double deltaTime) override final;
 
-        virtual void preImGuiUpdate(double deltaTime) {};
-        virtual void postImGuiUpdate(double deltaTime) {};
-        virtual void updateImGui(double deltaTime) {};
+        virtual void imGuiPreUpdate(double deltaTime) {};
+        virtual void imGuiPostUpdate(double deltaTime) {};
+        virtual void imGuiUpdate(double deltaTime) {};
 
 		struct GLState {
 			GLenum lastActiveTexture;

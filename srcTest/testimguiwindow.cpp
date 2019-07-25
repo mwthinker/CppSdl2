@@ -24,7 +24,7 @@ void TestImGuiWindow::eventUpdate(const SDL_Event& windowEvent) {
 	}
 }
 
-void TestImGuiWindow::preImGuiUpdate(double deltaTime) {
+void TestImGuiWindow::imGuiPreUpdate(double deltaTime) {
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     batch_->draw();
