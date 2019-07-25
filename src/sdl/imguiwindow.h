@@ -23,13 +23,15 @@ namespace sdl {
 
 		virtual void initPreLoop() override;
 
-		virtual void update(double deltaTime) override;
-
 		virtual void eventUpdate(const SDL_Event& windowEvent) override;
 
 		const ImGuiShader& getImGuiShader() const;
 
 	private:
+        virtual void update(double deltaTime) override final;
+
+        virtual void preImGuiUpdate(double deltaTime) {};
+        virtual void postImGuiUpdate(double deltaTime) {};
         virtual void updateImGui(double deltaTime) {};
 
 		struct GLState {

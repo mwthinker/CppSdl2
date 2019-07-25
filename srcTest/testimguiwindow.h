@@ -21,7 +21,7 @@ private:
 
 	void initOpenGl() override;
 
-    void update(double deltaTime) override;
+    void preImGuiUpdate(double deltaTime) override;
 
 	void eventUpdate(const SDL_Event& windowEvent) override;
 
