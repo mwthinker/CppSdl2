@@ -1,5 +1,5 @@
-#ifndef MW_VERTEXARRAYOBJECT_H
-#define MW_VERTEXARRAYOBJECT_H
+#ifndef CPPSDL2_SDL_VERTEXARRAYOBJECT_H
+#define CPPSDL2_SDL_VERTEXARRAYOBJECT_H
 
 #include "opengl.h"
 
@@ -17,17 +17,16 @@ namespace sdl {
 		VertexArrayObject(VertexArrayObject&& other) noexcept;
 		VertexArrayObject& operator=(VertexArrayObject&& other) noexcept;
 
-		void create();
+		void generate();
 
 		void bind() const;
 
 		static void unbind();
 
 	private:
-		bool created_;
 		GLuint vao_;
 	};
 
-} // Namespace mw.
+} // Namespace sdl.
 
-#endif // MW_VERTEXARRAYOBJECT_H
+#endif // CPPSDL2_SDL_VERTEXARRAYOBJECT_H

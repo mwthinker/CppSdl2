@@ -396,10 +396,12 @@ namespace sdl {
 		// Recreate the VAO every time
 		// (This is to easily allow multiple GL contexts. VAO are not shared among GL contexts, and we don't track creation/deletion of windows so we don't have an obvious key to use to cache them.)
 		sdl::VertexArrayObject vao;
-		vao.create();
+		vao.generate();
 		vao.bind();
 
         imGuiVbo_.bind();
+        imGuiElementsVbo_.bind();
+
         shader_.setVertexAttribPointer();
 
 		// Will project scissor/clipping rectangles into framebuffer space

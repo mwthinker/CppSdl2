@@ -111,7 +111,8 @@ void BatchTriangles::addHexagon(float x, float y, float size) {
 
 void BatchTriangles::init() {
     shader_->useProgram();
-    vao_.create();
+    vao_.generate();
+    vao_.bind();
     batch_.bindBuffer();
     shader_->setVertexAttribPointer();
 }

@@ -150,6 +150,8 @@ namespace sdl {
 
 	template <class Vertex>
 	void Batch<Vertex>::bindBuffer() const {
+        vbo_.generate();
+        vbo_.bind();
 		vbo_.bind();
 	}
 

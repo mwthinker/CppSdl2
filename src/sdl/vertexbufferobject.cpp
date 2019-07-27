@@ -38,15 +38,12 @@ namespace sdl {
         target_ = target;
         size_ = size;
 
-        generate();
-        glBindBuffer(target, vboId_);
         glBufferData(target, size, data, usage);
         checkGlError();
 	}
 
 	void VertexBufferObject::bindSubData(GLsizeiptr offset, GLsizeiptr size, const GLvoid* data) const {
 		if (vboId_ != 0 && target_ != 0) {
-			glBindBuffer(target_, vboId_);
 			glBufferSubData(target_, offset, size, data);
 			checkGlError();
 		} else {
@@ -66,7 +63,7 @@ namespace sdl {
 			glBindBuffer(target_, vboId_);
 			checkGlError();
 		} else {
-			logger()->warn("[VertexBufferObject] bind failed, bindData must be called first");
+			logger()->warn("[VertexBufferObject] bind failed, generate must be called first");
 		}
 	}
 

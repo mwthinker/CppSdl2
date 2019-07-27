@@ -7,11 +7,11 @@
 namespace sdl {
 
 	VertexArrayObject::VertexArrayObject() noexcept
-		: created_(false), vao_(0) {
+		: vao_(0) {
 	}
 
 	VertexArrayObject::~VertexArrayObject() {
-		if (created_) {
+		if (vao_ != 0) {
 			glDeleteVertexArrays(1, &vao_);
 			logger()->debug("[VertexArrayObject] Deleted vao: {}", vao_);
 			checkGlError();
@@ -19,23 +19,21 @@ namespace sdl {
 	}
 
 	VertexArrayObject::VertexArrayObject(VertexArrayObject&& other) noexcept
-		: created_(other.created_), vao_(other.vao_) {
+		: vao_(other.vao_) {
 
-		other.created_ = false;
+		other.vao_ = 0;
 	}
 	
 	VertexArrayObject& VertexArrayObject::operator=(VertexArrayObject&& other) noexcept {
 		vao_ = other.vao_;
 		
-		other.created_ = false;
+		other.vao_ = 0;
 		return *this;
 	}
 
-	void VertexArrayObject::create() {
-		if (!created_) {
-			created_ = true;
+	void VertexArrayObject::generate() {
+		if (vao_ == 0) {
 			glGenVertexArrays(1, &vao_);
-			glBindVertexArray(vao_);
 			checkGlError();
 		} else {
 			logger()->warn("[VertexArrayObject] tried to create, but vao was already exists");
@@ -43,11 +41,11 @@ namespace sdl {
 	}
 
 	void VertexArrayObject::bind() const {
-		if (created_) {
+		if (vao_ != 0) {
 			glBindVertexArray(vao_);
 			checkGlError();
 		} else {
-			logger()->debug("[VertexArrayObject] ");
+			logger()->debug("[VertexArrayObject] Must be generated first");
 		}
 	}
 
