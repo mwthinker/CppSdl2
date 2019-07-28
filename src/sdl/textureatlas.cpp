@@ -127,6 +127,14 @@ namespace sdl {
 		return it->second;
 	}
 
+	Sprite TextureAtlas::add(const Texture& image, int border, const std::string& key) {
+		if (image.imageData_ != nullptr && image.imageData_->preLoadSurface_ != nullptr) {
+			return add(image.imageData_->preLoadSurface_, border, key);
+		}
+		logger()->warn("[TextureAtlas] Texture already binded or no image loaded");
+		return Sprite();
+	}
+
 	Sprite TextureAtlas::add(SDL_Surface* image, int border, const std::string& key) {
 		auto it = images_.find(key);
 		if (key.empty() || it == images_.end()) {

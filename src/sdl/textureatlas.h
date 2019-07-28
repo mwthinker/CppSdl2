@@ -29,7 +29,7 @@ namespace sdl {
 
 		// Add the image to the texture atlas. Return true if successful, 
 		// else it return false.
-		Sprite add(SDL_Surface* image, int border = 0, const std::string& key = "");
+		Sprite add(const Texture& image, int border = 0, const std::string& key = "");
 
 		const Texture& getTexture() const {
 			return texture_;
@@ -39,6 +39,8 @@ namespace sdl {
 
 	private:
 		static void uploadSdlSurfaceToTexture(SDL_Surface* image, SDL_Rect dstRec, Texture& texture);
+
+		Sprite add(SDL_Surface* image, int border, const std::string& key);
 
 		class Node : public std::enable_shared_from_this<Node> {
 		public:

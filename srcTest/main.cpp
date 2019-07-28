@@ -5,6 +5,7 @@
 #include "testimguiwindow.h"
 #endif // IMGUI_LIB
 #include "types.h"
+#include "logger.h"
 
 #include <sdl/sprite.h>
 #include <sdl/sound.h>
@@ -16,45 +17,34 @@
 #include <cassert>
 #include <sstream>
 
-SDL_Surface* createSurface(int w, int h, char r, char g, char b) {
-	SDL_Surface* s = SDL_CreateRGBSurface(0, w, h, 32, 0, 0, 0, 0);
-	SDL_FillRect(s, 0, SDL_MapRGB(s->format, r, g, b));
-	return s;
-}
-
 // Test to load directly to ram memory.
 void testLoadTextureAtlas() {
-	SDL_Surface* a = createSurface(200, 100, (char) 255, 0, 0); // Red block.
-	SDL_Surface* b = createSurface(100, 200, 0, (char) 255, 0); // Green block.
-	SDL_Surface* c = createSurface(200, 200, 0, 0, (char) 255); // Blue block.
-	SDL_Surface* d = createSurface(30, 30, (char) 255, (char) 255, (char) 255); // White block.
+	sdl::Texture a(200, 100, 255, 0, 0); // Red block.
+	sdl::Texture b(100, 200, 0, 255, 0); // Green block.
+	sdl::Texture c(200, 200, 0, 0, 255); // Blue block.
+	sdl::Texture d(30, 30, 255, 255, 255); // White block.
 
 	sdl::TextureAtlas atlas(512, 512);
 
-	atlas.add("tetris.bmp", 1);
-	atlas.add("cross.png", 1);
-	atlas.add(a, 1);
-	atlas.add(b, 1);
-	atlas.add(c, 1);
-	atlas.add(d, 1);
+	sdl::Sprite s = atlas.add("tetris.bmp", 1);
+	s = atlas.add("cross.png", 1);
+	s = atlas.add(a, 1);
+	s = atlas.add(b, 1);
+	s = atlas.add(c, 1);
+	s = atlas.add(d, 1);
 
 	TestWindow w(atlas.getTexture());
 	w.startLoop();
 
-	SDL_FreeSurface(a);
-	SDL_FreeSurface(b);
-	SDL_FreeSurface(c);
-	SDL_FreeSurface(d);
-
-	std::cout << "\ntestLoadTextureAtlas() successfully!\n";
+	logger()->info("[testLoadTextureAtlas] Successfully!");
 }
 
 // Test to load directly to graphic memory. And draw the total texture and the newly added sprite.
 void testLoadTextureAtlas2() {
-	SDL_Surface* a = createSurface(200, 100, (char) 255, 0, 0); // Red block.
-	SDL_Surface* b = createSurface(100, 200, 0, (char) 255, 0); // Green block.
-	SDL_Surface* c = createSurface(200, 200, 0, 0, (char) 255); // Blue block.
-	SDL_Surface* d = createSurface(30, 30, (char) 255, (char) 255, (char) 255); // White block.
+	sdl::Texture a(200, 100, 255, 0, 0); // Red block.
+	sdl::Texture b(100, 200, 0, 255, 0); // Green block.
+	sdl::Texture c(200, 200, 0, 0, 255); // Blue block.
+	sdl::Texture d(30, 30, 255, 255, 255); // White block.
 
 	sdl::TextureAtlas atlas(512, 512);
 	TestWindow w(atlas.getTexture());
@@ -88,7 +78,7 @@ void testLoadTextureAtlas2() {
 			}
 		}
 		if (!sprite.getTexture().isValid()) {
-			std::cout << "\nNumber " << nbr << " failed to be inserted!\n";
+			logger()->warn("[testLoadTextureAtlas2] Number {} failed to be inserted!", nbr);
 		}
 		w.setCenteredSprite(sprite);
 	};
@@ -96,12 +86,7 @@ void testLoadTextureAtlas2() {
 	w.setSpaceFunction(func);
 	w.startLoop();
 
-	SDL_FreeSurface(a);
-	SDL_FreeSurface(b);
-	SDL_FreeSurface(c);
-	SDL_FreeSurface(d);
-
-	std::cout << "\ntestLoadTextureAtlas2() successfully!\n";
+	logger()->info("[testLoadTextureAtlas2] Successfully!");
 }
 
 void testBatchWindow() {
@@ -111,10 +96,11 @@ void testBatchWindow() {
 			TestWindow2 w(i, 1);
 			std::stringstream stream;
 			stream << "OpenGl Version " << i << "." << 1;
+			logger()->info("[testBatchWindow] ", stream.str());
 			w.setTitle(stream.str());
 			w.startLoop();
 		} catch (std::runtime_error& runtimeError) {
-			std::cout << runtimeError.what();
+			logger()->error("[testBatchWindow] Runtime exception: {}", runtimeError.what());
 		}
 	}
 }
@@ -138,7 +124,9 @@ void showHelp(const std::string& programName) {
 	std::cout << "\t" << "-1                       testLoadTextureAtlas" << "\n";
 	std::cout << "\t" << "-1                       testLoadTextureAtlas2" << "\n";
 	std::cout << "\t" << "-1                       testBatchWindow" << "\n";
+#if IMGUI_LIB
 	std::cout << "\t" << "-1                       testImGuiWindow" << "\n";
+#endif // IMGUI_LIB
 }
 
 void runAll() {
@@ -167,8 +155,13 @@ int main(int argc, char** argv) {
 			testBatchWindow();
 			return 0;
 		} else if (code == "-4") {
+#if IMGUI_LIB
 			testImGuiWindow();
 			return 0;
+#else
+			std::cout << "ImGui not compiled, must add preprocessor IMGUI_LIB\n";
+#endif // IMGUI_LIB
+			
 		} else {
 			std::cout << "Incorrect argument " << code << "\n";
 		}
