@@ -36,6 +36,7 @@ namespace sdl {
 	void InitSdl::initSdl() {
 		if (SDL_Init(flags_)) {
 			logger()->error("[InitSdl] Unable to init SDL: {}", SDL_GetError());
+		} else {
 			if (!TTF_WasInit() && TTF_Init() == -1) {
 				logger()->error("[InitTtf] InitTtf failed");
 			}

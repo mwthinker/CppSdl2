@@ -38,9 +38,9 @@ private:
 		}
 		
 		batch_->addRectangle(-0.9f, -0.9f, 0.3f, 0.3f, sprite_);
-		
-		batch_->uploadToGraphicCard();
+				
 		batch_->init();
+		batch_->uploadToGraphicCard();
 		sprite_.bindTexture();
 		sdl::checkGlError();
 	}
