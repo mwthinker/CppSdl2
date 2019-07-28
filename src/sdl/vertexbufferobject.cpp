@@ -34,15 +34,14 @@ namespace sdl {
 		return *this;
 	}
 
-	void VertexBufferObject::bindData(GLenum target, GLsizeiptr size, const GLvoid* data, GLenum usage) {
-        target_ = target;
+	void VertexBufferObject::bufferData(GLsizeiptr size, const GLvoid* data, GLenum usage) {
         size_ = size;
 
-        glBufferData(target, size, data, usage);
+        glBufferData(target_, size, data, usage);
         checkGlError();
 	}
 
-	void VertexBufferObject::bindSubData(GLsizeiptr offset, GLsizeiptr size, const GLvoid* data) const {
+	void VertexBufferObject::bufferSubData(GLsizeiptr offset, GLsizeiptr size, const GLvoid* data) const {
 		if (vboId_ != 0 && target_ != 0) {
 			glBufferSubData(target_, offset, size, data);
 			checkGlError();
@@ -55,11 +54,14 @@ namespace sdl {
         if (vboId_ == 0) {
             glGenBuffers(1, &vboId_);
             checkGlError();
-        }
+		} else {
+			logger()->warn("[VertexBufferObject] Calling generate failed, generate has already been called");
+		}
 	}
 
-	void VertexBufferObject::bind() const {
+	void VertexBufferObject::bind(GLenum target) {
 		if (vboId_ != 0) {
+			target_ = target;
 			glBindBuffer(target_, vboId_);
 			checkGlError();
 		} else {

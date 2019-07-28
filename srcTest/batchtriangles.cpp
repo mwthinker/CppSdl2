@@ -113,7 +113,8 @@ void BatchTriangles::init() {
     shader_->useProgram();
     vao_.generate();
     vao_.bind();
-    batch_.bindBuffer();
+	batch_.generate();
+    batch_.bind();
     shader_->setVertexAttribPointer();
 }
 

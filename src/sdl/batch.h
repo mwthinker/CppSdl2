@@ -35,7 +35,9 @@ namespace sdl {
 		size_t getMaxVertexes() const noexcept;
 
 		float getVboSizeInMiB() const noexcept;
-		void bindBuffer() const;
+
+		void generate();
+		void bind();
 
 		void clear();
 		GLsizei getSize() const noexcept;
@@ -149,10 +151,13 @@ namespace sdl {
 	}
 
 	template <class Vertex>
-	void Batch<Vertex>::bindBuffer() const {
-        vbo_.generate();
-        vbo_.bind();
-		vbo_.bind();
+	void Batch<Vertex>::generate() {
+		vbo_.generate();
+	}
+
+	template <class Vertex>
+	void Batch<Vertex>::bind() {
+		vbo_.bind(GL_ARRAY_BUFFER);
 	}
 
 	template <class Vertex>
@@ -237,15 +242,14 @@ namespace sdl {
 	void Batch<Vertex>::uploadToGraphicCard() {
 		if (vbo_.getSize() > index_) {
 			if (usage_ != GL_STATIC_DRAW) {
-				vbo_.bindSubData(0, index_ * sizeof(Vertex), data_.data());
+				vbo_.bufferSubData(0, index_ * sizeof(Vertex), data_.data());
 				uploadedIndex_ = index_;
 			}
 		} else {
-			vbo_ = sdl::VertexBufferObject();
 			if (usage_ == GL_STATIC_DRAW) {
-				vbo_.bindData(GL_ARRAY_BUFFER, index_ * sizeof(Vertex), data_.data(), usage_);
+				vbo_.bufferData(index_ * sizeof(Vertex), data_.data(), usage_);
 			} else {
-				vbo_.bindData(GL_ARRAY_BUFFER, data_.size() * sizeof(Vertex), data_.data(), usage_);
+				vbo_.bufferData(data_.size() * sizeof(Vertex), data_.data(), usage_);
 			}
 			uploadedIndex_ = index_;
 		}

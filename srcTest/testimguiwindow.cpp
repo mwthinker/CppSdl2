@@ -50,7 +50,7 @@ void TestImGuiWindow::initPreLoop() {
     batch_->addCircle(-0.5f, 0.5f, 0.3f, 40);
     batch_->addRectangle(TestShader2::Vertex(-0.3f, -0.2f), TestShader2::Vertex(0, 0), TestShader2::Vertex(0.f, 0.1f), TestShader2::Vertex(-0.2f, 0.2f));
     batch_->addHexagon(-0.1f, 0.1f, 0.3f);
-    batch_->uploadToGraphicCard();
-    batch_->init();
+	batch_->init();
+	batch_->uploadToGraphicCard();
     sdl::checkGlError();
 }

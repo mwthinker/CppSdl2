@@ -19,14 +19,14 @@ namespace sdl {
 		VertexBufferObject& operator=(VertexBufferObject&& other) noexcept;
 
 		// Generates an id or use the current one. Bind the buffer data to the graphic card. The buffer is then unbind.
-		void bindData(GLenum target, GLsizeiptr size, const GLvoid* data, GLenum usage);
+		void bufferData(GLsizeiptr size, const GLvoid* data, GLenum usage);
 
 		// Replaces the data in the buffer. The current buffer is binded.
 		// Will replace data if the buffer exists on the graphic card.
-		void bindSubData(GLsizeiptr offset, GLsizeiptr size, const GLvoid* data) const;
+		void bufferSubData(GLsizeiptr offset, GLsizeiptr size, const GLvoid* data) const;
 
-		// Bind the current vertex buffer with the initial target.
-		void bind() const;
+		// Bind the current vertex buffer.
+		void bind(GLenum target);
 
 		// Generate a new buffer on the graphic card first time called.
 		void generate();

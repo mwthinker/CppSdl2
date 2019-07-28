@@ -399,8 +399,8 @@ namespace sdl {
 		vao.generate();
 		vao.bind();
 
-        imGuiVbo_.bind();
-        imGuiElementsVbo_.bind();
+        imGuiVbo_.bind(GL_ARRAY_BUFFER);
+        imGuiElementsVbo_.bind(GL_ELEMENT_ARRAY_BUFFER);
 
         shader_.setVertexAttribPointer();
 
@@ -413,8 +413,8 @@ namespace sdl {
 			const ImDrawList* cmd_list = drawData->CmdLists[n];
 			size_t idxBufferOffset = 0;
 
-            imGuiVbo_.bindData(GL_ARRAY_BUFFER, (GLsizeiptr)cmd_list->VtxBuffer.Size * sizeof(ImDrawVert), (const GLvoid*)cmd_list->VtxBuffer.Data, GL_STREAM_DRAW);
-            imGuiElementsVbo_.bindData(GL_ELEMENT_ARRAY_BUFFER, (GLsizeiptr)cmd_list->IdxBuffer.Size * sizeof(ImDrawIdx), (const GLvoid*)cmd_list->IdxBuffer.Data, GL_STREAM_DRAW);
+            imGuiVbo_.bufferData((GLsizeiptr)cmd_list->VtxBuffer.Size * sizeof(ImDrawVert), (const GLvoid*)cmd_list->VtxBuffer.Data, GL_STREAM_DRAW);
+            imGuiElementsVbo_.bufferData((GLsizeiptr)cmd_list->IdxBuffer.Size * sizeof(ImDrawIdx), (const GLvoid*)cmd_list->IdxBuffer.Data, GL_STREAM_DRAW);
 
 			for (int cmd_i = 0; cmd_i < cmd_list->CmdBuffer.Size; cmd_i++) {
 				const ImDrawCmd* pcmd = &cmd_list->CmdBuffer[cmd_i];
