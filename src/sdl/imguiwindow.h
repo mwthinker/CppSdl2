@@ -4,6 +4,7 @@
 #include "window.h"
 #include "imguishader.h"
 #include "vertexbufferobject.h"
+#include "vertexarrayobject.h"
 
 #include <imgui.h>
 #include <array>
@@ -88,6 +89,8 @@ namespace sdl {
 		void backupGlState();
 		void restoreGlState();
 
+		void setupVao();
+
 		bool showDemoWindow_;
 		float menuHeight_;
 		bool initiatedOpenGl_;
@@ -97,6 +100,7 @@ namespace sdl {
 		
 		GLState glState_;
 		GLuint imGuiFontTexture_;
+		sdl::VertexArrayObject vao_;
 		VertexBufferObject imGuiVbo_;
         VertexBufferObject imGuiElementsVbo_;
 		

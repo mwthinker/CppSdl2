@@ -44,7 +44,6 @@ void TestImGuiWindow::initPreLoop() {
     shader_->setModelMatrix(Mat44(1));
     shader_->setProjectionMatrix(Mat44(1));
 
-
     batch_->addRectangle(0.1f, 0.4f, 0.2f, 0.2f);
     batch_->addTriangle(TestShader2::Vertex(0, 0), TestShader2::Vertex(0.3f, 0), TestShader2::Vertex(0.3f, 0.3f));
     batch_->addCircle(-0.5f, 0.5f, 0.3f, 40);
