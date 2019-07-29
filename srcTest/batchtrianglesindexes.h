@@ -1,5 +1,5 @@
-#ifndef BATCHTRIANGLES_H
-#define BATCHTRIANGLES_H
+#ifndef BATCHTRIANGLESINEXES_H
+#define BATCHTRIANGLESINEXES_H
 
 #include "testshader2.h"
 
@@ -7,29 +7,23 @@
 #include <sdl/sprite.h>
 #include <sdl/vertexarrayobject.h>
 
-class BatchTriangles {
+class BatchTrianglesIndexes {
 public:
-	BatchTriangles(const std::shared_ptr<TestShader2>& shader, GLenum usage);
+	BatchTrianglesIndexes(const std::shared_ptr<TestShader2>& shader, GLenum usage);
 
-	virtual ~BatchTriangles() = default;
+	~BatchTrianglesIndexes() = default;
 
 	float getVboSizeInMiB() const noexcept;
 
 	void uploadToGraphicCard();
 
-	void addTriangle(const TestShader2::Vertex& v1, const TestShader2::Vertex& v2, const TestShader2::Vertex& v3);
+	void addTriangle(TestShader2::Vertex v1, TestShader2::Vertex v2, TestShader2::Vertex v3);
 
 	void addRectangle(float x, float y, float w, float h);
-
-	void addRectangle(float x, float y, float w, float h, const sdl::Sprite& sprite);
 
 	void addRectangle(const TestShader2::Vertex& v1, const TestShader2::Vertex& v2, const TestShader2::Vertex& v3, const TestShader2::Vertex& v4);
 
 	void addCircle(float x, float y, float radius, const int iterations = 40);
-
-	void addLine(float x1, float y1, float x2, float y2, float w);
-
-	void addCircle(float x, float y, float outerRadius, float innerRadius, const int iterations = 40);
 
     void addHexagon(float x, float y, float size);
 
@@ -43,4 +37,4 @@ private:
 	sdl::VertexArrayObject vao_;
 };
 
-#endif // BATCHTRIANGLES_H
+#endif // BATCHTRIANGLESINEXES_H

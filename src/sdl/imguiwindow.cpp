@@ -403,8 +403,6 @@ namespace sdl {
 		glBindSampler(0, 0); // We use combined texture/sampler state. Applications using GL 3.3 may set that otherwise.
 #endif
 
-		// Recreate the VAO every time
-		// (This is to easily allow multiple GL contexts. VAO are not shared among GL contexts, and we don't track creation/deletion of windows so we don't have an obvious key to use to cache them.)
 		vao_.bind();
 		imGuiVbo_.bind(GL_ARRAY_BUFFER);
 		imGuiElementsVbo_.bind(GL_ELEMENT_ARRAY_BUFFER);
@@ -496,7 +494,6 @@ namespace sdl {
 		// Parse GLSL version string
 		auto glslVersion = getGlslVersion(sdl::Window::getOpenGlMajorVersion(), sdl::Window::getOpenGlMinorVersion());
 		auto [vertexShader, fragmentShader] = getShader(glslVersion);
-
         shader_ = sdl::ImGuiShader(vertexShader, fragmentShader);
 
 		// Create buffers
@@ -513,8 +510,6 @@ namespace sdl {
 	}
 
 	void ImGuiWindow::ImGui_ImplOpenGL3_DestroyDeviceObjects() {
-
-
         shader_ = sdl::ImGuiShader();
 		ImGui_ImplOpenGL3_DestroyFontsTexture();
 	}

@@ -28,6 +28,8 @@ namespace sdl {
 		// Bind the current vertex buffer.
 		void bind(GLenum target);
 
+		bool isGenerated() const noexcept;
+
 		// Generate a new buffer on the graphic card first time called.
 		void generate();
 

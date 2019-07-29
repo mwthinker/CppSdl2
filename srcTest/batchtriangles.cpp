@@ -19,21 +19,20 @@ namespace {
         corner.pos_ = getHexCorner(vertex.pos_, size, nbr);
         float x = corner.pos_.x;
         float y = corner.pos_.y;
-        sdl::logger()->info("Pos: ({},{})", corner.pos_.x, corner.pos_.y);
+        //sdl::logger()->info("Pos: ({},{})", corner.pos_.x, corner.pos_.y);
         return  corner;
     }
 
 }
 
-BatchTriangles::BatchTriangles(const std::shared_ptr<TestShader2>& shader, int maxVertexes)
-    : shader_(shader), batch_(GL_TRIANGLES, GL_DYNAMIC_DRAW, maxVertexes) {
+BatchTriangles::BatchTriangles(const std::shared_ptr<TestShader2>& shader, GLenum usage)
+    : shader_(shader), batch_(GL_TRIANGLES, usage) {
 
-    sdl::logger()->info("[BatchTriangles] {} Mib\n", batch_.getVboSizeInMiB());
+	assert(shader);
 }
 
-BatchTriangles::BatchTriangles(const std::shared_ptr<TestShader2>& shader)
-    : shader_(shader), batch_(GL_TRIANGLES, GL_STATIC_DRAW) {
-
+float BatchTriangles::getVboSizeInMiB() const noexcept {
+	return batch_.getVboSizeInMiB();
 }
 
 void BatchTriangles::uploadToGraphicCard() {
@@ -41,9 +40,7 @@ void BatchTriangles::uploadToGraphicCard() {
 }
 
 void BatchTriangles::addTriangle(const TestShader2::Vertex& v1, const TestShader2::Vertex& v2, const TestShader2::Vertex& v3) {
-    batch_.add(v1);
-    batch_.add(v2);
-    batch_.add(v3);
+	batch_.add(v1, v2, v3);
 }
 
 void BatchTriangles::addRectangle(float x, float y, float w, float h) {
@@ -113,7 +110,6 @@ void BatchTriangles::init() {
     shader_->useProgram();
     vao_.generate();
     vao_.bind();
-	batch_.generate();
     batch_.bind();
     shader_->setVertexAttribPointer();
 }

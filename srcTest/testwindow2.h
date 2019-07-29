@@ -18,7 +18,7 @@ private:
 		shader_ = std::make_shared<TestShader2>("testShader2_2_1.ver.glsl", "testShader2_2_1.fra.glsl");
 		sprite_ = textureAtlas_.add("tetris.bmp");
 
-		batch_ = std::make_shared<BatchTriangles>(shader_);
+		batch_ = std::make_shared<BatchTriangles>(shader_, GL_DYNAMIC_DRAW);
 
 		resize(sdl::Window::getWidth(), sdl::Window::getHeight());
 		shader_->setModelMatrix(Mat44(1));

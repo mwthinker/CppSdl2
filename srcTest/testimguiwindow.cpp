@@ -1,4 +1,5 @@
 #include "testimguiwindow.h"
+#include "logger.h"
 
 TestImGuiWindow::TestImGuiWindow() {
 	sdl::Window::setWindowSize(512, 512);
@@ -28,6 +29,7 @@ void TestImGuiWindow::imGuiPreUpdate(double deltaTime) {
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     batch_->draw();
+	batchIndexes_->draw();
 
     glDisable(GL_BLEND);
 }
@@ -39,17 +41,36 @@ void TestImGuiWindow::initOpenGl() {
 void TestImGuiWindow::initPreLoop() {
 	ImGuiWindow::initPreLoop();
     shader_ = std::make_shared<TestShader2>("testShader2_330.ver.glsl", "testShader2_330.fra.glsl");
-    batch_ = std::make_shared<BatchTriangles>(shader_);
-
     shader_->setModelMatrix(Mat44(1));
     shader_->setProjectionMatrix(Mat44(1));
+	
+	initBatchTriangles();
+	initBatchTrianglesIndexes();
+    
+	sdl::checkGlError();
+}
 
-    batch_->addRectangle(0.1f, 0.4f, 0.2f, 0.2f);
-    batch_->addTriangle(TestShader2::Vertex(0, 0), TestShader2::Vertex(0.3f, 0), TestShader2::Vertex(0.3f, 0.3f));
-    batch_->addCircle(-0.5f, 0.5f, 0.3f, 40);
-    batch_->addRectangle(TestShader2::Vertex(-0.3f, -0.2f), TestShader2::Vertex(0, 0), TestShader2::Vertex(0.f, 0.1f), TestShader2::Vertex(-0.2f, 0.2f));
-    batch_->addHexagon(-0.1f, 0.1f, 0.3f);
+void TestImGuiWindow::initBatchTriangles() {
+	batch_ = std::make_shared<BatchTriangles>(shader_, GL_STATIC_DRAW);
+	batch_->addRectangle(0.1f, 0.4f, 0.2f, 0.2f);
+	batch_->addTriangle(TestShader2::Vertex(0, 0), TestShader2::Vertex(0.3f, 0), TestShader2::Vertex(0.3f, 0.3f));
+	batch_->addCircle(-0.5f, 0.5f, 0.3f, 40);
+	batch_->addRectangle(TestShader2::Vertex(-0.3f, -0.2f), TestShader2::Vertex(0, 0), TestShader2::Vertex(0.f, 0.1f), TestShader2::Vertex(-0.2f, 0.2f));
+	batch_->addHexagon(-0.1f, 0.1f, 0.3f);
+	
 	batch_->init();
 	batch_->uploadToGraphicCard();
-    sdl::checkGlError();
+	logger()->info("Batch using glDrawArrays, size: {} MB", batch_->getVboSizeInMiB());
+}
+
+void TestImGuiWindow::initBatchTrianglesIndexes() {
+	batchIndexes_ = std::make_shared<BatchTrianglesIndexes>(shader_, GL_STATIC_DRAW);
+	batchIndexes_->addRectangle(-0.8f, -0.3f, 0.2f, 0.4f);
+	batchIndexes_->addTriangle(TestShader2::Vertex(0, 0), TestShader2::Vertex(-0.3f, 0), TestShader2::Vertex(-0.3f, -0.3f));	
+	batchIndexes_->addRectangle(TestShader2::Vertex(0.8f, -0.7f), TestShader2::Vertex(0.9f, -0.8f), TestShader2::Vertex(0.8f, 0.8f), TestShader2::Vertex(0.6f, 0.7f));
+	batchIndexes_->addHexagon(-0.5f, 0.5f, 0.1f);
+	batchIndexes_->addCircle(-0.7f, -0.7f, 0.1f, 20);
+	batchIndexes_->init();
+	batchIndexes_->uploadToGraphicCard();
+	logger()->info("Batch using glDrawElements, size: {} MB", batchIndexes_->getVboSizeInMiB());
 }

@@ -3,6 +3,7 @@
 
 #include "testshader.h"
 #include "batchtriangles.h"
+#include "batchtrianglesindexes.h"
 
 #include <sdl/imguiwindow.h>
 #include <sdl/sprite.h>
@@ -25,8 +26,12 @@ private:
 
 	void eventUpdate(const SDL_Event& windowEvent) override;
 
+	void initBatchTriangles();
+	void initBatchTrianglesIndexes();
+
     std::shared_ptr<TestShader2> shader_;
     std::shared_ptr<BatchTriangles> batch_;
+	std::shared_ptr<BatchTrianglesIndexes> batchIndexes_;
 };
 
 #endif // TESTIMGUIWINDOW_H

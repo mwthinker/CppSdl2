@@ -107,6 +107,8 @@ if (CppSdl2Test)
 	set(SOURCES_TEST
 		srcTest/batchtriangles.cpp
 		srcTest/batchtriangles.h
+		srcTest/batchtrianglesindexes.cpp
+		srcTest/batchtrianglesindexes.h
 		srcTest/logger.h
 		srcTest/types.h
 		srcTest/main.cpp

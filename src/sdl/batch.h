@@ -12,14 +12,9 @@ namespace sdl {
 	template <class Vertex>
 	class Batch {
 	public:
-		using iterator = typename std::vector<Vertex>::iterator;
-		using const_iterator = typename std::vector<Vertex>::const_iterator;
-		using reverse_iterator = typename std::vector<Vertex>::iterator;
-		using const_reverse_iterator = typename std::vector<Vertex>::const_iterator;
-
 		Batch();
 
-		Batch(GLenum mode, GLenum usage, size_t maxVertexes = 1000);
+		Batch(GLenum mode, GLenum usage);
 
 		~Batch() = default;
 
@@ -36,37 +31,37 @@ namespace sdl {
 
 		float getVboSizeInMiB() const noexcept;
 
-		void generate();
 		void bind();
 
 		void clear();
 		GLsizei getSize() const noexcept;
 
-		iterator begin() noexcept;
-		iterator end() noexcept;
-		const_iterator begin() const noexcept;
-		const_iterator end() const noexcept;
-		const_iterator cbegin() const noexcept;
-		const_iterator cend() const noexcept;
-
-		iterator rbegin() noexcept;
-		iterator rend() noexcept;
-		const_iterator rbegin() const noexcept;
-		const_iterator rend() const noexcept;
-		const_iterator crbegin() const noexcept;
-		const_iterator crend() const noexcept;
+		GLsizei getIndexesSize() const noexcept;
 
 		void uploadToGraphicCard();
 		void draw() const;
-		
-		void add(const Vertex& vertex);
 
 		template<class InputIterator>
 		void add(InputIterator begin, InputIterator end);
 
 		void add(const std::vector<Vertex>& data);
 
+		template<class ...Vertexes>
+		void add(Vertexes&& ...vertexes);
+
+		void startIndex();
+
+		template<class InputIterator>
+		void addIndexes(InputIterator begin, InputIterator end);
+
+		void addIndexes(const std::vector<GLuint>& data);
+
+		template<class ...Indexes>
+		void addIndexes(Indexes&& ...vertexes);
+
 	private:
+		void assertIndexSizeIsValid() const;
+
 		template<class InputIterator>
 		constexpr void IS_RANDOM_ACCESS_ITERATOR() {
 			static_assert(std::is_same<std::random_access_iterator_tag,
@@ -80,53 +75,66 @@ namespace sdl {
 				"Vertex type must be a type of standard layout.");
 		}
 
-		GLenum usage_;
-		GLenum mode_;
-		GLsizei index_;
-		size_t uploadedIndex_;
-		std::vector<Vertex> data_;		
+		template<class IndexType>
+		constexpr void IS_INDEX_TYPE() {
+			static_assert(std::is_integral<IndexType>(),
+				"IndexType must be a integral type ");
+		}
+		
+		std::vector<Vertex> vertexes_;
+		std::vector<GLint> indexes_;
 		sdl::VertexBufferObject vbo_;
+		sdl::VertexBufferObject vboIndexes_;
+		
+		size_t uploadedIndex_ = 0;
+		GLenum usage_ = 0;
+		GLenum mode_ = 0;
+		GLsizei index_ = 0;
+		GLuint currentIndexesIndex = 0;
 	};
 
 	template <class Vertex>
-	Batch<Vertex>::Batch() : mode_(0), usage_(0), index_(0),
-		uploadedIndex_(0) {
+	Batch<Vertex>::Batch() {
+		IS_VERTEX_STANDARD_LAYOUT<Vertex>();
+	}
+
+	template <class Vertex>
+	Batch<Vertex>::Batch(GLenum mode, GLenum usage) :
+		mode_(mode), usage_(usage) {
 
 		IS_VERTEX_STANDARD_LAYOUT<Vertex>();
 	}
 
 	template <class Vertex>
-	Batch<Vertex>::Batch(GLenum mode, GLenum usage, size_t maxVertexes) :
-		mode_(mode), usage_(usage), index_(0),
-		uploadedIndex_(0), data_(usage == GL_STATIC_DRAW ? 0 : maxVertexes) {
-
-		IS_VERTEX_STANDARD_LAYOUT<Vertex>();
-	}
-
-	template <class Vertex>
-	Batch<Vertex>::Batch(const Batch&& other) noexcept : mode_(other.mode_), usage_(other.usage_),
-		index_(other.index_), vbo_(std::move(other.vbo_)), data_(std::move(other.data_)) {
+	Batch<Vertex>::Batch(const Batch&& other) noexcept :
+		uploadedIndex_(other.uploadedIndex_), usage_(other.usage_), mode_(other.mode_), index_(other.index_),
+		vertexes_(std::move(other.vertexes_)), indexes_(std::move(other.indexes_)), vbo_(std::move(other.vbo_)), vboIndexes_(std::move(other.vboIndexes_)) {
 
 		IS_VERTEX_STANDARD_LAYOUT<Vertex>();
 
-		other.mode_ = 0;
+		other.uploadedIndex_ = 0;
 		other.usage_ = 0;
+		other.mode_ = 0;
 		other.index_ = 0;
-		other.vbo_ = VertexBufferObject();
+		other.currentIndexesIndex = false;
 	}
 	
 	template <class Vertex>
 	Batch<Vertex>& Batch<Vertex>::operator=(const Batch&& other) noexcept {
-		mode_ = other.mode_;
-		usage_ = other.usage_;
-		index_ = other.index_;
+		vertexes_ = std::move(other.vertexes_);
+		indexes_ = std::move(other.indexes_);
 		vbo_ = std::move(other.vbo_);
-		data_ = std::move(other.data_);
+		vboIndexes_ = std::move(other.vboIndexes_);
+		usage_ = other.usage_;
+		mode_ = other.mode_;
+		index_ = other.index_;
+		currentIndexesIndex = other.currentIndexesIndex;
 
-		other.mode_ = 0;
+		other.uploadedIndex_ = uploadedIndex_;
 		other.usage_ = 0;
+		other.mode_ = 0;
 		other.index_ = 0;
-		other.vbo_ = VertexBufferObject();
+		other.currentIndexesIndex = false;
 		return *this;
 	}
 
@@ -142,22 +150,27 @@ namespace sdl {
 
 	template <class Vertex>
 	size_t Batch<Vertex>::getMaxVertexes() const noexcept {
-		return data_.size();
+		return vertexes_.size();
 	}
 
 	template <class Vertex>
 	float Batch<Vertex>::getVboSizeInMiB() const noexcept {
-		return sizeof(Vertex) * data_.size() * 1.f / 1024 / 1024;
-	}
-
-	template <class Vertex>
-	void Batch<Vertex>::generate() {
-		vbo_.generate();
+		return (sizeof(Vertex) * vertexes_.size() + sizeof(GLuint) * indexes_.size()) * 1.f / 1024 / 1024;
 	}
 
 	template <class Vertex>
 	void Batch<Vertex>::bind() {
+		if (!vbo_.isGenerated()) {
+			vbo_.generate();
+		}
 		vbo_.bind(GL_ARRAY_BUFFER);
+		
+		if (!indexes_.empty()) {
+			if (!vboIndexes_.isGenerated()) {
+				vboIndexes_.generate();
+			}
+			vboIndexes_.bind(GL_ELEMENT_ARRAY_BUFFER);
+		}
 	}
 
 	template <class Vertex>
@@ -166,90 +179,51 @@ namespace sdl {
 		if (usage_ != GL_STATIC_DRAW) {
 			// Can only clear data if the vbo is not updated. 
 			uploadedIndex_ = 0;
+			indexes_.clear();
+			currentIndexesIndex = 0;
 		} else {
 			logger()->error("[Batch] VertexData failed to clear, vbo is static.");
 		}
 	}
 
-	// Iterator
 	template <class Vertex>
 	GLsizei Batch<Vertex>::getSize() const noexcept {
 		return index_;
 	}
-
+	
 	template <class Vertex>
-	typename Batch<Vertex>::iterator Batch<Vertex>::begin() noexcept {
-		return data_.begin();
-	}
-
-	template <class Vertex>
-	typename Batch<Vertex>::iterator Batch<Vertex>::end() noexcept {
-		return data_.end();
-	}
-
-	template <class Vertex>
-	typename Batch<Vertex>::const_iterator Batch<Vertex>::begin() const noexcept {
-		return data_.begin();
-	}
-
-	template <class Vertex>
-	typename Batch<Vertex>::const_iterator Batch<Vertex>::end() const noexcept {
-		return data_.end();
-	}
-
-	template <class Vertex>
-	typename Batch<Vertex>::const_iterator Batch<Vertex>::cbegin() const noexcept {
-		return data_.cbegin();
-	}
-
-	template <class Vertex>
-	typename Batch<Vertex>::const_iterator Batch<Vertex>::cend() const noexcept {
-		return data_.cend();
-	}
-
-	// Reverse iterator
-	template <class Vertex>
-	typename Batch<Vertex>::iterator Batch<Vertex>::rbegin() noexcept {
-		return data_.rbegin();
-	}
-
-	template <class Vertex>
-	typename Batch<Vertex>::iterator Batch<Vertex>::rend() noexcept {
-		return data_.rend();
-	}
-
-	template <class Vertex>
-	typename Batch<Vertex>::const_iterator Batch<Vertex>::rbegin() const noexcept {
-		return data_.rbegin();
-	}
-
-	template <class Vertex>
-	typename Batch<Vertex>::const_iterator Batch<Vertex>::rend() const noexcept {
-		return data_.rend();
-	}
-
-	template <class Vertex>
-	typename Batch<Vertex>::const_iterator Batch<Vertex>::crbegin() const noexcept {
-		return data_.crbegin();
-	}
-
-	template <class Vertex>
-	typename Batch<Vertex>::const_iterator Batch<Vertex>::crend() const noexcept {
-		return data_.crend();
+	GLsizei Batch<Vertex>::getIndexesSize() const noexcept {
+		return indexes_.size();
 	}
 
 	template <class Vertex>
 	void Batch<Vertex>::uploadToGraphicCard() {
 		if (vbo_.getSize() > index_) {
 			if (usage_ != GL_STATIC_DRAW) {
-				vbo_.bufferSubData(0, index_ * sizeof(Vertex), data_.data());
+				vbo_.bind(GL_ARRAY_BUFFER);
+				vbo_.bufferSubData(0, index_ * sizeof(Vertex), vertexes_.data());
 				uploadedIndex_ = index_;
+				
+				if (!indexes_.empty()) {
+					vboIndexes_.bind(GL_ELEMENT_ARRAY_BUFFER);
+					vboIndexes_.bufferSubData(0, indexes_.size() * sizeof(GLuint), indexes_.data());
+				}
 			}
 		} else {
 			if (usage_ == GL_STATIC_DRAW) {
-				vbo_.bufferData(index_ * sizeof(Vertex), data_.data(), usage_);
+				vbo_.bind(GL_ARRAY_BUFFER);
+				vbo_.bufferData(index_ * sizeof(Vertex), vertexes_.data(), usage_);
+				if (!indexes_.empty()) {
+					vboIndexes_.bind(GL_ELEMENT_ARRAY_BUFFER);
+					vboIndexes_.bufferData(indexes_.size() * sizeof(GLuint), indexes_.data(), usage_);
+				}
 			} else {
-				vbo_.bufferData(data_.size() * sizeof(Vertex), data_.data(), usage_);
+				vbo_.bind(GL_ARRAY_BUFFER);
+				vbo_.bufferData(vertexes_.size() * sizeof(Vertex), vertexes_.data(), usage_);
+				if (!indexes_.empty()) {
+					vboIndexes_.bind(GL_ELEMENT_ARRAY_BUFFER);
+					vboIndexes_.bufferData(indexes_.size() * sizeof(GLuint), indexes_.data(), usage_);
+				}
 			}
 			uploadedIndex_ = index_;
 		}
@@ -259,7 +233,11 @@ namespace sdl {
 	void Batch<Vertex>::draw() const {
 		if (vbo_.getSize() > 0) {
 			if (uploadedIndex_ > 0) { // Data is avaiable to be drawn.
-				glDrawArrays(mode_, 0, index_);
+				if (!indexes_.empty()) {
+					glDrawElements(mode_, static_cast<GLuint>(indexes_.size()), GL_UNSIGNED_INT, nullptr);
+				} else {
+					glDrawArrays(mode_, 0, index_);
+				}
 				sdl::checkGlError();
 			}
 		} else {
@@ -268,41 +246,24 @@ namespace sdl {
 	}
 
 	template <class Vertex>
-	void Batch<Vertex>::add(const Vertex& vertex) {
-		if (usage_ != GL_STATIC_DRAW) {
-			if (index_ < data_.size()) {
-				data_[index_++] = vertex;
-			} else {
-				data_.push_back(vertex);
-				++index_;
-			}
-		} else {
-			if (vbo_.getSize() == 0) {
-				data_.push_back(vertex);
-				++index_;
-			} else {
-				logger()->error("[Batch] VertexData is static, data can't be modified.");
-			}
-		}
-	}
-
-	template <class Vertex>
 	template<class InputIterator>
 	void Batch<Vertex>::add(InputIterator begin, InputIterator end) {
 		IS_RANDOM_ACCESS_ITERATOR<InputIterator>();
+		
+		const auto size = static_cast<int>(end - begin);
+		assert(size >= 0);
 
 		if (usage_ != GL_STATIC_DRAW) {
-			if (index_ + end - begin < data_.size()) {
-				std::copy(begin, end, data_.begin() + index_);
+			if (size + index_ < static_cast<int>(vertexes_.size())) {
+				std::copy(begin, end, vertexes_.begin() + index_);
 			} else {
-				data_.insert(data_.begin() + index_, begin, end);
+				vertexes_.insert(vertexes_.begin() + index_, begin, end);
 			}
-			index_ += end - begin;
+			index_ += size;
 		} else {
 			if (vbo_.getSize() == 0) {
-				// Only add data before the vbo is created.
-				data_.insert(data_.end(), begin, end);
-				index_ += end - begin;
+				vertexes_.insert(vertexes_.end(), begin, end);
+				index_ += size;
 			} else {
 				logger()->error("[Batch] VertexData is static, data can't be modified.");
 			}
@@ -312,6 +273,54 @@ namespace sdl {
 	template <class Vertex>
 	void Batch<Vertex>::add(const std::vector<Vertex>& data) {
 		add(data.begin(), data.end());
+	}
+
+	template <class Vertex>
+	template<class ...Vertexes>
+	void Batch<Vertex>::add(Vertexes&& ... pack) {
+		std::array<Vertex, sizeof...(Vertexes)> vertexes = {{ pack ... }};
+		add(vertexes.begin(), vertexes.end());
+	}
+
+	template <class Vertex>
+	void Batch<Vertex>::startIndex() {
+		currentIndexesIndex = static_cast<GLuint>(vertexes_.size());
+	}
+
+	template <class Vertex>
+	template<class InputIterator>
+	void Batch<Vertex>::addIndexes(InputIterator begin, InputIterator end) {
+		IS_RANDOM_ACCESS_ITERATOR<InputIterator>();
+		IS_INDEX_TYPE<InputIterator::value_type>();
+		
+		const auto size = static_cast<int>(end - begin);
+		assert(size >= 0);
+
+		if (vbo_.getSize() != 0 && usage_ == GL_STATIC_DRAW) {
+			logger()->error("[Batch] VertexData is static, data index can't be modified.");
+			return;
+		}
+		for (auto it = begin; it != end; ++it) {
+			auto index = *it;
+			indexes_.push_back(index + currentIndexesIndex);
+		}
+	}
+
+	template <class Vertex>
+	void Batch<Vertex>::addIndexes(const std::vector<GLuint>& indexes) {
+		addIndexes(indexes.begin(), indexes.end());
+	}
+
+	template <class Vertex>
+	template<class ...Indexes>
+	void Batch<Vertex>::addIndexes(Indexes&& ...pack) {
+		std::array<GLint, sizeof...(Indexes)> indexes = {{ pack ... }};
+		addIndexes(indexes.begin(), indexes.end());
+	}
+
+	template <class Vertex>
+	void Batch<Vertex>::assertIndexSizeIsValid() const {
+		assert(mode_ != GL_TRIANGLES || (mode_ == GL_TRIANGLES && indexes_ % 3 == 0));
 	}
 
 } // Namespace sdl.
