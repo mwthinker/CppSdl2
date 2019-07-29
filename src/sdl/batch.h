@@ -60,6 +60,8 @@ namespace sdl {
 		void addIndexes(Indexes&& ...vertexes);
 
 	private:
+		bool isEveryIndexSizeValid() const;
+
 		void assertIndexSizeIsValid() const;
 
 		template<class InputIterator>
@@ -234,6 +236,7 @@ namespace sdl {
 		if (vbo_.getSize() > 0) {
 			if (uploadedIndex_ > 0) { // Data is avaiable to be drawn.
 				if (!indexes_.empty()) {
+					assertIndexSizeIsValid();
 					glDrawElements(mode_, static_cast<GLuint>(indexes_.size()), GL_UNSIGNED_INT, nullptr);
 				} else {
 					glDrawArrays(mode_, 0, index_);
@@ -319,8 +322,18 @@ namespace sdl {
 	}
 
 	template <class Vertex>
+	bool Batch<Vertex>::isEveryIndexSizeValid() const {
+		for (auto index : indexes_) {
+			if (index < 0 || index >= vertexes_.size()) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+	template <class Vertex>
 	void Batch<Vertex>::assertIndexSizeIsValid() const {
-		assert(mode_ != GL_TRIANGLES || (mode_ == GL_TRIANGLES && indexes_ % 3 == 0));
+		assert(mode_ != GL_TRIANGLES || (mode_ == GL_TRIANGLES && indexes_.size() % 3 == 0 && isEveryIndexSizeValid()));
 	}
 
 } // Namespace sdl.
