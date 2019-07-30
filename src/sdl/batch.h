@@ -42,7 +42,7 @@ namespace sdl {
 		void draw() const;
 
 		template<class InputIterator>
-		void add(InputIterator begin, InputIterator end);
+		void insert(InputIterator begin, InputIterator end);
 
 		void add(const std::vector<Vertex>& data);
 
@@ -52,7 +52,7 @@ namespace sdl {
 		void startIndex();
 
 		template<class InputIterator>
-		void addIndexes(InputIterator begin, InputIterator end);
+		void insertIndexes(InputIterator begin, InputIterator end);
 
 		void addIndexes(const std::vector<GLuint>& data);
 
@@ -250,7 +250,7 @@ namespace sdl {
 
 	template <class Vertex>
 	template<class InputIterator>
-	void Batch<Vertex>::add(InputIterator begin, InputIterator end) {
+	void Batch<Vertex>::insert(InputIterator begin, InputIterator end) {
 		IS_RANDOM_ACCESS_ITERATOR<InputIterator>();
 		
 		const auto size = static_cast<int>(end - begin);
@@ -275,14 +275,14 @@ namespace sdl {
 
 	template <class Vertex>
 	void Batch<Vertex>::add(const std::vector<Vertex>& data) {
-		add(data.begin(), data.end());
+		insert(data.begin(), data.end());
 	}
 
 	template <class Vertex>
 	template<class ...Vertexes>
 	void Batch<Vertex>::add(Vertexes&& ... pack) {
 		std::array<Vertex, sizeof...(Vertexes)> vertexes = {{ pack ... }};
-		add(vertexes.begin(), vertexes.end());
+		insert(vertexes.begin(), vertexes.end());
 	}
 
 	template <class Vertex>
@@ -292,9 +292,9 @@ namespace sdl {
 
 	template <class Vertex>
 	template<class InputIterator>
-	void Batch<Vertex>::addIndexes(InputIterator begin, InputIterator end) {
+	void Batch<Vertex>::insertIndexes(InputIterator begin, InputIterator end) {
 		IS_RANDOM_ACCESS_ITERATOR<InputIterator>();
-		IS_INDEX_TYPE<InputIterator::value_type>();
+		IS_INDEX_TYPE<typename std::decay<decltype(*begin)>::type>();
 		
 		const auto size = static_cast<int>(end - begin);
 		assert(size >= 0);
@@ -311,14 +311,14 @@ namespace sdl {
 
 	template <class Vertex>
 	void Batch<Vertex>::addIndexes(const std::vector<GLuint>& indexes) {
-		addIndexes(indexes.begin(), indexes.end());
+		insertIndexes(indexes.begin(), indexes.end());
 	}
 
 	template <class Vertex>
 	template<class ...Indexes>
 	void Batch<Vertex>::addIndexes(Indexes&& ...pack) {
 		std::array<GLint, sizeof...(Indexes)> indexes = {{ pack ... }};
-		addIndexes(indexes.begin(), indexes.end());
+		insertIndexes(indexes.begin(), indexes.end());
 	}
 
 	template <class Vertex>
