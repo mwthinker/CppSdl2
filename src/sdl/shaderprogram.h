@@ -11,7 +11,7 @@ namespace sdl {
 	class ShaderProgram {
 	public:
 		// Create an empty non linked shader.
-		ShaderProgram();
+		ShaderProgram() = default;
 
 		ShaderProgram(const ShaderProgram& sprite) = delete;
 		ShaderProgram& operator=(const ShaderProgram& sprite) = delete;
@@ -63,8 +63,8 @@ namespace sdl {
 		std::map<std::string, int> attributes_;
 		mutable std::map<std::string, int> uniforms_;
 
-		int location_;
-		GLuint programObjectId_;
+		int location_ = -1;
+		GLuint programObjectId_ = 0;
 	};
 
 } // Namespace sdl.

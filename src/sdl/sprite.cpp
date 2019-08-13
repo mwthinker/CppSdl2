@@ -6,11 +6,8 @@
 
 namespace sdl {
 
-	Sprite::Sprite() : x_(0), y_(0), dx_(0), dy_(0) {
-	}
-
 	Sprite::Sprite(const std::string& image, const std::function<void()>& filter) :
-		texture_(image, filter), x_(0), y_(0),
+		texture_(image, filter),
 		dx_(static_cast<float>(texture_.getWidth())),
 		dy_(static_cast<float>(texture_.getHeight())) {
 	}

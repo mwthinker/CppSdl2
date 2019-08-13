@@ -7,28 +7,19 @@ namespace sdl {
 
 	int Sound::lastId_ = 0;
 
-	Sound::Sound() {
-		channel_ = -1;
-		id_ = ++lastId_;
-		volume_ = 1;
+	Sound::Sound() : id_(++lastId_) {
 	}
 
 	Sound::~Sound() {
 		stopPlaying();
 	}
 
-	Sound::Sound(const std::string& filename) {
-		soundBuffer_ = std::make_shared<SoundBuffer>(filename);
-		channel_ = -1;
-		id_ = ++lastId_;
-		volume_ = 1;
+	Sound::Sound(const std::string& filename) :
+		soundBuffer_(std::make_shared<SoundBuffer>(filename)), id_(++lastId_) {
 	}
 	
-	Sound::Sound(const Sound& sound) {
-		soundBuffer_ = sound.soundBuffer_;
-		channel_ = -1;
-		id_ = ++lastId_;
-		volume_ = sound.volume_;
+	Sound::Sound(const Sound& sound) :
+		soundBuffer_(sound.soundBuffer_ ), volume_(sound.volume_), id_(++lastId_) {
 	}
 
 	Sound& Sound::operator=(const Sound& sound) {

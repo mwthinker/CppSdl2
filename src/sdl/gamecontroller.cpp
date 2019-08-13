@@ -3,10 +3,7 @@
 
 #include <SDL.h>
 
-namespace sdl {
-
-	GameController::GameController() noexcept : GameController(nullptr) {
-	}
+namespace sdl {	
 
 	GameController::GameController(SDL_GameController* gameController) noexcept : gameController_(gameController) {
 	}

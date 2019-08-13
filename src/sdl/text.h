@@ -11,7 +11,7 @@ namespace sdl {
 	class Text {
 	public:
 		// Create a empty text object.
-		Text();
+		Text() = default;
 
 		// Create a Text object with the text and font provided.
 		// The character size for the text is the same as the font.
@@ -70,8 +70,8 @@ namespace sdl {
 
         Font font_;
 		Texture texture_;
-		std::string text_;
-		float characterSize_;
+		std::string text_ = "";
+		float characterSize_ = 0.f;
 	};
 
 	inline std::string Text::getText() const {

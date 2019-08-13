@@ -29,8 +29,7 @@ namespace sdl {
 		friend class TextureAtlas;
 		friend class Text;
 
-		// Empty texture. Does nothing.
-		Texture();
+		Texture() = default;
 
 		// Loads a image from a file. It stores the image in memory and no opengl
 		// code are of use in the constructor (safe to call constructor in other threads).
@@ -117,14 +116,14 @@ namespace sdl {
 			// Is mutable in order for the bind() function to be const.
 			// It's ok beacause the variables can be seen as cache variables.
 			// So the external "constness" is preserved.
-			mutable SDL_Surface* preLoadSurface_;
-			mutable GLuint texture_;
-			std::function<void()> filter_;
+			mutable SDL_Surface* preLoadSurface_ = nullptr;
+			mutable GLuint texture_ = 0;
+			std::function<void()> filter_ = [](){};
 		};
 		
-		std::shared_ptr<ImageData> imageData_;
-		mutable bool firstCallBind_;
-		int width_, height_;
+		std::shared_ptr<ImageData> imageData_ = nullptr;
+		mutable bool firstCallBind_ = true;
+		int width_ = 0, height_ = 0;
 	};
 
 	inline bool Texture::operator==(const Texture& texture) const {

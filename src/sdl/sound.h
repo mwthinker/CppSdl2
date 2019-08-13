@@ -82,10 +82,11 @@ namespace sdl {
 			return (channel_ != -1 && SoundBuffer::channelList[channel_] == id_);
 		}
 
-		float volume_;
-		int channel_;
-		int id_;
-		std::shared_ptr<SoundBuffer> soundBuffer_;
+		std::shared_ptr<SoundBuffer> soundBuffer_ = nullptr;
+
+		float volume_ = 1.f;
+		int channel_ = -1;
+		int id_ = 0;
 
 		static int lastId_;
 	};

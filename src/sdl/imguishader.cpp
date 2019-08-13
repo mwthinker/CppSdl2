@@ -17,11 +17,7 @@ namespace sdl {
 
 	}
 
-	ImGuiShader::ImGuiShader() : aPosIndex_(-1), aTexIndex_(-1), aColorIndex_(-1),
-		uMatrixIndex_(-1), uTextureIndex_(-1) {
-	}
-
-	ImGuiShader::ImGuiShader(const GLchar* vShade, const GLchar* fShader) : ImGuiShader() {
+	ImGuiShader::ImGuiShader(const GLchar* vShade, const GLchar* fShader) {
 		shader_.bindAttribute(A_POS);
 		shader_.bindAttribute(A_TEX);
 		shader_.bindAttribute(A_COL);

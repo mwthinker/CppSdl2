@@ -7,7 +7,7 @@ namespace sdl {
 
 	class VertexArrayObject {
 	public:
-		VertexArrayObject() noexcept;
+		VertexArrayObject() noexcept = default;
 
 		~VertexArrayObject();
 
@@ -24,7 +24,7 @@ namespace sdl {
 		static void unbind();
 
 	private:
-		GLuint vao_;
+		GLuint vao_ = 0;
 	};
 
 } // Namespace sdl.

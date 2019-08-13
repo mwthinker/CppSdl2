@@ -12,7 +12,7 @@ namespace sdl {
 	class Sprite {
 	public:
 		// Create an empty sprite, but it will draw nothing.
-		Sprite();
+		Sprite() = default;
 
 		// Load an image from file.
 		explicit Sprite(const std::string& image, const std::function<void()>& filter = []() {
@@ -77,7 +77,7 @@ namespace sdl {
 
 	private:
 		Texture texture_;
-		float x_, y_, dx_, dy_;
+		float x_ = 0, y_ = 0, dx_ = 0, dy_ = 0;
 	};
 
 } // Namespace sdl.

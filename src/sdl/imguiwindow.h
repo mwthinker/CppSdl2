@@ -36,44 +36,44 @@ namespace sdl {
         virtual void imGuiUpdate(double deltaTime) {};
 
 		struct GLState {
-			GLenum lastActiveTexture;
+			GLenum lastActiveTexture = 0;
 
-			GLint lastProgram;
-			GLint lastTexture;
+			GLint lastProgram = 0;
+			GLint lastTexture = 0;
 #ifdef GL_SAMPLER_BINDING
-			GLint lastSampler;
+			GLint lastSampler = 0;
 #endif
-			GLint lastArrayBuffer;
-			GLint lastVertexArray;
+			GLint lastArrayBuffer = 0;
+			GLint lastVertexArray = 0;
 #ifdef GL_POLYGON_MODE
-			GLint lastPolygonMode[2];
+			GLint lastPolygonMode[2] = {0, 0};
 #endif
-			GLint lastViewport[4];
-			GLint lastScissorBox[4];
-			GLenum lastBlendSrcRgb;
-			GLenum lastBlendDstRgb;
-			GLenum lastBlendSrcAlpha;
-			GLenum lastBlendDstAlpha;
-			GLenum lastBlendEquationRgb;
-			GLenum lastBlendEquationAlpha;
-			GLboolean lastEnableBlend;
-			GLboolean lastEnableCullFace;
-			GLboolean lastEnableDepthTest;
-			GLboolean lastEnableScissorTest;
-			bool clipOriginLowerLeft;
+			GLint lastViewport[4] = {0, 0, 0, 0};
+			GLint lastScissorBox[4] = {0, 0, 0, 0};
+			GLenum lastBlendSrcRgb = 0;
+			GLenum lastBlendDstRgb = 0;
+			GLenum lastBlendSrcAlpha = 0;
+			GLenum lastBlendDstAlpha = 0;
+			GLenum lastBlendEquationRgb = 0;
+			GLenum lastBlendEquationAlpha = 0;
+			GLboolean lastEnableBlend = GL_FALSE;
+			GLboolean lastEnableCullFace = GL_FALSE;
+			GLboolean lastEnableDepthTest = GL_FALSE;
+			GLboolean lastEnableScissorTest = GL_FALSE;
+			bool clipOriginLowerLeft = false;
 #if defined(GL_CLIP_ORIGIN) && !defined(__APPLE__)
-			GLenum lastClipOrigin;
+			GLenum lastClipOrigin = 0;
 #endif
 		};
 
 		// ImGui SDL2 specific code.
 		bool ImGui_ImplSDL2_ProcessEvent(const SDL_Event& sdlEvent);
-		bool ImGui_ImplSDL2_Init();
+		void ImGui_ImplSDL2_Init();
 		void ImGui_ImplSDL2_Shutdown();
 		void ImGui_ImplSDL2_NewFrame(double deltaTime);
 
 		// ImGui OpenGL3 specific code.
-		bool ImGui_ImplOpenGL3_Init();
+		void ImGui_ImplOpenGL3_Init();
 		void ImGui_ImplOpenGL3_Shutdown();
 		void ImGui_ImplOpenGL3_NewFrame();
 		void ImGui_ImplOpenGL3_RenderDrawData(ImDrawData* drawData);
@@ -91,22 +91,22 @@ namespace sdl {
 
 		void setupVao();
 
-		bool showDemoWindow_;
-		float menuHeight_;
-		bool initiatedOpenGl_;
-		bool initiatedSdl_;
-
-		std::array<bool, 3> mousePressed_;
-		
 		GLState glState_;
-		GLuint imGuiFontTexture_;
+		std::array<bool, 3> mousePressed_ = { false, false, false };
+		std::array<SDL_Cursor*, ImGuiMouseCursor_COUNT> mouseCursors_ = { nullptr };
+
 		sdl::VertexArrayObject vao_;
 		VertexBufferObject imGuiVbo_;
-        VertexBufferObject imGuiElementsVbo_;
-		
+		VertexBufferObject imGuiElementsVbo_;
+
 		sdl::ImGuiShader shader_;
-        std::array<SDL_Cursor*, ImGuiMouseCursor_COUNT> mouseCursors_;
-		char* clipboardTextData_;
+		
+		bool showDemoWindow_ = true;
+		bool initiatedOpenGl_ = false;
+		bool initiatedSdl_ = false;
+        
+		char* clipboardTextData_ = nullptr;
+		GLuint imGuiFontTexture_ = 0;
 	};
 
 	inline bool ImGuiWindow::isShowDemoWindow() const {

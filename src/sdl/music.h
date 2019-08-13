@@ -13,7 +13,7 @@ namespace sdl {
 	public:
 		// Creates a empty music object. Does nothing, but is safe to use as
 		// a regular music object, but no music will be heared.
-		Music();
+		Music() = default;
 
 		// Loads a musicfile and creates a music object.
 		// Only one music file can be played.
@@ -71,13 +71,13 @@ namespace sdl {
 			MusicBuffer(const std::string& filename);
 			~MusicBuffer();
 
-			Mix_Music* mixMusic_;
-			bool valid_;
-			std::string error_;
+			Mix_Music* mixMusic_ = nullptr;
+			bool valid_ = true;
+			std::string error_ = "";
 		};
-
-		MusicBufferPtr musicBuffer_;
-		float volume_;
+				
+		float volume_ = 1.f;
+		MusicBufferPtr musicBuffer_ = nullptr;
 	};
 
 

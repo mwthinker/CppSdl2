@@ -15,7 +15,7 @@ namespace sdl {
 
 		static void removeController(GameController&& gameController);
 
-		GameController() noexcept;
+		GameController() noexcept = default;
 		~GameController();
 
 		GameController(GameController&& other) noexcept;
@@ -43,7 +43,7 @@ namespace sdl {
 	private:
 		GameController(SDL_GameController* gameController) noexcept;
 
-		SDL_GameController* gameController_;
+		SDL_GameController* gameController_ = nullptr;
 	};
 
 	inline SDL_GameController* GameController::getSdlGameController() const {

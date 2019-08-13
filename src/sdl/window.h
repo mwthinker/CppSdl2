@@ -3,11 +3,10 @@
 
 #include "opengl.h"
 
-#include <string>
-#include <functional>
-#include <utility>
-
 #include <SDL.h>
+
+#include <string>
+#include <utility>
 
 namespace sdl {
 
@@ -16,7 +15,7 @@ namespace sdl {
 	// the window and origo is on the left down side.
 	class Window {
 	public:
-		Window();
+		Window() = default;
 
 		Window(int majorVersionGl, int minorVersionGl);
 
@@ -40,6 +39,8 @@ namespace sdl {
 		std::pair<int, int> getSize() const;
 
 		std::pair<int, int> getDrawableSize() const;
+
+		std::pair<int, int> getWindowPosition() const;
 
 		// Return the current windows width in pixels.
 		int getWidth() const;
@@ -90,6 +91,11 @@ namespace sdl {
 		}
 
 	private:
+		static constexpr int DEFAULT_MAJOR_VERSION_GL = 3;
+		static constexpr int DEFAULT_MINOR_VERSION_GL = 3;
+		static constexpr int DEFAULT_WIDTH = 800;
+		static constexpr int DEFAULT_HEIGHT = 800;
+
 		// Is called by the loop. The frequency in which this function is called is fixed
 		// by the vertical frequency of the monitor (VSYNC) or the sleeping time of the loop.
 		virtual void update(double deltaTime) {
@@ -103,21 +109,23 @@ namespace sdl {
 
 		void setupOpenGlContext();
 
-		SDL_Window* window_;
-		SDL_GLContext glContext_;
-		int width_, height_;
-		bool quit_;
-		bool fullScreen_;
-		bool bordered_;
-		bool resizable_;
-		
-		GLbitfield glBitfield_;
-		int x_, y_;
-		std::string title_;
-		SDL_Surface* icon_;
-		int sleepingTime_;
+		std::string title_ = "";
 
-		const int majorVersionGl_, minorVersionGl_;
+		SDL_Window* window_ = nullptr;
+		SDL_GLContext glContext_ = nullptr;
+		SDL_Surface* icon_ = nullptr;
+		
+		int width_ = DEFAULT_WIDTH, height_ = DEFAULT_HEIGHT;
+		int x_ = SDL_WINDOWPOS_UNDEFINED, y_ = SDL_WINDOWPOS_UNDEFINED;
+		int sleepingTime_ = -1;
+		const int majorVersionGl_ = DEFAULT_MAJOR_VERSION_GL, minorVersionGl_ = DEFAULT_MINOR_VERSION_GL;
+		
+		GLbitfield glBitfield_ = GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT;
+		
+		bool quit_ = false;
+		bool fullScreen_ = false;
+		bool bordered_ = true;
+		bool resizable_ = true;
 	};
 
 	inline void Window::quit() {

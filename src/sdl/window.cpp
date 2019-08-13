@@ -24,16 +24,9 @@ namespace sdl {
 			glGetError(); // Ignore, silly error which glew may cause.
 		}
 
-		constexpr int DEFAULT_MAJOR_VERSION_GL = 3;
-		constexpr int DEFAULT_MINOR_VERSION_GL = 3;
 	}
 
-	Window::Window() : Window(DEFAULT_MAJOR_VERSION_GL, DEFAULT_MINOR_VERSION_GL) {
-	}
-
-	Window::Window(int majorVersionGl, int minorVersionGl) : window_(nullptr), x_(-1), y_(-1), icon_(nullptr), width_(800), height_(800),
-		title_(""), resizable_(true), bordered_(true), fullScreen_(false), sleepingTime_(-1), quit_(false),
-		glContext_(nullptr), glBitfield_(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT),
+	Window::Window(int majorVersionGl, int minorVersionGl) :
 		majorVersionGl_(majorVersionGl), minorVersionGl_(minorVersionGl) {
 
 		logger()->info("[Window] Creating Window");
@@ -85,13 +78,6 @@ namespace sdl {
 
 			if (!bordered_) {
 				flags |= SDL_WINDOW_BORDERLESS;
-			}
-
-			if (x_ < 0) {
-				x_ = SDL_WINDOWPOS_UNDEFINED;
-			}
-			if (y_ < 0) {
-				y_ = SDL_WINDOWPOS_UNDEFINED;
 			}
 
 			initOpenGl();
@@ -233,6 +219,17 @@ namespace sdl {
 		} else {
 			pair.first = width_;
 			pair.second = height_;
+		}
+		return pair;
+	}
+
+	std::pair<int, int> Window::getWindowPosition() const {
+		std::pair<int, int> pair;
+		if (window_) {
+			SDL_GetWindowPosition(window_, &pair.first, &pair.second);
+		} else {
+			pair.first = x_;
+			pair.second = y_;
 		}
 		return pair;
 	}

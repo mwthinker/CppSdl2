@@ -69,12 +69,6 @@ namespace sdl {
 
 	}
 
-	ShaderProgram::ShaderProgram() :
-		location_(0),
-		programObjectId_(0) {
-
-	}
-
 	ShaderProgram::ShaderProgram(ShaderProgram&& other) noexcept :
 		attributes_(std::move(other.attributes_)),
 		uniforms_(std::move(other.uniforms_)),

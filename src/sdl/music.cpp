@@ -5,13 +5,8 @@
 
 namespace sdl {
 
-	Music::Music() {
-		volume_ = 1;
-	}
-
-	Music::Music(const std::string& filename) {
-		musicBuffer_ = std::make_shared<MusicBuffer>(filename);
-		volume_ = 1;
+	Music::Music(const std::string& filename) :
+		musicBuffer_(std::make_shared<MusicBuffer>(filename)) {
 	}
 
 	void Music::play(int loops) {
@@ -59,7 +54,7 @@ namespace sdl {
 	}
 
 	Music::MusicBuffer::~MusicBuffer() {
-		if (mixMusic_ != 0) {
+		if (mixMusic_ != nullptr) {
 			Mix_FreeMusic(mixMusic_);
 		}
 	}

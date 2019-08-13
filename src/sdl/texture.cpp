@@ -90,11 +90,6 @@ namespace sdl {
 		}
 	}
 
-	Texture::Texture() : 
-		firstCallBind_(true),
-		width_(0), height_(0) {
-	}
-
 	Texture::Texture(const std::string& filename, const std::function<void()>& filter) :
 		Texture(IMG_Load(filename.c_str())) {
 	}
@@ -162,12 +157,11 @@ namespace sdl {
 		}
 	}
 	
-	Texture::ImageData::ImageData(std::function<void()> filter) :
-		preLoadSurface_(0), texture_(0), filter_(filter) {
+	Texture::ImageData::ImageData(std::function<void()> filter) : filter_(filter) {
 	}
 
 	Texture::ImageData::ImageData(SDL_Surface* surface, std::function<void()> filter) :
-		preLoadSurface_(surface), texture_(0), filter_(filter) {
+		preLoadSurface_(surface), filter_(filter) {
 	}
 
 	void Texture::ImageData::loadImageToGraphic() const {

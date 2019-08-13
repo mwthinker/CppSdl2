@@ -15,10 +15,6 @@ namespace sdl {
 
 	}
 
-	VertexBufferObject::VertexBufferObject() noexcept
-		: vboId_(0), size_(0), target_(0) {
-	}
-
 	VertexBufferObject::~VertexBufferObject() {
 		if (vboId_ != 0) {
 			glDeleteBuffers(1, &vboId_);
@@ -47,6 +43,7 @@ namespace sdl {
 
 	void VertexBufferObject::bufferData(GLsizeiptr size, const GLvoid* data, GLenum usage) {
 		assert(isValidDataBufferUsage(usage));
+		assert(vboId_ != 0);
 
         size_ = size;
 

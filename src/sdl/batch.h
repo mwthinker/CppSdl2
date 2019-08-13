@@ -242,6 +242,8 @@ namespace sdl {
 					glDrawArrays(mode_, 0, index_);
 				}
 				sdl::checkGlError();
+			} else {
+				logger()->warn("[Batch] VertexData failed to draw, no data uploaded to call to uploadToGraphicCard().");
 			}
 		} else {
 			logger()->error("[Batch] VertexData failed to draw, no vbo binded, i.e. Batch::uploadToGraphicCard never called.");

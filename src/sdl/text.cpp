@@ -7,10 +7,6 @@
 
 namespace sdl {
 
-	Text::Text() : characterSize_(0) {
-		setText("");
-	}
-
 	Text::Text(const std::string& text, const Font& font) : characterSize_((float) font.getCharacterSize()), font_(font) {
 		setText(text);
 	}

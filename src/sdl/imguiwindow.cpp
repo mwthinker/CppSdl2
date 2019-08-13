@@ -11,55 +11,42 @@ namespace sdl {
 
 	namespace {
 
-		/*
-		bool ComboAi(const char* name, int& item, const std::vector<Ai>& ais, ImGuiComboFlags flags = 0) {
-			int oldItem = item;
-			if (ImGui::BeginCombo(name, ais[item].getName().c_str(), flags))
-			{
-				size_t size = ais.size();
-				for (int n = 0; n < size; ++n)
-				{
-					bool is_selected = (item == n);
-					if (ImGui::Selectable(ais[n].getName().c_str(), is_selected)) {
-						item = n;
-					}
-					if (is_selected)
-						ImGui::SetItemDefaultFocus();
-				}
-				ImGui::EndCombo();
-			}
-			return oldItem != item;
-		}
-		*/
-
 		constexpr const GLchar* getVertexShaderGlsl_330() {
 			return
-				"#version 330 core\n"
-				"uniform mat4 ProjMtx;\n"
-				"in vec2 Position;\n"
-				"in vec2 UV;\n"
-				"in vec4 Color;\n"
-				"out vec2 Frag_UV;\n"
-				"out vec4 Frag_Color;\n"
-				"void main()\n"
-				"{\n"
-				"    Frag_UV = UV;\n"
-				"    Frag_Color = Color;\n"
-				"    gl_Position = ProjMtx * vec4(Position.xy,0,1);\n"
-				"}\n";
+				"#version 330 core                                           \n"
+				"                                                              "
+				"uniform mat4 ProjMtx;                                       \n"
+				"                                                              "
+				"in vec2 Position;                                           \n"
+				"in vec2 UV;                                                 \n"
+				"in vec4 Color;                                              \n"
+				"                                                              "
+				"out vec2 Frag_UV;                                           \n"
+				"out vec4 Frag_Color;                                        \n"
+				"                                                              "
+				"void main()                                                 \n"
+				"{                                                           \n"
+				"    Frag_UV = UV;                                           \n"
+				"    Frag_Color = Color;                                     \n"
+				"    gl_Position = ProjMtx * vec4(Position.xy,0,1);          \n"
+				"}                                                           \n";
 		}
 
 		constexpr const GLchar* getFragmentShaderGlsl_330() {
 			return
-				"#version 330 core\n"
-				"uniform sampler2D Texture;\n"
-				"in vec2 Frag_UV;\n"
-				"in vec4 Frag_Color;\n"
-				"out vec4 Out_Color;\n"
-				"void main()\n"
-				"{\n"
-				"    Out_Color = Frag_Color * texture(Texture, Frag_UV.st);\n"
-				"}\n";
+				"#version 330 core                                           \n"
+				"                                                              "
+				"uniform sampler2D Texture;                                  \n"
+				"                                                              "
+				"in vec2 Frag_UV;                                            \n"
+				"in vec4 Frag_Color;                                         \n"
+				"                                                              "
+				"out vec4 Out_Color;                                         \n"
+				"                                                              "
+				"void main()                                                 \n"
+				"{                                                           \n"
+				"    Out_Color = Frag_Color * texture(Texture, Frag_UV.st);  \n"
+				"}                                                           \n";
 		}
 
 		constexpr int getGlslVersion3(int minorVersion) {
@@ -93,10 +80,7 @@ namespace sdl {
 		
 	}
 
-	ImGuiWindow::ImGuiWindow() : imGuiFontTexture_(0),
-		mousePressed_{false, false, false}, clipboardTextData_(nullptr), showDemoWindow_(true),
-		initiatedOpenGl_(false), initiatedSdl_(false), mouseCursors_{nullptr} {
-
+	ImGuiWindow::ImGuiWindow() {
 		for (auto& cursor : mouseCursors_) {
 			cursor = nullptr;
 		}
@@ -172,29 +156,26 @@ namespace sdl {
 	bool ImGuiWindow::ImGui_ImplSDL2_ProcessEvent(const SDL_Event& sdlEvent) {
 		ImGuiIO& io = ImGui::GetIO();
 		switch (sdlEvent.type) {
-			case SDL_MOUSEWHEEL:
-			{
+			case SDL_MOUSEWHEEL: {
 				if (sdlEvent.wheel.x > 0) io.MouseWheelH += 1;
 				if (sdlEvent.wheel.x < 0) io.MouseWheelH -= 1;
 				if (sdlEvent.wheel.y > 0) io.MouseWheel += 1;
 				if (sdlEvent.wheel.y < 0) io.MouseWheel -= 1;
 				return true;
 			}
-			case SDL_MOUSEBUTTONDOWN:
-			{
+			case SDL_MOUSEBUTTONDOWN: {
 				if (sdlEvent.button.button == SDL_BUTTON_LEFT) mousePressed_[0] = true;
 				if (sdlEvent.button.button == SDL_BUTTON_RIGHT) mousePressed_[1] = true;
 				if (sdlEvent.button.button == SDL_BUTTON_MIDDLE) mousePressed_[2] = true;
 				return true;
 			}
-			case SDL_TEXTINPUT:
-			{
+			case SDL_TEXTINPUT: {
 				io.AddInputCharactersUTF8(sdlEvent.text.text);
 				return true;
 			}
 			case SDL_KEYDOWN:
-			case SDL_KEYUP:
-			{
+				// Fall through.
+			case SDL_KEYUP: {
 				int key = sdlEvent.key.keysym.scancode;
 				IM_ASSERT(key >= 0 && key < IM_ARRAYSIZE(io.KeysDown));
 				io.KeysDown[key] = (sdlEvent.type == SDL_KEYDOWN);
@@ -209,7 +190,7 @@ namespace sdl {
 		return false;
 	}
 
-	bool ImGuiWindow::ImGui_ImplSDL2_Init() {
+	void ImGuiWindow::ImGui_ImplSDL2_Init() {
 		initiatedSdl_ = true;
 		// Setup back-end capabilities flags
 		auto& io = ImGui::GetIO();
@@ -265,7 +246,6 @@ namespace sdl {
 		SDL_GetWindowWMInfo(getSdlWindow(), &wmInfo);
 		io.ImeWindowHandle = wmInfo.info.win.window;
 #endif
-		return true;
 	}
 
 	void ImGuiWindow::ImGui_ImplSDL2_Shutdown() {
@@ -310,17 +290,14 @@ namespace sdl {
 		mousePressed_[0] = mousePressed_[1] = mousePressed_[2] = false;
 
 #if !defined(__EMSCRIPTEN__) && !defined(__ANDROID__) && !(defined(__APPLE__) && TARGET_OS_IOS)
-		SDL_Window* focusedWindow = SDL_GetKeyboardFocus();
-		if (getSdlWindow() == focusedWindow) {
-			// SDL_GetMouseState() gives mouse position seemingly based on the last window entered/focused(?)
-			// The creation of a new windows at runtime and SDL_CaptureMouse both seems to severely mess up with that, so we retrieve that position globally.
-			int wx, wy;
-			SDL_GetWindowPosition(focusedWindow, &wx, &wy);
-			SDL_GetGlobalMouseState(&mx, &my);
-			mx -= wx;
-			my -= wy;
-			io.MousePos = {(float) mx, (float) my};
-		}
+		// SDL_GetMouseState() gives mouse position seemingly based on the last window entered/focused(?)
+		// The creation of a new windows at runtime and SDL_CaptureMouse both seems to severely mess up with that, so we retrieve that position globally.
+			
+		auto [wx, wy] = getWindowPosition();
+		SDL_GetGlobalMouseState(&mx, &my);
+		mx -= wx;
+		my -= wy;
+		io.MousePos = {(float) mx, (float) my};		
 
 		// SDL_CaptureMouse() let the OS know e.g. that our imgui drag outside the SDL window boundaries shouldn't e.g. trigger the OS window resize cursor.
 		SDL_CaptureMouse(ImGui::IsAnyMouseDown()? SDL_TRUE : SDL_FALSE);
@@ -331,7 +308,7 @@ namespace sdl {
 #endif
 	}
 
-	bool ImGuiWindow::ImGui_ImplOpenGL3_Init() {
+	void ImGuiWindow::ImGui_ImplOpenGL3_Init() {
 		initiatedOpenGl_ = true;
 		ImGuiIO& io = ImGui::GetIO();
 		io.BackendRendererName = "imgui_impl_opengl3";
@@ -341,7 +318,6 @@ namespace sdl {
 		// Desktop OpenGL 3/4 need a function loader. See the IMGUI_IMPL_OPENGL_LOADER_xxx explanation above.
 		GLint currentTexture;
 		glGetIntegerv(GL_TEXTURE_BINDING_2D, &currentTexture);
-		return true;
 	}
 
 	void ImGuiWindow::ImGui_ImplOpenGL3_Shutdown() {

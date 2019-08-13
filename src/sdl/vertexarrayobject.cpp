@@ -6,10 +6,6 @@
 
 namespace sdl {
 
-	VertexArrayObject::VertexArrayObject() noexcept
-		: vao_(0) {
-	}
-
 	VertexArrayObject::~VertexArrayObject() {
 		if (vao_ != 0) {
 			glDeleteVertexArrays(1, &vao_);

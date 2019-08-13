@@ -8,7 +8,7 @@ namespace sdl {
 	class VertexBufferObject {
 	public:
 		// Create a empty vertex buffer object.
-		VertexBufferObject() noexcept;
+		VertexBufferObject() = default;
 
 		~VertexBufferObject();
 
@@ -43,9 +43,9 @@ namespace sdl {
 		GLenum getTarget() const noexcept;
 
 	private:
-		GLuint vboId_;
-		GLsizeiptr size_;
-		GLenum target_;
+		GLuint vboId_ = 0;
+		GLsizeiptr size_ = 0;
+		GLenum target_ = 0;
 	};
 
 	inline GLsizeiptr VertexBufferObject::getSize() const noexcept {

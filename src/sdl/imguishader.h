@@ -9,7 +9,7 @@ namespace sdl {
 
 	class ImGuiShader {
 	public:
-		ImGuiShader();
+		ImGuiShader() = default;
 		ImGuiShader(const GLchar* vShade, const GLchar* fShader);
 
 		ImGuiShader(const ImGuiShader&) = delete;
@@ -30,13 +30,13 @@ namespace sdl {
 		sdl::ShaderProgram shader_;
 
 		// Vertex buffer attributes.
-		int aPosIndex_;
-		int aTexIndex_;
-		int aColorIndex_;
+		int aPosIndex_ = -1;
+		int aTexIndex_ = -1;
+		int aColorIndex_ = -1;
 
 		// Vertex buffer uniform.
-		int uMatrixIndex_;
-		int uTextureIndex_;
+		int uMatrixIndex_ = -1;
+		int uTextureIndex_ = -1;
 	};
 
 } // Namespace sdl.
