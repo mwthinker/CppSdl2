@@ -31,14 +31,14 @@ namespace sdl {
                 }
                 std::string str;
                 str.append(message, message + size);
-                logger()->error("[Shader] {}, {}: {}", shaderString, errorHeader, str);
+                logger()->error("[ShaderProgram] {}, {}: {}", shaderString, errorHeader, str);
             }
         }
 
 		GLuint loadShader(GLuint program, GLenum type, const GLchar* shaderSrc) {
-			GLuint shader= glCreateShader(type);
+			auto shader= glCreateShader(type);
 			if (shader == 0) {
-                logger()->error("[Shader] Failed to create shader: ", shaderSrc);
+                logger()->error("[ShaderProgram] Failed to create shader: ", shaderSrc);
                 return 0;
 			}
 			glShaderSource(shader, 1, &shaderSrc, 0);
@@ -72,20 +72,16 @@ namespace sdl {
 	ShaderProgram::ShaderProgram(ShaderProgram&& other) noexcept :
 		attributes_(std::move(other.attributes_)),
 		uniforms_(std::move(other.uniforms_)),
-		location_(other.location_),
 		programObjectId_(other.programObjectId_) {
 
-	    other.location_ = -1;
 		other.programObjectId_ = 0;
 	}
 
 	ShaderProgram& ShaderProgram::operator=(ShaderProgram&& other) noexcept {
 		attributes_ = std::move(other.attributes_);
 		uniforms_ = std::move(other.uniforms_);
-		location_ = other.location_;
 		programObjectId_ = other.programObjectId_;
 
-		other.location_ = -1;
 		other.programObjectId_ = 0;
 		return *this;
 	}
@@ -101,7 +97,9 @@ namespace sdl {
 
 	void ShaderProgram::bindAttribute(const std::string& attribute) {
 		if (programObjectId_ == 0) {
-			attributes_[attribute] = location_;
+			attributes_[attribute] = 0;
+		} else {
+			logger()->warn("[ShaderProgram] Failed to bind attribute, program is already compiled");
 		}
 	}
 
@@ -120,7 +118,7 @@ namespace sdl {
 			if (it != uniforms_.end()) {
 				return it->second;
 			} else {
-				int loc = glGetUniformLocation(programObjectId_, uniform.c_str());
+				auto loc = glGetUniformLocation(programObjectId_, uniform.c_str());
 				checkGlError();
 				if (loc != -1) {
 					uniforms_[uniform] = loc;
@@ -162,19 +160,9 @@ namespace sdl {
                 return false;
 			}
 
-			// Bind all attributes.
-			for (auto& [name, location] : attributes_) {
-				glBindAttribLocation(programObjectId_, location_, name.c_str());
-				checkGlError();
-                location = location_++;
-			}
+			bindAllAttributes();
 
-			glLinkProgram(programObjectId_);
-			GLint linked;
-			glGetProgramiv(programObjectId_, GL_LINK_STATUS, &linked);
-			if (linked == GL_FALSE) {
-                logError<LogError::PROGRAM_ERROR>(programObjectId_,"", "Error linking program");
-				glDeleteProgram(programObjectId_);
+			if (!linkProgram()) {
 				return false;
 			}
 
@@ -192,6 +180,30 @@ namespace sdl {
 		if (programObjectId_ != 0) {
 			glUseProgram(programObjectId_);
 			checkGlError();
+		} else {
+			logger()->warn("[ShaderProgram] Failed to use program, program is not compiled");
+		}
+	}
+	
+	bool ShaderProgram::linkProgram() {
+		glLinkProgram(programObjectId_);
+		GLint linked;
+		glGetProgramiv(programObjectId_, GL_LINK_STATUS, &linked);
+		if (linked == GL_FALSE) {
+			logError<LogError::PROGRAM_ERROR>(programObjectId_, "", "Error linking program");
+			glDeleteProgram(programObjectId_);
+			return false;
+		}
+		return true;
+	}
+	
+
+	void ShaderProgram::bindAllAttributes() {
+		int index = 0;
+		for (auto& [name, location] : attributes_) {
+			glBindAttribLocation(programObjectId_, index, name.c_str());
+			checkGlError();
+			location = index++;
 		}
 	}
 

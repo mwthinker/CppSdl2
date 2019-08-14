@@ -74,7 +74,7 @@ namespace sdl {
 		Texture texture_;
 		std::map<std::string, Sprite> images_;
 		std::shared_ptr<Node> root_;
-		int width_, height_;
+		int width_ = 0, height_ = 0;
 	};
 
 } // Namespace sdl.

@@ -109,7 +109,7 @@ namespace sdl {
 
 		void setupOpenGlContext();
 
-		std::string title_ = "";
+		std::string title_;
 
 		SDL_Window* window_ = nullptr;
 		SDL_GLContext glContext_ = nullptr;

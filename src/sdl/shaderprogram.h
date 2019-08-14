@@ -60,10 +60,13 @@ namespace sdl {
 		}
 
 	private:
-		std::map<std::string, int> attributes_;
-		mutable std::map<std::string, int> uniforms_;
+		bool linkProgram();
 
-		int location_ = -1;
+		void bindAllAttributes();
+
+		std::map<std::string, GLuint> attributes_;
+		mutable std::map<std::string, GLuint> uniforms_;
+		
 		GLuint programObjectId_ = 0;
 	};
 

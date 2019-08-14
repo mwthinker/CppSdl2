@@ -34,11 +34,11 @@ namespace sdl {
 			FontData(TTF_Font* font) noexcept;
 			~FontData();
 
-			TTF_Font* font_;
+			TTF_Font* font_ = nullptr;
 		};
 
 		std::shared_ptr<FontData> fontData_;
-		int characterSize_;
+		int characterSize_ = 0;
 	};
 
 	inline bool Font::operator==(const Font& font) const noexcept {

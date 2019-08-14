@@ -10,9 +10,7 @@
 namespace sdl {
 
 	class Sound {
-	public:
-		// Creates a empty sound. Does nothing, but is safe to use as
-		// a regular sound, but no sound will be heared.
+	public:		
 		Sound();
 
 		~Sound();
@@ -82,7 +80,7 @@ namespace sdl {
 			return (channel_ != -1 && SoundBuffer::channelList[channel_] == id_);
 		}
 
-		std::shared_ptr<SoundBuffer> soundBuffer_ = nullptr;
+		std::shared_ptr<SoundBuffer> soundBuffer_;
 
 		float volume_ = 1.f;
 		int channel_ = -1;
