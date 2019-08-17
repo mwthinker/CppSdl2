@@ -241,7 +241,7 @@ namespace sdl {
 				} else {
 					glDrawArrays(mode_, 0, index_);
 				}
-				sdl::checkGlError();
+				assertGlError();
 			} else {
 				logger()->warn("[Batch] VertexData failed to draw, no data uploaded to call to uploadToGraphicCard().");
 			}

@@ -132,12 +132,12 @@ namespace sdl {
 					imageData_->loadImageToGraphic();
 				} else {
 					glBindTexture(GL_TEXTURE_2D, imageData_->texture_);
-					checkGlError();
+					assertGlError();
 				}
 			} else {
 				if (imageData_->texture_ != 0) {
 					glBindTexture(GL_TEXTURE_2D, imageData_->texture_);
-					checkGlError();
+					assertGlError();
 				}
 			}
 		}

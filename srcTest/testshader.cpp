@@ -1,35 +1,18 @@
 #include "testshader.h"
 #include "types.h"
 
-TestShader::TestShader() {
-    aPosIndex_ = -1;
-    aTexIndex_ = -1;
-
-    // Collect the vertex buffer uniforms indexes.
-    uProjIndex_ = -1;
-    uModelIndex_ = -1;
-
-    // Collect the fragment buffer uniforms indexes.
-    uColorIndex_ = -1;
-    uIsTexIndex_ = -1;
-}
-
 TestShader::TestShader(const std::string& vShader, const std::string& fShader) {
 	shaderProgram_.bindAttribute("aPos");
 	shaderProgram_.bindAttribute("aTex");
 	shaderProgram_.loadAndLinkFromFile(vShader, fShader);
 
 	shaderProgram_.useProgram();
-
-    // Collect the vertex buffer attributes indexes.
+    
     aPosIndex_ = shaderProgram_.getAttributeLocation("aPos");
     aTexIndex_ = shaderProgram_.getAttributeLocation("aTex");
-
-    // Collect the vertex buffer uniforms indexes.
+    
     uProjIndex_ = shaderProgram_.getUniformLocation("uProj");
     uModelIndex_ = shaderProgram_.getUniformLocation("uModel");
-
-    // Collect the fragment buffer uniforms indexes.
     uColorIndex_ = shaderProgram_.getUniformLocation("uColor");
     uIsTexIndex_ = shaderProgram_.getUniformLocation("uIsTexture");
 }
@@ -43,10 +26,8 @@ void TestShader::setVertexAttribPointer() const {
 	glVertexAttribPointer(aPosIndex_, 2, GL_FLOAT, GL_FALSE, vertexSizeInBytes(), (GLvoid*) (sizeof(GLfloat) * 0));
 	glEnableVertexAttribArray(aTexIndex_);
 	glVertexAttribPointer(aTexIndex_, 2, GL_FLOAT, GL_FALSE, vertexSizeInBytes(), (GLvoid*) (sizeof(GLfloat) * 2));
-	sdl::checkGlError();
+	sdl::assertGlError();
 }
-
-// Uniforms. -------------------------------------------
 
 void TestShader::setProjectionMatrixU(const Mat44& matrix) const {
 	shaderProgram_.useProgram();

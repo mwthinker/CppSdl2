@@ -10,7 +10,7 @@
 
 class TestShader {
 public:
-    TestShader();
+	TestShader() = default;
     TestShader(const std::string& vShader, const std::string& fShader);
 
 	static constexpr unsigned int vertexSizeInBytes() {
@@ -36,14 +36,14 @@ public:
 private:
     sdl::ShaderProgram shaderProgram_;
 
-    int aPosIndex_;
-    int aTexIndex_;
+    int aPosIndex_ = -1;
+    int aTexIndex_ = -1;
 
-    int uProjIndex_;
-    int uModelIndex_;
-
-    int uColorIndex_;
-    int uIsTexIndex_;
+    int uProjIndex_ = -1;
+    int uModelIndex_ = -1;
+    
+	int uColorIndex_ = -1;
+    int uIsTexIndex_ = -1;
 };
 
 #endif // TESTSHADER_H

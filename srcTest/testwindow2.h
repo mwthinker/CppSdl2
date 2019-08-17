@@ -42,7 +42,7 @@ private:
 		batch_->init();
 		batch_->uploadToGraphicCard();
 		sprite_.bindTexture();
-		sdl::checkGlError();
+		sdl::assertGlError();
 	}
 
 	void update(double deltaTime) override {
@@ -85,10 +85,10 @@ private:
 	}
 
 	void resize(int w, int h) {
-		sdl::checkGlError();
+		sdl::assertGlError();
 		glViewport(0, 0, w, h);
 		//shader_.setProjectionMatrix(glm::ortho(0, w, 0, h));
-		sdl::checkGlError();
+		sdl::assertGlError();
 	}
 
 	std::shared_ptr<TestShader2> shader_;

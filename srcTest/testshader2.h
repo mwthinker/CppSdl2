@@ -10,8 +10,8 @@
 
 class TestShader2 {
 public:
-	TestShader2();
-	TestShader2(std::string vShader, std::string fShader);
+	TestShader2() = default;
+	TestShader2(const std::string& vShader, const std::string& fShader);
 
 	void useProgram() const;
 	void setVertexAttribPointer() const;
@@ -40,13 +40,13 @@ public:
 private:
 	sdl::ShaderProgram shader_;
 
-	int aPosIndex_;
-	int aTexIndex_;
-	int aColorIndex_;
-	int aTextureIndex_;
+	int aPosIndex_ = -1;
+	int aTexIndex_ = -1;
+	int aColorIndex_ = -1;
+	int aTextureIndex_ = -1;
 
-	int uProjIndex_;
-	int uModelIndex_;
+	int uProjIndex_ = -1;
+	int uModelIndex_ = -1;
 };
 
 #endif // TESTSHADER2_H

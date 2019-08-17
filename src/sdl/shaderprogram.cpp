@@ -42,7 +42,7 @@ namespace sdl {
                 return 0;
 			}
 			glShaderSource(shader, 1, &shaderSrc, 0);
-			checkGlError();
+			assertGlError();
 			glCompileShader(shader);
 
 			GLint compileStatus;
@@ -51,14 +51,15 @@ namespace sdl {
                 logError<LogError::SHADER_ERROR>(shader, shaderSrc, "Failed to compile shader: ");
                 return 0;
             }
-			checkGlError();
+			assertGlError();
 			glAttachShader(program, shader);
-			checkGlError();
+			assertGlError();
 			return shader;
 		}
 
 		std::string loadFromFile(const std::string& file) {
 			if (file.empty()) {
+				logger()->warn("[ShaderProgram] shader filename is empty");
 				return "";
 			}
 			std::ifstream inFile(file);
@@ -91,7 +92,7 @@ namespace sdl {
 		if (programObjectId_ != 0) {
 			// Is called if the program is valid and therefore need to be cleaned up.
 			glDeleteProgram(programObjectId_);
-			checkGlError();
+			assertGlError();
 		}
 	}
 
@@ -120,7 +121,7 @@ namespace sdl {
 				return it->second;
 			} else {
 				auto loc = glGetUniformLocation(programObjectId_, uniform.c_str());
-				checkGlError();
+				assertGlError();
 				if (loc != -1) {
 					uniforms_[uniform] = loc;
 				}
@@ -132,10 +133,7 @@ namespace sdl {
 	}
 
 	bool ShaderProgram::loadAndLinkFromFile(const std::string& vShaderFile, const std::string& gShaderFile, const std::string& fShaderFile) {
-		if (programObjectId_ == 0) {
-			return loadAndLink(loadFromFile(vShaderFile), loadFromFile(gShaderFile), loadFromFile(fShaderFile));
-		}
-		return false;
+		return loadAndLink(loadFromFile(vShaderFile), loadFromFile(gShaderFile), loadFromFile(fShaderFile));
 	}
 
 	bool ShaderProgram::loadAndLinkFromFile(const std::string& vShaderFile, const std::string& fShaderFile) {
@@ -145,10 +143,10 @@ namespace sdl {
 	bool ShaderProgram::loadAndLink(const std::string& vShader, const std::string& gShader, const std::string& fShader) {
 		if (programObjectId_ == 0) {
 			programObjectId_ = glCreateProgram();
-			checkGlError();
+			assertGlError();
 			
 			if (programObjectId_ == 0) {
-                logger()->error("[Shader] Failed to create program");
+                logger()->error("[ShaderProgram] Failed to create program");
 				return false;
 			}
 
@@ -171,6 +169,7 @@ namespace sdl {
 			useProgram();
 			return true;
 		}
+		logger()->warn("[ShaderProgram] Failed to load and link, opengl program already generated");
 		return false;
 	}
 
@@ -181,7 +180,7 @@ namespace sdl {
 	void ShaderProgram::useProgram() const {
 		if (programObjectId_ != 0) {
 			glUseProgram(programObjectId_);
-			checkGlError();
+			assertGlError();
 		} else {
 			logger()->warn("[ShaderProgram] Failed to use program, program is not compiled");
 		}
@@ -204,7 +203,7 @@ namespace sdl {
 		int index = 0;
 		for (auto& [name, location] : attributes_) {
 			glBindAttribLocation(programObjectId_, index, name.c_str());
-			checkGlError();
+			assertGlError();
 			location = index++;
 		}
 	}

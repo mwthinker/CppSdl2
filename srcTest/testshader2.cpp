@@ -3,11 +3,7 @@
 
 #include <sdl/window.h>
 
-TestShader2::TestShader2() : aPosIndex_(-1), aTexIndex_(-1), aColorIndex_(-1), aTextureIndex_(-1),
-uProjIndex_(-1), uModelIndex_(-1) {
-}
-
-TestShader2::TestShader2(std::string vShader, std::string fShader) {
+TestShader2::TestShader2(const std::string& vShader, const std::string& fShader) {
 	shader_.bindAttribute("aPos");
 	shader_.bindAttribute("aTex");
 	shader_.bindAttribute("aColor");
@@ -48,7 +44,7 @@ void TestShader2::setVertexAttribPointer() const {
 
 	glEnableVertexAttribArray(aTextureIndex_);
 	glVertexAttribPointer(aTextureIndex_, 1, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid*) size);
-	sdl::checkGlError();
+	sdl::assertGlError();
 }
 
 // Uniforms. -------------------------------------------

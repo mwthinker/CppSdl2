@@ -28,29 +28,12 @@ namespace sdl {
 		if (shader_.isLinked()) {
 			// Collect the vertex buffer attributes indexes.
 			aPosIndex_ = shader_.getAttributeLocation(A_POS);
-			if (aPosIndex_ == -1) {
-				logger()->warn("[ImGuiShader] shader attribute {} failed to be extracted", A_POS);
-			}
-
 			aTexIndex_ = shader_.getAttributeLocation(A_TEX);
-			if (aTexIndex_ == -1) {
-				logger()->warn("[ImGuiShader] shader attribute {} failed to be extracted", A_TEX);
-			}
-
 			aColorIndex_ = shader_.getAttributeLocation(A_COL);
-			if (aColorIndex_ == -1) {
-				logger()->warn("[ImGuiShader] shader attribute {} failed to be extracted", A_COL);
-			}
-
+			
 			// Collect the vertex buffer uniforms indexes.
 			uMatrixIndex_ = shader_.getUniformLocation(U_MAT);
-			if (uMatrixIndex_ == -1) {
-				logger()->warn("[ImGuiShader] shader uniform {} failed to be extracted", U_MAT);
-			}
 			uTextureIndex_ = shader_.getUniformLocation(U_TEXTURE);
-			if (uTextureIndex_ == -1) {
-				logger()->warn("[ImGuiShader] shader uniform {} failed to be extracted", U_TEXTURE);
-			}
 		} else {
 			logger()->warn("[ImGuiShader] failed to create ImGuiShader, shader not linked");
 		}
@@ -95,15 +78,15 @@ namespace sdl {
 		if (shader_.isLinked()) {
 			glEnableVertexAttribArray(aPosIndex_);
 			glVertexAttribPointer(aPosIndex_, 2, GL_FLOAT, GL_FALSE, sizeof(ImDrawVert), (GLvoid*)IM_OFFSETOF(ImDrawVert, pos));
-			sdl::checkGlError();
+			sdl::assertGlError();
 
 			glEnableVertexAttribArray(aTexIndex_);
 			glVertexAttribPointer(aTexIndex_, 2, GL_FLOAT, GL_FALSE, sizeof(ImDrawVert), (GLvoid*)IM_OFFSETOF(ImDrawVert, uv));
-			sdl::checkGlError();
+			sdl::assertGlError();
 
 			glEnableVertexAttribArray(aColorIndex_);
 			glVertexAttribPointer(aColorIndex_, 4, GL_UNSIGNED_BYTE, GL_TRUE, sizeof(ImDrawVert), (GLvoid*)IM_OFFSETOF(ImDrawVert, col));
-			sdl::checkGlError();
+			sdl::assertGlError();
 		} else {
 			logger()->warn("[ImGuiShader] setVertexAttribPointer failed, shader not linked");
 		}

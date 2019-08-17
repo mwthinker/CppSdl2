@@ -9,45 +9,7 @@
 
 namespace sdl {
 
-	namespace {
-
-		constexpr const GLchar* getVertexShaderGlsl_330() {
-			return
-				"#version 330 core                                           \n"
-				"                                                              "
-				"uniform mat4 ProjMtx;                                       \n"
-				"                                                              "
-				"in vec2 Position;                                           \n"
-				"in vec2 UV;                                                 \n"
-				"in vec4 Color;                                              \n"
-				"                                                              "
-				"out vec2 Frag_UV;                                           \n"
-				"out vec4 Frag_Color;                                        \n"
-				"                                                              "
-				"void main()                                                 \n"
-				"{                                                           \n"
-				"    Frag_UV = UV;                                           \n"
-				"    Frag_Color = Color;                                     \n"
-				"    gl_Position = ProjMtx * vec4(Position.xy,0,1);          \n"
-				"}                                                           \n";
-		}
-
-		constexpr const GLchar* getFragmentShaderGlsl_330() {
-			return
-				"#version 330 core                                           \n"
-				"                                                              "
-				"uniform sampler2D Texture;                                  \n"
-				"                                                              "
-				"in vec2 Frag_UV;                                            \n"
-				"in vec4 Frag_Color;                                         \n"
-				"                                                              "
-				"out vec4 Out_Color;                                         \n"
-				"                                                              "
-				"void main()                                                 \n"
-				"{                                                           \n"
-				"    Out_Color = Frag_Color * texture(Texture, Frag_UV.st);  \n"
-				"}                                                           \n";
-		}
+	namespace {		
 
 		constexpr int getGlslVersion3(int minorVersion) {
 			switch (minorVersion) {
@@ -73,7 +35,7 @@ namespace sdl {
 
 		constexpr std::pair<const GLchar*, const GLchar*> getShader(int glslVersion) {
 			if (glslVersion == 330) {
-				return {getVertexShaderGlsl_330(), getFragmentShaderGlsl_330()};
+				return {getImGuiVertexShaderGlsl_330(), getImGuiFragmentShaderGlsl_330()};
 			}
 			return {"", ""};
 		}
@@ -429,9 +391,9 @@ namespace sdl {
 	void ImGuiWindow::ImGui_ImplOpenGL3_CreateFontsTexture() {
 		// Build texture atlas
 		ImGuiIO& io = ImGui::GetIO();
-		unsigned char* pixels;
-		int width, height;
-		io.Fonts->GetTexDataAsRGBA32(&pixels, &width, &height);   // Load as RGBA 32-bits (75% of the memory is wasted, but default font is so small) because it is more likely to be compatible with user's existing shaders. If your ImTextureId represent a higher-level concept than just a GL texture id, consider calling GetTexDataAsAlpha8() instead to save on GPU memory.
+		unsigned char* pixels = nullptr;
+		int width = 0, height = 0;
+		io.Fonts->GetTexDataAsRGBA32(&pixels, &width, &height); // Load as RGBA 32-bits (75% of the memory is wasted, but default font is so small) because it is more likely to be compatible with user's existing shaders. If your ImTextureId represent a higher-level concept than just a GL texture id, consider calling GetTexDataAsAlpha8() instead to save on GPU memory.
 
 		// Upload texture to graphics system
 		GLint lastTexture;

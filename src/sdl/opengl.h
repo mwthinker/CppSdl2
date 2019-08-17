@@ -10,9 +10,9 @@ namespace sdl {
 
 	// Print all OpenGL errors.
 	// Call check_gl_error instead if the error checking only should be in debug mode.
-	void _checkGlError(const char* file, int line);
+	void _assertGlError(const char* file, int line);
 
-#define checkGlError() _checkGlError(__FILE__,__LINE__)
+#define assertGlError() _assertGlError(__FILE__,__LINE__)
 #else // _DEBUG
 
 	inline void _empty() {}

@@ -47,7 +47,7 @@ void TestImGuiWindow::initPreLoop() {
 	initBatchTriangles();
 	initBatchTrianglesIndexes();
     
-	sdl::checkGlError();
+	sdl::assertGlError();
 }
 
 void TestImGuiWindow::initBatchTriangles() {

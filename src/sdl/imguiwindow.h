@@ -93,7 +93,7 @@ namespace sdl {
 
 		GLState glState_;
 		std::array<bool, 3> mousePressed_ = { false, false, false };
-		std::array<SDL_Cursor*, ImGuiMouseCursor_COUNT> mouseCursors_ = { nullptr };
+		std::array<SDL_Cursor*, ImGuiMouseCursor_COUNT> mouseCursors_; // Initiate in constructor.
 
 		sdl::VertexArrayObject vao_;
 		VertexBufferObject imGuiVbo_;
@@ -121,6 +121,6 @@ namespace sdl {
 	    return shader_;
 	}
 
-} // Namespace tetris.
+} // Namespace sdl.
 
 #endif // CPPSDL2_IMGUIWINDOW_H

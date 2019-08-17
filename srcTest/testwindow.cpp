@@ -98,7 +98,7 @@ void TestWindow::update(double deltaTime) {
 	//drawText_->draw();
 	
 	glDisable(GL_BLEND);
-	sdl::checkGlError();
+	sdl::assertGlError();
 }
 
 void TestWindow::eventUpdate(const SDL_Event& windowEvent) {

@@ -7,6 +7,44 @@
 
 namespace sdl {
 
+	constexpr const GLchar* getImGuiVertexShaderGlsl_330() {
+		return
+			"#version 330 core                                           \n"
+			"                                                            \n"
+			"uniform mat4 ProjMtx;                                       \n"
+			"                                                            \n"
+			"in vec2 Position;                                           \n"
+			"in vec2 UV;                                                 \n"
+			"in vec4 Color;                                              \n"
+			"                                                            \n"
+			"out vec2 Frag_UV;                                           \n"
+			"out vec4 Frag_Color;                                        \n"
+			"                                                            \n"
+			"void main()                                                 \n"
+			"{                                                           \n"
+			"    Frag_UV = UV;                                           \n"
+			"    Frag_Color = Color;                                     \n"
+			"    gl_Position = ProjMtx * vec4(Position.xy,0,1);          \n"
+			"}                                                           \n";
+	}
+
+	constexpr const GLchar* getImGuiFragmentShaderGlsl_330() {
+		return
+			"#version 330 core                                           \n"
+			"                                                            \n"
+			"uniform sampler2D Texture;                                  \n"
+			"                                                            \n"
+			"in vec2 Frag_UV;                                            \n"
+			"in vec4 Frag_Color;                                         \n"
+			"                                                            \n"
+			"out vec4 Out_Color;                                         \n"
+			"                                                            \n"
+			"void main()                                                 \n"
+			"{                                                           \n"
+			"    Out_Color = Frag_Color * texture(Texture, Frag_UV.st);  \n"
+			"}                                                           \n";
+	}
+
 	class ImGuiShader {
 	public:
 		ImGuiShader() = default;
@@ -28,13 +66,11 @@ namespace sdl {
 
 	private:
 		sdl::ShaderProgram shader_;
-
-		// Vertex buffer attributes.
+		
 		GLuint aPosIndex_ = -1;
 		GLuint aTexIndex_ = -1;
 		GLuint aColorIndex_ = -1;
-
-		// Vertex buffer uniform.
+		
 		GLuint uMatrixIndex_ = -1;
 		GLuint uTextureIndex_ = -1;
 	};

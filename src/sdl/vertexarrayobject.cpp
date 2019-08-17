@@ -10,7 +10,7 @@ namespace sdl {
 		if (vao_ != 0) {
 			glDeleteVertexArrays(1, &vao_);
 			logger()->debug("[VertexArrayObject] Deleted vao: {}", vao_);
-			checkGlError();
+			assertGlError();
 		}
 	}
 
@@ -30,7 +30,7 @@ namespace sdl {
 	void VertexArrayObject::generate() {
 		if (vao_ == 0) {
 			glGenVertexArrays(1, &vao_);
-			checkGlError();
+			assertGlError();
 		} else {
 			logger()->warn("[VertexArrayObject] tried to create, but vao was already exists");
 		}
@@ -39,7 +39,7 @@ namespace sdl {
 	void VertexArrayObject::bind() const {
 		if (vao_ != 0) {
 			glBindVertexArray(vao_);
-			checkGlError();
+			assertGlError();
 		} else {
 			logger()->debug("[VertexArrayObject] Must be generated first");
 		}
