@@ -108,6 +108,7 @@ namespace sdl {
 		if (it != attributes_.end()) {
 			return it->second;
 		}
+		logger()->warn("[ShaderProgram] shader attribute {} failed to be extracted", attribute);
 		return -1;
 	}
 
@@ -126,6 +127,7 @@ namespace sdl {
 				return loc;
 			}
 		}
+		logger()->warn("[ShaderProgram] shader uniform {} failed to be extracted", uniform);
 		return -1;
 	}
 
