@@ -84,9 +84,9 @@ namespace sdl {
 			return imageData_ != nullptr;
 		}
 
-		// Use with care may be null.
+		// Return zero if no texture is binded
 		GLuint getGlTexture() const {
-			return imageData_->texture_;
+			return isValid()? imageData_->texture_ : 0;
 		}
 
 	private:

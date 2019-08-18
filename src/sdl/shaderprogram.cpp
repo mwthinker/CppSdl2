@@ -59,7 +59,6 @@ namespace sdl {
 
 		std::string loadFromFile(const std::string& file) {
 			if (file.empty()) {
-				logger()->warn("[ShaderProgram] shader filename is empty");
 				return "";
 			}
 			std::ifstream inFile(file);

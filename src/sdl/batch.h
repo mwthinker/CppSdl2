@@ -245,7 +245,7 @@ namespace sdl {
 			} else {
 				logger()->warn("[Batch] VertexData failed to draw, no data uploaded to call to uploadToGraphicCard().");
 			}
-		} else {
+		} else if (!vbo_.isGenerated()) {
 			logger()->error("[Batch] VertexData failed to draw, no vbo binded, i.e. Batch::uploadToGraphicCard never called.");
 		}
 	}
