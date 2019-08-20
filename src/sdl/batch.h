@@ -18,8 +18,8 @@ namespace sdl {
 
 		~Batch() = default;
 
-		Batch(const Batch&& other) noexcept;
-		Batch& operator=(const Batch&& other) noexcept;
+		Batch(Batch&& other) noexcept;
+		Batch& operator=(Batch&& other) noexcept;
 
 		Batch(const Batch& batch) = delete;
 		Batch &operator=(const Batch& batch) = delete;
@@ -108,7 +108,7 @@ namespace sdl {
 	}
 
 	template <class Vertex>
-	Batch<Vertex>::Batch(const Batch&& other) noexcept :
+	Batch<Vertex>::Batch(Batch&& other) noexcept :
 		uploadedIndex_(other.uploadedIndex_), usage_(other.usage_), mode_(other.mode_), index_(other.index_),
 		vertexes_(std::move(other.vertexes_)), indexes_(std::move(other.indexes_)), vbo_(std::move(other.vbo_)), vboIndexes_(std::move(other.vboIndexes_)) {
 
@@ -122,7 +122,7 @@ namespace sdl {
 	}
 	
 	template <class Vertex>
-	Batch<Vertex>& Batch<Vertex>::operator=(const Batch&& other) noexcept {
+	Batch<Vertex>& Batch<Vertex>::operator=(Batch&& other) noexcept {
 		vertexes_ = std::move(other.vertexes_);
 		indexes_ = std::move(other.indexes_);
 		vbo_ = std::move(other.vbo_);

@@ -115,8 +115,11 @@ namespace sdl {
 		SDL_GLContext glContext_ = nullptr;
 		SDL_Surface* icon_ = nullptr;
 		
-		int width_ = DEFAULT_WIDTH, height_ = DEFAULT_HEIGHT;
-		int x_ = SDL_WINDOWPOS_UNDEFINED, y_ = SDL_WINDOWPOS_UNDEFINED;
+		int width_ = DEFAULT_WIDTH;
+		int height_ = DEFAULT_HEIGHT;
+		int x_ = SDL_WINDOWPOS_UNDEFINED;
+		int y_ = SDL_WINDOWPOS_UNDEFINED;
+		
 		int sleepingTime_ = -1;
 		const int majorVersionGl_ = DEFAULT_MAJOR_VERSION_GL, minorVersionGl_ = DEFAULT_MINOR_VERSION_GL;
 		
