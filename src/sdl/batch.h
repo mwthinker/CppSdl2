@@ -12,8 +12,6 @@ namespace sdl {
 	template <class Vertex>
 	class Batch {
 	public:
-		Batch();
-
 		Batch(GLenum mode, GLenum usage);
 
 		~Batch() = default;
@@ -94,11 +92,6 @@ namespace sdl {
 		GLsizei index_ = 0;
 		GLuint currentIndexesIndex = 0;
 	};
-
-	template <class Vertex>
-	Batch<Vertex>::Batch() {
-		IS_VERTEX_STANDARD_LAYOUT<Vertex>();
-	}
 
 	template <class Vertex>
 	Batch<Vertex>::Batch(GLenum mode, GLenum usage) :
