@@ -252,12 +252,13 @@ namespace sdl {
 		assert(size >= 0);
 
 		if (usage_ != GL_STATIC_DRAW) {
-			if (size + index_ < static_cast<int>(vertexes_.size())) {
+			if (size + index_ <= static_cast<int>(vertexes_.size())) {
 				std::copy(begin, end, vertexes_.begin() + index_);
+				index_ += 3;
 			} else {
 				vertexes_.insert(vertexes_.begin() + index_, begin, end);
+				index_ = static_cast<int>(vertexes_.size());
 			}
-			index_ += size;
 		} else {
 			if (vbo_.getSize() == 0) {
 				vertexes_.insert(vertexes_.end(), begin, end);
@@ -282,7 +283,7 @@ namespace sdl {
 
 	template <class Vertex>
 	void Batch<Vertex>::startIndex() {
-		currentIndexesIndex = static_cast<GLuint>(vertexes_.size());
+		currentIndexesIndex = static_cast<GLuint>(index_);
 	}
 
 	template <class Vertex>
