@@ -49,8 +49,13 @@ namespace sdl {
 
 		BatchView(const BatchView&) = default;
 		BatchView& operator=(const BatchView&) = default;
-		BatchView(BatchView&&) = default;
-		BatchView& operator=(BatchView&&) = default;
+		BatchView(BatchView&&) noexcept = default;
+		BatchView& operator=(BatchView&&) noexcept = default;
+
+		BatchView operator-(BatchView& batchView) const noexcept {
+			assert(mode_ == batchView.mode_);
+			return BatchView(mode_, index_ - batchView.index_, size_ - batchView.size_);
+		}
 
 	private:
 		GLsizei index_ = 0;
