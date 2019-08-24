@@ -26,7 +26,7 @@ namespace {
 }
 
 BatchTriangles::BatchTriangles(const std::shared_ptr<TestShader2>& shader, GLenum usage)
-    : shader_(shader), batch_(GL_TRIANGLES, usage) {
+    : shader_(shader), batch_(usage) {
 
 	assert(shader);
 }
@@ -117,5 +117,5 @@ void BatchTriangles::init() {
 void BatchTriangles::draw() const {
     shader_->useProgram();
     vao_.bind();
-    batch_.draw();
+    batch_.draw(GL_TRIANGLES);
 }

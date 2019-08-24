@@ -23,11 +23,12 @@ namespace sdl {
 	}
 
 	VertexBufferObject::VertexBufferObject(VertexBufferObject&& other) noexcept : 
-		vboId_(other.vboId_), size_(other.size_), target_(other.target_) {
+		vboId_(other.vboId_), size_(other.size_), target_(other.target_), usage_(other.usage_) {
 
 		other.vboId_ = 0;
 		other.size_ = 0;
 		other.target_ = 0;
+		other.usage_ = 0;
 	}
 
 	VertexBufferObject& VertexBufferObject::operator=(VertexBufferObject&& other) noexcept {
@@ -38,6 +39,7 @@ namespace sdl {
 		other.vboId_ = 0;
 		other.size_ = 0;
 		other.target_ = 0;
+		other.usage_ = 0;
 		return *this;
 	}
 
@@ -46,14 +48,19 @@ namespace sdl {
 		assert(vboId_ != 0);
 
         size_ = size;
+		usage_ = usage;
 
         glBufferData(target_, size, data, usage);
 		assertGlError();
 	}
 
-	void VertexBufferObject::bufferSubData(GLsizeiptr offset, GLsizeiptr size, const GLvoid* data) const {
+	void VertexBufferObject::bufferSubData(GLsizeiptr offset, GLsizeiptr size, const GLvoid* data) {
 		if (vboId_ != 0 && target_ != 0) {
-			glBufferSubData(target_, offset, size, data);
+			if (size_ > size) {
+				glBufferSubData(target_, offset, size, data);
+			} else {
+				bufferData(size, data, usage_);
+			}
 			assertGlError();
 		} else {
 		    logger()->warn("[VertexBufferObject] Calling bindSubData failed, must call bindData first");
@@ -71,7 +78,7 @@ namespace sdl {
 		} else {
 			logger()->warn("[VertexBufferObject] Calling generate failed, generate has already been called");
 		}
-	}	
+	}
 
 	void VertexBufferObject::bind(GLenum target) {
 		assert(isValidBindTarget(target));

@@ -23,7 +23,7 @@ namespace sdl {
 
 		// Replaces the data in the buffer. The current buffer is binded.
 		// Will replace data if the buffer exists on the graphic card.
-		void bufferSubData(GLsizeiptr offset, GLsizeiptr size, const GLvoid* data) const;
+		void bufferSubData(GLsizeiptr offset, GLsizeiptr size, const GLvoid* data);
 
 		// Bind the current vertex buffer.
 		void bind(GLenum target);
@@ -46,6 +46,7 @@ namespace sdl {
 		GLuint vboId_ = 0;
 		GLsizeiptr size_ = 0;
 		GLenum target_ = 0;
+		GLenum usage_ = 0;
 	};
 
 	inline GLsizeiptr VertexBufferObject::getSize() const noexcept {

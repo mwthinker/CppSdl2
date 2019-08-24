@@ -40,8 +40,8 @@ namespace sdl {
 			IS_VERTEX_STANDARD_LAYOUT<Vertex>();
 		}
 
-		constexpr BatchView(GLsizei index, GLsizei size) :
-			index_(index), size_(size) {
+		constexpr BatchView(GLenum mode, GLsizei index, GLsizei size) :
+			mode_(mode), index_(index), size_(size) {
 
 			assert(index_ >= 0 && size_ >= 0);
 			IS_VERTEX_STANDARD_LAYOUT<Vertex>();
@@ -55,12 +55,13 @@ namespace sdl {
 	private:
 		GLsizei index_ = 0;
 		GLsizei size_ = 0;
+		GLenum mode_ = 0;
 	};
 
 	template <class Vertex>
 	class Batch {
 	public:
-		Batch(GLenum mode, GLenum usage);
+		Batch(GLenum usage);
 
 		~Batch() = default;
 
@@ -85,7 +86,7 @@ namespace sdl {
 		GLsizei getIndexesSize() const noexcept;
 
 		void uploadToGraphicCard();
-		void draw() const;
+		void draw(GLenum mode) const;
 
 		void draw(const BatchView<Vertex>& batchView) const;
 
@@ -114,7 +115,7 @@ namespace sdl {
 
 		bool isEveryIndexSizeValid() const;
 
-		void assertIndexSizeIsValid() const;
+		void assertIndexSizeIsValid(GLenum mode) const;
 		
 		std::vector<Vertex> vertexes_;
 		std::vector<GLint> indexes_;
@@ -123,28 +124,24 @@ namespace sdl {
 		
 		size_t uploadedIndex_ = 0;
 		GLenum usage_ = 0;
-		GLenum mode_ = 0;
 		GLsizei index_ = 0;
 		GLuint currentIndexesIndex = 0;
 	};
 
 	template <class Vertex>
-	Batch<Vertex>::Batch(GLenum mode, GLenum usage) :
-		mode_(mode), usage_(usage) {
-
+	Batch<Vertex>::Batch(GLenum usage) : usage_(usage) {
 		IS_VERTEX_STANDARD_LAYOUT<Vertex>();
 	}
 
 	template <class Vertex>
 	Batch<Vertex>::Batch(Batch&& other) noexcept :
-		uploadedIndex_(other.uploadedIndex_), usage_(other.usage_), mode_(other.mode_), index_(other.index_),
+		uploadedIndex_(other.uploadedIndex_), usage_(other.usage_), index_(other.index_),
 		vertexes_(std::move(other.vertexes_)), indexes_(std::move(other.indexes_)), vbo_(std::move(other.vbo_)), vboIndexes_(std::move(other.vboIndexes_)) {
 
 		IS_VERTEX_STANDARD_LAYOUT<Vertex>();
 
 		other.uploadedIndex_ = 0;
 		other.usage_ = 0;
-		other.mode_ = 0;
 		other.index_ = 0;
 		other.currentIndexesIndex = false;
 	}
@@ -156,13 +153,11 @@ namespace sdl {
 		vbo_ = std::move(other.vbo_);
 		vboIndexes_ = std::move(other.vboIndexes_);
 		usage_ = other.usage_;
-		mode_ = other.mode_;
 		index_ = other.index_;
 		currentIndexesIndex = other.currentIndexesIndex;
 
 		other.uploadedIndex_ = uploadedIndex_;
 		other.usage_ = 0;
-		other.mode_ = 0;
 		other.index_ = 0;
 		other.currentIndexesIndex = false;
 		return *this;
@@ -260,11 +255,11 @@ namespace sdl {
 	}
 
 	template <class Vertex>
-	void Batch<Vertex>::draw() const {
+	void Batch<Vertex>::draw(GLenum mode) const {
 		if (indexes_.empty()) {
-			draw(BatchView<Vertex>(0, static_cast<GLsizei>(index_)));
+			draw(BatchView<Vertex>(mode, 0, static_cast<GLsizei>(index_)));
 		} else {
-			draw(BatchView<Vertex>(0, static_cast<GLsizei>(indexes_.size())));
+			draw(BatchView<Vertex>(mode, 0, static_cast<GLsizei>(indexes_.size())));
 		}
 	}
 
@@ -291,10 +286,10 @@ namespace sdl {
 			}
 
 			if (indexes_.empty()) {
-				glDrawArrays(mode_, batchView.index_, batchView.size_);
+				glDrawArrays(batchView.mode_, batchView.index_, batchView.size_);
 			} else {
-				assertIndexSizeIsValid();
-				glDrawElements(mode_, batchView.size_, GL_UNSIGNED_INT, reinterpret_cast<void*>(batchView.index_ * sizeof(GLint)));
+				assertIndexSizeIsValid(batchView.mode_);
+				glDrawElements(batchView.mode_, batchView.size_, GL_UNSIGNED_INT, reinterpret_cast<void*>(batchView.index_ * sizeof(GLint)));
 			}
 			assertGlError();
 		} else if (!vbo_.isGenerated()) {
@@ -393,8 +388,8 @@ namespace sdl {
 	}
 
 	template <class Vertex>
-	void Batch<Vertex>::assertIndexSizeIsValid() const {
-		assert(mode_ != GL_TRIANGLES || (mode_ == GL_TRIANGLES && indexes_.size() % 3 == 0 && isEveryIndexSizeValid()));
+	void Batch<Vertex>::assertIndexSizeIsValid(GLenum mode) const {
+		assert(mode != GL_TRIANGLES || (mode == GL_TRIANGLES && indexes_.size() % 3 == 0 && isEveryIndexSizeValid()));
 	}
 
 } // Namespace sdl.
