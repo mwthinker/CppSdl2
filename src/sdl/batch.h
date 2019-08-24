@@ -9,6 +9,54 @@
 
 namespace sdl {
 
+	template<class InputIterator>
+	constexpr void IS_RANDOM_ACCESS_ITERATOR() {
+		static_assert(std::is_same<std::random_access_iterator_tag,
+			typename std::iterator_traits<InputIterator>::iterator_category>::value,
+			"The function only accepts random access iterator");
+	}
+
+	template<class VertexType>
+	constexpr void IS_VERTEX_STANDARD_LAYOUT() {
+		static_assert(std::is_standard_layout<VertexType>(),
+			"Vertex type must be a type of standard layout");
+	}
+
+	template<class IndexType>
+	constexpr void IS_INDEX_TYPE() {
+		static_assert(std::is_integral<IndexType>(),
+			"IndexType must be a integral type ");
+	}
+
+	template<class Vertex>
+	class Batch;
+
+	template <class Vertex>
+	class BatchView {
+	public:
+		friend class Batch<Vertex>;
+
+		constexpr BatchView() {
+			IS_VERTEX_STANDARD_LAYOUT<Vertex>();
+		}
+
+		constexpr BatchView(GLsizei index, GLsizei size) :
+			index_(index), size_(size) {
+
+			assert(index_ >= 0 && size_ >= 0);
+			IS_VERTEX_STANDARD_LAYOUT<Vertex>();
+		}
+
+		BatchView(const BatchView&) = default;
+		BatchView& operator=(const BatchView&) = default;
+		BatchView(BatchView&&) = default;
+		BatchView& operator=(BatchView&&) = default;
+
+	private:
+		GLsizei index_ = 0;
+		GLsizei size_ = 0;
+	};
+
 	template <class Vertex>
 	class Batch {
 	public:
@@ -39,6 +87,8 @@ namespace sdl {
 		void uploadToGraphicCard();
 		void draw() const;
 
+		void draw(const BatchView<Vertex>& batchView) const;
+
 		template<class InputIterator>
 		void insert(InputIterator begin, InputIterator end);
 
@@ -47,7 +97,9 @@ namespace sdl {
 		template<class ...Vertexes>
 		void add(Vertexes&& ...vertexes);
 
-		void startIndex();
+		void startAdding();
+
+		BatchView<Vertex> getCurrentBatchView() const;
 
 		template<class InputIterator>
 		void insertIndexes(InputIterator begin, InputIterator end);
@@ -58,28 +110,11 @@ namespace sdl {
 		void addIndexes(Indexes&& ...vertexes);
 
 	private:
+		bool isValidBatchView(const BatchView<Vertex>& batchView) const;
+
 		bool isEveryIndexSizeValid() const;
 
 		void assertIndexSizeIsValid() const;
-
-		template<class InputIterator>
-		constexpr void IS_RANDOM_ACCESS_ITERATOR() {
-			static_assert(std::is_same<std::random_access_iterator_tag,
-				typename std::iterator_traits<InputIterator>::iterator_category>::value,
-				"The function only accepts random access iterator.");
-		}
-
-		template<class VertexType>
-		constexpr void IS_VERTEX_STANDARD_LAYOUT() {
-			static_assert(std::is_standard_layout<VertexType>(),
-				"Vertex type must be a type of standard layout.");
-		}
-
-		template<class IndexType>
-		constexpr void IS_INDEX_TYPE() {
-			static_assert(std::is_integral<IndexType>(),
-				"IndexType must be a integral type ");
-		}
 		
 		std::vector<Vertex> vertexes_;
 		std::vector<GLint> indexes_;
@@ -177,7 +212,7 @@ namespace sdl {
 			indexes_.clear();
 			currentIndexesIndex = 0;
 		} else {
-			logger()->error("[Batch] VertexData failed to clear, vbo is static.");
+			logger()->error("[Batch] VertexData failed to clear, vbo is static");
 		}
 	}
 
@@ -226,22 +261,47 @@ namespace sdl {
 
 	template <class Vertex>
 	void Batch<Vertex>::draw() const {
-		if (vbo_.getSize() > 0) {
-			if (uploadedIndex_ > 0) { // Data is avaiable to be drawn.
-				if (!indexes_.empty()) {
-					assertIndexSizeIsValid();
-					glDrawElements(mode_, static_cast<GLuint>(indexes_.size()), GL_UNSIGNED_INT, nullptr);
-				} else {
-					glDrawArrays(mode_, 0, index_);
-				}
-				assertGlError();
-			} else {
-				logger()->warn("[Batch] VertexData failed to draw, no data uploaded to call to uploadToGraphicCard().");
-			}
-		} else if (!vbo_.isGenerated()) {
-			logger()->error("[Batch] VertexData failed to draw, no vbo binded, i.e. Batch::uploadToGraphicCard never called.");
+		if (indexes_.empty()) {
+			draw(BatchView<Vertex>(0, static_cast<GLsizei>(index_)));
+		} else {
+			draw(BatchView<Vertex>(0, static_cast<GLsizei>(indexes_.size())));
 		}
 	}
+
+	template <class Vertex>
+	bool Batch<Vertex>::isValidBatchView(const BatchView<Vertex>& batchView) const {
+		if (indexes_.empty()) {
+			return batchView.index_ >= 0 && batchView.index_ + batchView.size_ <= vertexes_.size();
+		} else {
+			return batchView.index_ >= 0 && batchView.index_ + batchView.size_ <= indexes_.size();
+		}
+	}
+
+	template <class Vertex>
+	void Batch<Vertex>::draw(const BatchView<Vertex>& batchView) const {
+		if (vbo_.getSize() > 0) {
+			if (uploadedIndex_ <= 0) {
+				logger()->warn("[Batch] Failed to draw, no data uploaded to call to uploadToGraphicCard()");
+				return;
+			}
+
+			if (!isValidBatchView(batchView)) {
+				logger()->warn("[Batch] BatchView not valid. start = {}, size = {}", batchView.index_, batchView.size_);
+				return;
+			}
+
+			if (indexes_.empty()) {
+				glDrawArrays(mode_, batchView.index_, batchView.size_);
+			} else {
+				assertIndexSizeIsValid();
+				glDrawElements(mode_, batchView.size_, GL_UNSIGNED_INT, reinterpret_cast<void*>(batchView.index_ * sizeof(GLint)));
+			}
+			assertGlError();
+		} else if (!vbo_.isGenerated()) {
+			logger()->error("[Batch] VertexData failed to draw, no vbo binded, i.e. Batch::uploadToGraphicCard never called");
+		}
+	}
+	
 
 	template <class Vertex>
 	template<class InputIterator>
@@ -264,7 +324,7 @@ namespace sdl {
 				vertexes_.insert(vertexes_.end(), begin, end);
 				index_ += size;
 			} else {
-				logger()->error("[Batch] VertexData is static, data can't be modified.");
+				logger()->error("[Batch] VertexData is static, data can't be modified");
 			}
 		}
 	}
@@ -282,8 +342,13 @@ namespace sdl {
 	}
 
 	template <class Vertex>
-	void Batch<Vertex>::startIndex() {
+	void Batch<Vertex>::startAdding() {
 		currentIndexesIndex = static_cast<GLuint>(index_);
+	}
+
+	template <class Vertex>
+	BatchView<Vertex> Batch<Vertex>::getCurrentBatchView() const {
+		return BatchView<Vertex>();
 	}
 
 	template <class Vertex>
@@ -296,7 +361,7 @@ namespace sdl {
 		assert(size >= 0);
 
 		if (vbo_.getSize() != 0 && usage_ == GL_STATIC_DRAW) {
-			logger()->error("[Batch] VertexData is static, data index can't be modified.");
+			logger()->error("[Batch] VertexData is static, data index can't be modified");
 			return;
 		}
 		for (auto it = begin; it != end; ++it) {

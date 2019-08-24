@@ -42,7 +42,7 @@ void BatchTrianglesIndexes::uploadToGraphicCard() {
 }
 
 void BatchTrianglesIndexes::addTriangle(TestShader2::Vertex v1, TestShader2::Vertex v2, TestShader2::Vertex v3) {
-	batch_.startIndex();
+	batch_.startAdding();
 
 	v1.color_ = COLOR;
 	v2.color_ = COLOR;
@@ -63,7 +63,7 @@ void BatchTrianglesIndexes::addRectangle(const TestShader2::Vertex& v1, const Te
 }
 
 void BatchTrianglesIndexes::addCircle(float x, float y, float radius, const int iterations) {
-	batch_.startIndex();
+	batch_.startAdding();
     TestShader2::Vertex center(x, y);
 	center.color_ = COLOR;
 	batch_.add(center);
@@ -79,7 +79,7 @@ void BatchTrianglesIndexes::addCircle(float x, float y, float radius, const int 
 }
 
 void BatchTrianglesIndexes::addHexagon(float x, float y, float size) {
-	batch_.startIndex();
+	batch_.startAdding();
     auto center = TestShader2::Vertex(x, y);
     center.color_ = COLOR;
 	batch_.add(center);
