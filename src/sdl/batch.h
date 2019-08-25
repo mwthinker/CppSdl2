@@ -36,31 +36,46 @@ namespace sdl {
 	public:
 		friend class Batch<Vertex>;
 
-		constexpr BatchView() {
+		BatchView() noexcept {
 			IS_VERTEX_STANDARD_LAYOUT<Vertex>();
-		}
+		}	
 
-		constexpr BatchView(GLenum mode, GLsizei index, GLsizei size) :
+		BatchView(const BatchView&) noexcept = default;
+		BatchView& operator=(const BatchView&) noexcept = default;
+		BatchView(BatchView&&) noexcept = default;
+		BatchView& operator=(BatchView&&) noexcept = default;
+
+	private:
+		BatchView(GLenum mode, GLsizei index, GLsizei size) noexcept :
 			mode_(mode), index_(index), size_(size) {
 
 			assert(index_ >= 0 && size_ >= 0);
 			IS_VERTEX_STANDARD_LAYOUT<Vertex>();
 		}
 
-		BatchView(const BatchView&) = default;
-		BatchView& operator=(const BatchView&) = default;
-		BatchView(BatchView&&) noexcept = default;
-		BatchView& operator=(BatchView&&) noexcept = default;
-
-		BatchView operator-(BatchView& batchView) const noexcept {
-			assert(mode_ == batchView.mode_);
-			return BatchView(mode_, index_ - batchView.index_, size_ - batchView.size_);
-		}
-
-	private:
+		GLenum mode_ = 0;
 		GLsizei index_ = 0;
 		GLsizei size_ = 0;
-		GLenum mode_ = 0;
+	};
+
+	template <class Vertex>
+	class BatchIndex {
+	public:
+
+		BatchIndex() noexcept = default;
+		BatchIndex(const BatchIndex&) noexcept = default;
+		BatchIndex& operator=(const BatchIndex&) noexcept = default;
+		BatchIndex(BatchIndex&&) noexcept = default;
+		BatchIndex& operator=(BatchIndex&&) noexcept = default;
+
+	private:
+		friend class Batch<Vertex>;
+		
+		BatchIndex(GLsizei index) noexcept
+			: index_(index) {
+		}
+
+		GLsizei index_ = 0;
 	};
 
 	template <class Vertex>
@@ -76,7 +91,6 @@ namespace sdl {
 		Batch(const Batch& batch) = delete;
 		Batch &operator=(const Batch& batch) = delete;
 
-		GLenum getMode() const noexcept;
 		GLenum getUsage() const noexcept;
 
 		size_t getMaxVertexes() const noexcept;
@@ -92,7 +106,6 @@ namespace sdl {
 
 		void uploadToGraphicCard();
 		void draw(GLenum mode) const;
-
 		void draw(const BatchView<Vertex>& batchView) const;
 
 		template<class InputIterator>
@@ -103,9 +116,12 @@ namespace sdl {
 		template<class ...Vertexes>
 		void add(Vertexes&& ...vertexes);
 
-		void startAdding();
+		void startAdding() noexcept;
 
-		BatchView<Vertex> getCurrentBatchView() const;
+		BatchIndex<Vertex> getCurrentBatchIndex() const noexcept;
+		
+		static BatchView<Vertex> getBatchView(GLenum mode, BatchIndex<Vertex> start, BatchIndex<Vertex> end) noexcept;
+		BatchView<Vertex> getBatchView(GLenum mode) const noexcept;
 
 		template<class InputIterator>
 		void insertIndexes(InputIterator begin, InputIterator end);
@@ -166,11 +182,6 @@ namespace sdl {
 		other.index_ = 0;
 		other.currentIndexesIndex = false;
 		return *this;
-	}
-
-	template <class Vertex>
-	GLenum Batch<Vertex>::getMode() const noexcept {
-		return mode_;
 	}
 
 	template <class Vertex>
@@ -262,18 +273,18 @@ namespace sdl {
 	template <class Vertex>
 	void Batch<Vertex>::draw(GLenum mode) const {
 		if (indexes_.empty()) {
-			draw(BatchView<Vertex>(mode, 0, static_cast<GLsizei>(index_)));
+			draw({mode, 0, static_cast<GLsizei>(index_)});
 		} else {
-			draw(BatchView<Vertex>(mode, 0, static_cast<GLsizei>(indexes_.size())));
+			draw({mode, 0, static_cast<GLsizei>(indexes_.size())});
 		}
 	}
 
 	template <class Vertex>
 	bool Batch<Vertex>::isValidBatchView(const BatchView<Vertex>& batchView) const {
 		if (indexes_.empty()) {
-			return batchView.index_ >= 0 && batchView.index_ + batchView.size_ <= vertexes_.size();
+			return batchView.index_ >= 0 && batchView.index_ + static_cast<GLsizei>(batchView.size_) <= vertexes_.size();
 		} else {
-			return batchView.index_ >= 0 && batchView.index_ + batchView.size_ <= indexes_.size();
+			return batchView.index_ >= 0 && batchView.index_ + static_cast<GLsizei>(batchView.size_) <= indexes_.size();
 		}
 	}
 
@@ -342,13 +353,27 @@ namespace sdl {
 	}
 
 	template <class Vertex>
-	void Batch<Vertex>::startAdding() {
+	void Batch<Vertex>::startAdding() noexcept {
 		currentIndexesIndex = static_cast<GLuint>(index_);
 	}
 
 	template <class Vertex>
-	BatchView<Vertex> Batch<Vertex>::getCurrentBatchView() const {
-		return BatchView<Vertex>();
+	BatchIndex<Vertex> Batch<Vertex>::getCurrentBatchIndex() const noexcept {
+		if (indexes_.empty()) {
+			return {index_};
+		} else {
+			return {static_cast<GLsizei>(indexes_.size())};
+		}
+	}
+
+	template <class Vertex>
+	BatchView<Vertex> Batch<Vertex>::getBatchView(GLenum mode, BatchIndex<Vertex> start, BatchIndex<Vertex> end) noexcept {
+		return {mode, start.index_, end.index_ - start.index_};
+	}
+
+	template <class Vertex>
+	BatchView<Vertex> Batch<Vertex>::getBatchView(GLenum mode) const noexcept {
+		return getBatchView(mode, BatchIndex<Vertex>(), getCurrentBatchIndex());
 	}
 
 	template <class Vertex>

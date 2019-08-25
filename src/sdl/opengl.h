@@ -17,7 +17,7 @@ namespace sdl {
 
 	inline void _empty() {}
 
-#define checkGlError() _empty()
+#define assertGlError() _empty()
 #endif // _DEBUG
 
 } // Namespace sdl.
