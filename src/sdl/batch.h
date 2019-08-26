@@ -91,8 +91,6 @@ namespace sdl {
 		template<class InputIterator>
 		void insert(InputIterator begin, InputIterator end);
 
-		void add(const std::vector<Vertex>& data);
-
 		template<class ...Vertexes>
 		void add(Vertexes&& ...vertexes);
 
@@ -104,8 +102,6 @@ namespace sdl {
 
 		template<class InputIterator>
 		void insertIndexes(InputIterator begin, InputIterator end);
-
-		void addIndexes(const std::vector<GLuint>& data);
 
 		template<class ...Indexes>
 		void addIndexes(Indexes&& ...vertexes);
@@ -322,11 +318,6 @@ namespace sdl {
 	}
 
 	template <class Vertex>
-	void Batch<Vertex>::add(const std::vector<Vertex>& data) {
-		insert(data.begin(), data.end());
-	}
-
-	template <class Vertex>
 	template<class ...Vertexes>
 	void Batch<Vertex>::add(Vertexes&& ... pack) {
 		std::array<Vertex, sizeof...(Vertexes)> vertexes = {{ pack ... }};
@@ -373,11 +364,6 @@ namespace sdl {
 			auto index = *it;
 			indexes_.push_back(index + currentIndexesIndex_);
 		}
-	}
-
-	template <class Vertex>
-	void Batch<Vertex>::addIndexes(const std::vector<GLuint>& indexes) {
-		insertIndexes(indexes.begin(), indexes.end());
 	}
 
 	template <class Vertex>
