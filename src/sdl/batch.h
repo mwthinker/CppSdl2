@@ -59,26 +59,6 @@ namespace sdl {
 	};
 
 	template <class Vertex>
-	class BatchIndex {
-	public:
-
-		BatchIndex() noexcept = default;
-		BatchIndex(const BatchIndex&) noexcept = default;
-		BatchIndex& operator=(const BatchIndex&) noexcept = default;
-		BatchIndex(BatchIndex&&) noexcept = default;
-		BatchIndex& operator=(BatchIndex&&) noexcept = default;
-
-	private:
-		friend class Batch<Vertex>;
-		
-		BatchIndex(GLsizei index) noexcept
-			: index_(index) {
-		}
-
-		GLsizei index_ = 0;
-	};
-
-	template <class Vertex>
 	class Batch {
 	public:
 		Batch(GLenum usage);
@@ -116,11 +96,10 @@ namespace sdl {
 		template<class ...Vertexes>
 		void add(Vertexes&& ...vertexes);
 
-		void startAdding() noexcept;
+		void startBatchView() noexcept;
 
-		BatchIndex<Vertex> getCurrentBatchIndex() const noexcept;
+		void startAdding() noexcept;
 		
-		static BatchView<Vertex> getBatchView(GLenum mode, BatchIndex<Vertex> start, BatchIndex<Vertex> end) noexcept;
 		BatchView<Vertex> getBatchView(GLenum mode) const noexcept;
 
 		template<class InputIterator>
@@ -143,10 +122,11 @@ namespace sdl {
 		sdl::VertexBufferObject vbo_;
 		sdl::VertexBufferObject vboIndexes_;
 		
+		GLsizei currentViewIndex_ = 0;
 		size_t uploadedIndex_ = 0;
 		GLenum usage_ = 0;
 		GLsizei index_ = 0;
-		GLuint currentIndexesIndex = 0;
+		GLuint currentIndexesIndex_ = 0;
 	};
 
 	template <class Vertex>
@@ -164,7 +144,7 @@ namespace sdl {
 		other.uploadedIndex_ = 0;
 		other.usage_ = 0;
 		other.index_ = 0;
-		other.currentIndexesIndex = false;
+		other.currentIndexesIndex_ = false;
 	}
 	
 	template <class Vertex>
@@ -175,12 +155,12 @@ namespace sdl {
 		vboIndexes_ = std::move(other.vboIndexes_);
 		usage_ = other.usage_;
 		index_ = other.index_;
-		currentIndexesIndex = other.currentIndexesIndex;
+		currentIndexesIndex_ = other.currentIndexesIndex_;
 
 		other.uploadedIndex_ = uploadedIndex_;
 		other.usage_ = 0;
 		other.index_ = 0;
-		other.currentIndexesIndex = false;
+		other.currentIndexesIndex_ = false;
 		return *this;
 	}
 
@@ -216,15 +196,16 @@ namespace sdl {
 
 	template <class Vertex>
 	void Batch<Vertex>::clear() {
-		index_ = 0;
-		if (usage_ != GL_STATIC_DRAW) {
-			// Can only clear data if the vbo is not updated. 
-			uploadedIndex_ = 0;
-			indexes_.clear();
-			currentIndexesIndex = 0;
-		} else {
-			logger()->error("[Batch] VertexData failed to clear, vbo is static");
+		if (usage_ == GL_STATIC_DRAW) {
+			logger()->warn("[Batch] Batch static, vbo failed to cleare");
+			return;
 		}
+
+		index_ = 0;
+		uploadedIndex_ = 0;
+		indexes_.clear();
+		currentIndexesIndex_ = 0;
+		currentViewIndex_ = 0;
 	}
 
 	template <class Vertex>
@@ -325,7 +306,7 @@ namespace sdl {
 		if (usage_ != GL_STATIC_DRAW) {
 			if (size + index_ <= static_cast<int>(vertexes_.size())) {
 				std::copy(begin, end, vertexes_.begin() + index_);
-				index_ += 3;
+				index_ += size;
 			} else {
 				vertexes_.insert(vertexes_.begin() + index_, begin, end);
 				index_ = static_cast<int>(vertexes_.size());
@@ -353,27 +334,26 @@ namespace sdl {
 	}
 
 	template <class Vertex>
-	void Batch<Vertex>::startAdding() noexcept {
-		currentIndexesIndex = static_cast<GLuint>(index_);
-	}
-
-	template <class Vertex>
-	BatchIndex<Vertex> Batch<Vertex>::getCurrentBatchIndex() const noexcept {
+	void Batch<Vertex>::startBatchView() noexcept {
 		if (indexes_.empty()) {
-			return {index_};
+			currentViewIndex_ = index_;
 		} else {
-			return {static_cast<GLsizei>(indexes_.size())};
+			currentViewIndex_ = static_cast<GLsizei>(indexes_.size());
 		}
 	}
 
 	template <class Vertex>
-	BatchView<Vertex> Batch<Vertex>::getBatchView(GLenum mode, BatchIndex<Vertex> start, BatchIndex<Vertex> end) noexcept {
-		return {mode, start.index_, end.index_ - start.index_};
+	void Batch<Vertex>::startAdding() noexcept {
+		currentIndexesIndex_ = static_cast<GLuint>(index_);
 	}
 
 	template <class Vertex>
 	BatchView<Vertex> Batch<Vertex>::getBatchView(GLenum mode) const noexcept {
-		return getBatchView(mode, BatchIndex<Vertex>(), getCurrentBatchIndex());
+		if (indexes_.empty()) {
+			return {mode, currentViewIndex_, index_ - currentViewIndex_};
+		} else {
+			return {mode, currentViewIndex_, static_cast<GLsizei>(indexes_.size()) - currentViewIndex_};
+		}
 	}
 
 	template <class Vertex>
@@ -391,7 +371,7 @@ namespace sdl {
 		}
 		for (auto it = begin; it != end; ++it) {
 			auto index = *it;
-			indexes_.push_back(index + currentIndexesIndex);
+			indexes_.push_back(index + currentIndexesIndex_);
 		}
 	}
 
