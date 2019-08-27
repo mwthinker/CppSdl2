@@ -220,7 +220,7 @@ namespace sdl {
 			return;
 		}
 
-		vertexes_.size();
+		vertexes_.clear();
 		indexes_.clear();
 		currentIndexesIndex_ = 0;
 		currentViewIndex_ = 0;
