@@ -228,12 +228,12 @@ namespace sdl {
 
 	template <class Vertex>
 	GLsizei Batch<Vertex>::getSize() const noexcept {
-		return vertexes_.size();
+		return static_cast<GLsizei>(vertexes_.size());
 	}
 	
 	template <class Vertex>
 	GLsizei Batch<Vertex>::getIndexesSize() const noexcept {
-		return indexes_.size();
+		return static_cast<GLsizei>(indexes_.size());
 	}
 
 	template <class Vertex>
