@@ -8,41 +8,39 @@
 namespace sdl {
 
 	constexpr const GLchar* getImGuiVertexShaderGlsl_330() {
-		return
-			"#version 330 core                                           \n"
-			"                                                            \n"
-			"uniform mat4 ProjMtx;                                       \n"
-			"                                                            \n"
-			"in vec2 Position;                                           \n"
-			"in vec2 UV;                                                 \n"
-			"in vec4 Color;                                              \n"
-			"                                                            \n"
-			"out vec2 Frag_UV;                                           \n"
-			"out vec4 Frag_Color;                                        \n"
-			"                                                            \n"
-			"void main()                                                 \n"
-			"{                                                           \n"
-			"    Frag_UV = UV;                                           \n"
-			"    Frag_Color = Color;                                     \n"
-			"    gl_Position = ProjMtx * vec4(Position.xy,0,1);          \n"
-			"}                                                           \n";
+		return R"(#version 330 core
+
+uniform mat4 ProjMtx;
+
+in vec2 Position;
+in vec2 UV;
+in vec4 Color;
+
+out vec2 Frag_UV;
+out vec4 Frag_Color;
+
+void main() {
+    Frag_UV = UV;
+    Frag_Color = Color;
+    gl_Position = ProjMtx * vec4(Position.xy,0,1);
+}
+)";
 	}
 
 	constexpr const GLchar* getImGuiFragmentShaderGlsl_330() {
-		return
-			"#version 330 core                                           \n"
-			"                                                            \n"
-			"uniform sampler2D Texture;                                  \n"
-			"                                                            \n"
-			"in vec2 Frag_UV;                                            \n"
-			"in vec4 Frag_Color;                                         \n"
-			"                                                            \n"
-			"out vec4 Out_Color;                                         \n"
-			"                                                            \n"
-			"void main()                                                 \n"
-			"{                                                           \n"
-			"    Out_Color = Frag_Color * texture(Texture, Frag_UV.st);  \n"
-			"}                                                           \n";
+		return R"(#version 330 core
+
+uniform sampler2D Texture;
+
+in vec2 Frag_UV;
+in vec4 Frag_Color;
+
+out vec4 Out_Color;
+
+void main() {
+    Out_Color = Frag_Color * texture(Texture, Frag_UV.st);
+}
+)";
 	}
 
 	class ImGuiShader {

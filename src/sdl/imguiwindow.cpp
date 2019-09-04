@@ -145,7 +145,6 @@ namespace sdl {
 				io.KeyCtrl = ((SDL_GetModState() & KMOD_CTRL) != 0);
 				io.KeyAlt = ((SDL_GetModState() & KMOD_ALT) != 0);
 				io.KeySuper = ((SDL_GetModState() & KMOD_GUI) != 0);
-				logger()->info("[ImGuiWindow] Key: {}", (char)sdlEvent.key.keysym.sym);
 				return true;
 			}
 		}
