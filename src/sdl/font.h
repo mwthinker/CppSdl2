@@ -34,7 +34,7 @@ namespace sdl {
 			FontData(TTF_Font* font) noexcept;
 			~FontData();
 
-			TTF_Font* font_ = nullptr;
+			TTF_Font* font = nullptr;
 		};
 
 		std::shared_ptr<FontData> fontData_;

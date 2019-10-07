@@ -6,13 +6,13 @@
 namespace sdl {
 
 	Music::Music(const std::string& filename) :
-		musicBuffer_(std::make_shared<MusicBuffer>(filename)) {
+		musicBuffer_{std::make_shared<MusicBuffer>(filename)} {
 	}
 
 	void Music::play(int loops) {
-		if (musicBuffer_ && musicBuffer_->valid_) {
+		if (musicBuffer_ && musicBuffer_->valid) {
 			setVolume(volume_);
-			Mix_PlayMusic(musicBuffer_->mixMusic_, loops);
+			Mix_PlayMusic(musicBuffer_->mixMusic, loops);
 		}
 	}
 
@@ -42,20 +42,20 @@ namespace sdl {
 	}
 
 	bool Music::isValid() const {
-		return musicBuffer_ ? musicBuffer_->valid_ : false;
+		return musicBuffer_ ? musicBuffer_->valid : false;
 	}
 
-	Music::MusicBuffer::MusicBuffer(const std::string& filename) : valid_(true) {
-		mixMusic_ = Mix_LoadMUS(filename.c_str());
-		if (mixMusic_ == nullptr) {
-			valid_ = false;
+	Music::MusicBuffer::MusicBuffer(const std::string& filename) {
+		mixMusic = Mix_LoadMUS(filename.c_str());
+		if (mixMusic == nullptr) {
+			valid = false;
 			logger()->warn("[Music] {} failed to load!", filename);
 		}
 	}
 
 	Music::MusicBuffer::~MusicBuffer() {
-		if (mixMusic_ != nullptr) {
-			Mix_FreeMusic(mixMusic_);
+		if (mixMusic != nullptr) {
+			Mix_FreeMusic(mixMusic);
 		}
 	}
 

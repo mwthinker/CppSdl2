@@ -70,9 +70,9 @@ namespace sdl {
 	}
 
 	ShaderProgram::ShaderProgram(ShaderProgram&& other) noexcept :
-		attributes_(std::move(other.attributes_)),
-		uniforms_(std::move(other.uniforms_)),
-		programObjectId_(other.programObjectId_) {
+		attributes_{std::move(other.attributes_)},
+		uniforms_{std::move(other.uniforms_)},
+		programObjectId_{other.programObjectId_} {
 
 		other.programObjectId_ = 0;
 	}

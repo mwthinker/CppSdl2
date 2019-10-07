@@ -7,7 +7,7 @@
 
 namespace sdl {
 
-	InitSdl::InitSdl(Uint32 flags) : flags_(flags) {
+	InitSdl::InitSdl(Uint32 flags) : flags_{flags} {
 		if (flags & SDL_INIT_VIDEO) {
 			initSdl();
 		}

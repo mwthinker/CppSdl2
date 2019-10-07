@@ -24,6 +24,9 @@ namespace sdl {
 		Window(const Window&) = delete;
 		Window& operator=(const Window&) = delete;
 
+		Window(Window&&) = delete;
+		Window& operator=(Window&&) = delete;
+
 		// Start the loop which handle all inputs and graphics in the windows. It will not
 		// return until the loop is ended. Is closed when the windows is closed, i.e. a
 		// call to the function quit().

@@ -34,14 +34,14 @@ namespace sdl {
 		bool getButtonState(SDL_GameControllerButton button) const;
 
 		// Value ranging from -1 and 1. Trigger however range from 0 to 1.
-		double getAxisState(SDL_GameControllerAxis axis) const;
+		float getAxisState(SDL_GameControllerAxis axis) const;
 
 		bool isAttached() const;
 
 		SDL_JoystickID getInstanceId() const;
 
 	private:
-		GameController(SDL_GameController* gameController) noexcept;
+		explicit GameController(SDL_GameController* gameController) noexcept;
 
 		SDL_GameController* gameController_ = nullptr;
 	};
@@ -54,8 +54,8 @@ namespace sdl {
 		return SDL_GameControllerGetButton(gameController_, button) != 0;
 	}
 
-	inline double GameController::getAxisState(SDL_GameControllerAxis axis) const {
-		return (double) SDL_GameControllerGetAxis(gameController_, axis) / sizeof(Sint16);
+	inline float GameController::getAxisState(SDL_GameControllerAxis axis) const {
+		return static_cast<float>(SDL_GameControllerGetAxis(gameController_, axis) / sizeof(Sint16));
 	}
 
 	inline bool GameController::isAttached() const {

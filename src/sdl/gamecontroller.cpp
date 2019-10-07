@@ -5,10 +5,13 @@
 
 namespace sdl {	
 
-	GameController::GameController(SDL_GameController* gameController) noexcept : gameController_(gameController) {
+	GameController::GameController(SDL_GameController* gameController) noexcept
+		: gameController_{gameController} {
 	}
 
-	GameController::GameController(GameController&& other) noexcept  : gameController_(other.gameController_) {
+	GameController::GameController(GameController&& other) noexcept
+		: gameController_{other.gameController_} {
+
 		other.gameController_ = nullptr;
 	}
 
@@ -40,17 +43,18 @@ namespace sdl {
 
 	GameController GameController::addController(int index) {
 		if (SDL_IsGameController(index)) {
-			SDL_GameController* controller = SDL_GameControllerOpen(index);
-			if (controller) {
-				return GameController(controller);
+			
+			if (auto controller = SDL_GameControllerOpen(index);
+				controller != nullptr) {
+				
+				return GameController{controller};
 			} else {
 				logger()->error("[GameController] Could not open gamecontroller: {}", SDL_GetError());
-				return GameController(nullptr);
 			}
 		} else {
 			logger()->error("[GameController] Game Controller mapping is not avvailable.");
 		}
-		return GameController(nullptr);
+		return GameController{};
 	}
 
 	void GameController::removeController(GameController&& gameController) {

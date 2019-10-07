@@ -7,13 +7,13 @@ namespace sdl {
 
 	class InitSdl {
 	public:
-		InitSdl(Uint32 flags = SDL_INIT_VIDEO);
+		explicit InitSdl(Uint32 flags = SDL_INIT_VIDEO);
 		~InitSdl();
 		
 		InitSdl(const InitSdl&) = delete;
 		InitSdl& operator=(const InitSdl&) = delete;
 
-		Uint32 getFlags() const {
+		Uint32 getFlags() const noexcept {
 			return flags_;
 		}
 

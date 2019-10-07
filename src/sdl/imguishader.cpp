@@ -40,9 +40,9 @@ namespace sdl {
 	}
 
 	ImGuiShader::ImGuiShader(ImGuiShader&& other) noexcept :
-		shader_(std::move(other.shader_)), aPosIndex_(other.aPosIndex_),
-		aTexIndex_(other.aTexIndex_), aColorIndex_(other.aColorIndex_),
-		uMatrixIndex_(other.uMatrixIndex_), uTextureIndex_(other.uTextureIndex_) {
+		shader_{std::move(other.shader_)}, aPosIndex_{other.aPosIndex_},
+		aTexIndex_{other.aTexIndex_}, aColorIndex_{other.aColorIndex_},
+		uMatrixIndex_{other.uMatrixIndex_}, uTextureIndex_{other.uTextureIndex_} {
 
 		other.aPosIndex_ = -1;
 		other.aTexIndex_ = -1;
@@ -77,15 +77,15 @@ namespace sdl {
 	void ImGuiShader::setVertexAttribPointer() const {
 		if (shader_.isLinked()) {
 			glEnableVertexAttribArray(aPosIndex_);
-			glVertexAttribPointer(aPosIndex_, 2, GL_FLOAT, GL_FALSE, sizeof(ImDrawVert), (GLvoid*)IM_OFFSETOF(ImDrawVert, pos));
+			glVertexAttribPointer(aPosIndex_, 2, GL_FLOAT, GL_FALSE, sizeof(ImDrawVert), (GLvoid*) IM_OFFSETOF(ImDrawVert, pos));
 			sdl::assertGlError();
 
 			glEnableVertexAttribArray(aTexIndex_);
-			glVertexAttribPointer(aTexIndex_, 2, GL_FLOAT, GL_FALSE, sizeof(ImDrawVert), (GLvoid*)IM_OFFSETOF(ImDrawVert, uv));
+			glVertexAttribPointer(aTexIndex_, 2, GL_FLOAT, GL_FALSE, sizeof(ImDrawVert), (GLvoid*) IM_OFFSETOF(ImDrawVert, uv));
 			sdl::assertGlError();
 
 			glEnableVertexAttribArray(aColorIndex_);
-			glVertexAttribPointer(aColorIndex_, 4, GL_UNSIGNED_BYTE, GL_TRUE, sizeof(ImDrawVert), (GLvoid*)IM_OFFSETOF(ImDrawVert, col));
+			glVertexAttribPointer(aColorIndex_, 4, GL_UNSIGNED_BYTE, GL_TRUE, sizeof(ImDrawVert), (GLvoid*) IM_OFFSETOF(ImDrawVert, col));
 			sdl::assertGlError();
 		} else {
 			logger()->warn("[ImGuiShader] setVertexAttribPointer failed, shader not linked");

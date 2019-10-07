@@ -28,7 +28,7 @@ namespace {
 }
 
 BatchTrianglesIndexes::BatchTrianglesIndexes(const std::shared_ptr<TestShader2>& shader, GLenum usage)
-    : shader_(shader), batch_(usage) {
+	: shader_{shader}, batch_{usage} {
 
 	assert(shader);
 }

@@ -63,7 +63,7 @@ namespace sdl {
 
 	private:
 		BatchView(GLenum mode, GLsizei index, GLsizei size) noexcept :
-			mode_(mode), index_(index), size_(size) {
+			mode_{mode}, index_{index}, size_{size} {
 
 			assertValidDrawMode(mode);
 			assert(index_ >= 0 && size_ >= 0);
@@ -78,7 +78,7 @@ namespace sdl {
 	template <class Vertex>
 	class Batch {
 	public:
-		Batch(GLenum usage);
+		explicit Batch(GLenum usage);
 
 		~Batch() = default;
 
@@ -149,14 +149,15 @@ namespace sdl {
 	};
 
 	template <class Vertex>
-	Batch<Vertex>::Batch(GLenum usage) : usage_(usage) {
+	Batch<Vertex>::Batch(GLenum usage) : usage_{usage} {
 		IS_VERTEX_STANDARD_LAYOUT<Vertex>();
 	}
 
 	template <class Vertex>
 	Batch<Vertex>::Batch(Batch&& other) noexcept :
-		uploadedIndex_(other.uploadedIndex_), usage_(other.usage_), index_(other.index_),
-		vertexes_(std::move(other.vertexes_)), indexes_(std::move(other.indexes_)), vbo_(std::move(other.vbo_)), vboIndexes_(std::move(other.vboIndexes_)) {
+		uploadedIndex_{other.uploadedIndex_}, usage_{other.usage_}, index_{other.index_},
+		vertexes_{std::move(other.vertexes_)}, indexes_{std::move(other.indexes_)},
+		vbo_{std::move(other.vbo_)}, vboIndexes_{std::move(other.vboIndexes_)} {
 
 		IS_VERTEX_STANDARD_LAYOUT<Vertex>();
 
@@ -307,7 +308,7 @@ namespace sdl {
 			}
 			assertGlError();
 		} else if (!vbo_.isGenerated()) {
-			logger()->error("[Batch] VertexData failed to draw, no vbo binded, i.e. Batch::uploadToGraphicCard never called");
+			logger()->error("[Batch] Vertex data failed to draw, no vbo binded, i.e. Batch::uploadToGraphicCard never called");
 		}
 	}
 	
@@ -381,7 +382,7 @@ namespace sdl {
 		assert(size >= 0);
 
 		if (vbo_.getSize() != 0 && usage_ == GL_STATIC_DRAW) {
-			logger()->error("[Batch] VertexData is static, data index can't be modified");
+			logger()->error("[Batch] Vertex data is static, data index can't be modified");
 			return;
 		}
 		for (auto it = begin; it != end; ++it) {

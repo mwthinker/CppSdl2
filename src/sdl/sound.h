@@ -20,7 +20,7 @@ namespace sdl {
 		bool operator!=(const Sound& sound) const;
 
 		// Loads a soundfile and creates a sound.
-		Sound(const std::string& filename);
+		explicit Sound(const std::string& filename);
 
 		// Copie the sound. Is a fast copy. Will point to the 
 		// same Mix_Chunk data.
@@ -59,12 +59,12 @@ namespace sdl {
 
 	private:
 		struct SoundBuffer {
-			SoundBuffer(const std::string& filename);
+			explicit SoundBuffer(const std::string& filename);
 			~SoundBuffer();
 
-			Mix_Chunk* mixChunk_;
-			bool valid_;
-			std::string error_;
+			Mix_Chunk* mixChunk = nullptr;
+			bool valid = true;
+			std::string error;
 
 			static std::map<int, int> channelList;// <channel, sound id>
 		};
@@ -90,7 +90,7 @@ namespace sdl {
 	};
 
 	inline Mix_Chunk* Sound::getMixChunk() const {
-		return soundBuffer_ ? soundBuffer_->mixChunk_ : nullptr;
+		return soundBuffer_ ? soundBuffer_->mixChunk : nullptr;
 	}
 
 	inline bool Sound::operator==(const Sound& sound) const {

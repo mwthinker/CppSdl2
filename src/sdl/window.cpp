@@ -19,7 +19,7 @@ namespace sdl {
 				logger()->info("[Window] glewInit succeeded");
 			} else {
 				logger()->error("[Window] glewInit failed, something is seriously wrong: {}", glewGetErrorString(status));
-				throw std::exception();
+				throw std::exception{};
 			}
 			glGetError(); // Ignore, silly error which glew may cause.
 		}
@@ -27,7 +27,7 @@ namespace sdl {
 	}
 
 	Window::Window(int majorVersionGl, int minorVersionGl) :
-		majorVersionGl_(majorVersionGl), minorVersionGl_(minorVersionGl) {
+		majorVersionGl_{majorVersionGl}, minorVersionGl_{minorVersionGl} {
 
 		logger()->info("[Window] Creating Window");
 	}
@@ -36,7 +36,7 @@ namespace sdl {
 		glContext_ = SDL_GL_CreateContext(window_);
 		if (glContext_ == 0) {
 			logger()->error("[Window] SDL_GL_CreateContext failed: ", SDL_GetError());
-			throw std::exception();
+			throw std::exception{};
 		}
 
 		if (SDL_GL_SetSwapInterval(1) < 0) {
@@ -49,7 +49,7 @@ namespace sdl {
 			logger()->info("[Window] GL_SHADING_LANGUAGE_VERSION: {}", (char*) glGetString(GL_SHADING_LANGUAGE_VERSION));
 		} else {
 			logger()->error("[Window] Error: unknown OpenGL version loadad!");
-			throw std::exception();
+			throw std::exception{};
 		}
 
 		initGlew();
@@ -282,10 +282,10 @@ namespace sdl {
 		SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, minorVersionGl_);
 		SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
 
-		if (SDL_GL_LoadLibrary(0) != 0) {
+		if (SDL_GL_LoadLibrary(nullptr) != 0) {
 			logger()->error("[Window] SDL_GL_LoadLibrary failed {}", SDL_GetError());
 			logger()->error("[Window] Failed to load OpenGL version {}.{}", majorVersionGl_, minorVersionGl_);
-			throw std::exception();
+			throw std::exception{};
 		}
 	}
 

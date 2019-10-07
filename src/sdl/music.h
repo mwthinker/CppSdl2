@@ -17,7 +17,7 @@ namespace sdl {
 
 		// Loads a musicfile and creates a music object.
 		// Only one music file can be played.
-		Music(const std::string& filename);
+		explicit Music(const std::string& filename);
 
 		bool operator==(const Music& music) const;
 
@@ -59,25 +59,21 @@ namespace sdl {
 
 		// Use with care! Return the pointer to the Mix_Music data.
 		Mix_Music* getMixMusic() const {
-			return musicBuffer_ ? musicBuffer_->mixMusic_ : nullptr;
+			return musicBuffer_ ? musicBuffer_->mixMusic : nullptr;
 		}
 
 	private:
-		class MusicBuffer;
-		typedef std::shared_ptr<MusicBuffer> MusicBufferPtr;
-
-		class MusicBuffer {
-		public:
-			MusicBuffer(const std::string& filename);
+		struct MusicBuffer {
+			explicit MusicBuffer(const std::string& filename);
 			~MusicBuffer();
 
-			Mix_Music* mixMusic_ = nullptr;
-			bool valid_ = true;
-			std::string error_ = "";
+			Mix_Music* mixMusic = nullptr;
+			bool valid = true;
+			std::string error;
 		};
 				
 		float volume_ = 1.f;
-		MusicBufferPtr musicBuffer_ = nullptr;
+		std::shared_ptr<MusicBuffer> musicBuffer_;
 	};
 
 

@@ -13,11 +13,11 @@ namespace sdl {
 		// Create an empty non linked shader.
 		ShaderProgram() = default;
 
-		ShaderProgram(const ShaderProgram& sprite) = delete;
-		ShaderProgram& operator=(const ShaderProgram& sprite) = delete;
+		ShaderProgram(const ShaderProgram&) = delete;
+		ShaderProgram& operator=(const ShaderProgram&) = delete;
 
-		ShaderProgram(ShaderProgram&& sprite) noexcept;
-		ShaderProgram& operator=(ShaderProgram&& sprite) noexcept;
+		ShaderProgram(ShaderProgram&& other) noexcept;
+		ShaderProgram& operator=(ShaderProgram&& other) noexcept;
 
 		~ShaderProgram();
 

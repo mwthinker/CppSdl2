@@ -32,7 +32,7 @@ namespace sdl {
 			glGenVertexArrays(1, &vao_);
 			assertGlError();
 		} else {
-			logger()->warn("[VertexArrayObject] tried to create, but vao was already exists");
+			logger()->warn("[VertexArrayObject] tried to create, but vao already exists");
 		}
 	}
 

@@ -23,7 +23,7 @@ namespace sdl {
 	}
 
 	VertexBufferObject::VertexBufferObject(VertexBufferObject&& other) noexcept : 
-		vboId_(other.vboId_), size_(other.size_), target_(other.target_), usage_(other.usage_) {
+		vboId_{other.vboId_}, size_{other.size_}, target_{other.target_}, usage_{other.usage_} {
 
 		other.vboId_ = 0;
 		other.size_ = 0;
