@@ -1,5 +1,6 @@
 #include "batchtrianglesindexes.h"
 
+#include <sdl/color.h>
 #include <glm/gtc/constants.hpp>
 #include "logger.h"
 
@@ -14,8 +15,8 @@ namespace {
         return {center.x + size * std::cos(angleRad), center.y + size * std::sin(angleRad)};
     }
 
-    inline TestShader2::Vertex createHexCornerVertex(const TestShader2::Vertex& vertex, float size, int nbr) {
-        TestShader2::Vertex corner = vertex;
+    inline TestShader::Vertex createHexCornerVertex(const TestShader::Vertex& vertex, float size, int nbr) {
+		auto corner = vertex;
         corner.pos_ = getHexCorner(vertex.pos_, size, nbr);
         float x = corner.pos_.x;
         float y = corner.pos_.y;
@@ -23,11 +24,11 @@ namespace {
         return  corner;
     }
 
-	const Color COLOR = Color(0.5f, 1.f, 0, 1.f);
+	const sdl::Color COLOR = {0.5f, 1.f, 0, 1.f};
 
 }
 
-BatchTrianglesIndexes::BatchTrianglesIndexes(const std::shared_ptr<TestShader2>& shader, GLenum usage)
+BatchTrianglesIndexes::BatchTrianglesIndexes(const std::shared_ptr<TestShader>& shader, GLenum usage)
 	: shader_{shader}, batch_{usage} {
 
 	assert(shader);
@@ -41,7 +42,7 @@ void BatchTrianglesIndexes::uploadToGraphicCard() {
     batch_.uploadToGraphicCard();
 }
 
-void BatchTrianglesIndexes::addTriangle(TestShader2::Vertex v1, TestShader2::Vertex v2, TestShader2::Vertex v3) {
+void BatchTrianglesIndexes::addTriangle(TestShader::Vertex v1, TestShader::Vertex v2, TestShader::Vertex v3) {
 	batch_.startAdding();
 
 	v1.color_ = COLOR;
@@ -53,23 +54,23 @@ void BatchTrianglesIndexes::addTriangle(TestShader2::Vertex v1, TestShader2::Ver
 }
 
 void BatchTrianglesIndexes::addRectangle(float x, float y, float w, float h) {
-    addTriangle(TestShader2::Vertex(x, y), TestShader2::Vertex(x + w, y), TestShader2::Vertex(x, y + h));
-    addTriangle(TestShader2::Vertex(x, y + h), TestShader2::Vertex(x + w, y), TestShader2::Vertex(x + w, y + h));
+	addTriangle({x, y}, {x + w, y}, {x, y + h});
+	addTriangle({x, y + h}, {x + w, y}, {x + w, y + h});
 }
 
-void BatchTrianglesIndexes::addRectangle(const TestShader2::Vertex& v1, const TestShader2::Vertex& v2, const TestShader2::Vertex& v3, const TestShader2::Vertex& v4) {
+void BatchTrianglesIndexes::addRectangle(const TestShader::Vertex& v1, const TestShader::Vertex& v2, const TestShader::Vertex& v3, const TestShader::Vertex& v4) {
     addTriangle(v1, v2, v3);
     addTriangle(v3, v4, v1);
 }
 
 void BatchTrianglesIndexes::addCircle(float x, float y, float radius, const int iterations) {
 	batch_.startAdding();
-    TestShader2::Vertex center(x, y);
+	TestShader::Vertex center{x, y};
 	center.color_ = COLOR;
 	batch_.add(center);
     for (int i = 0; i < iterations; ++i) {
 		float rad = 2 * PI * i / iterations;
-        TestShader2::Vertex circleVertex(x + radius * std::cos(rad), y + radius * std::sin(rad));
+		TestShader::Vertex circleVertex{x + radius * std::cos(rad), y + radius * std::sin(rad)};
 		circleVertex.color_ = COLOR;
 		batch_.add(circleVertex);
     }
@@ -80,7 +81,7 @@ void BatchTrianglesIndexes::addCircle(float x, float y, float radius, const int 
 
 void BatchTrianglesIndexes::addHexagon(float x, float y, float size) {
 	batch_.startAdding();
-    auto center = TestShader2::Vertex(x, y);
+	TestShader::Vertex center{x, y};
     center.color_ = COLOR;
 	batch_.add(center);
     for (int i = 0; i < 6; ++i) {

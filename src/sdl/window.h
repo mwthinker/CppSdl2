@@ -46,20 +46,20 @@ namespace sdl {
 		std::pair<int, int> getWindowPosition() const;
 
 		// Return the current windows width in pixels.
-		int getWidth() const;
+		int getWidth() const noexcept;
 
 		// Return the current windows height in pixels.
-		int getHeight() const;
+		int getHeight() const noexcept;
 
 		// Make the program to quit as soon as the current frame is finished.
 		// I.e. the loop in startLoop() will be made to stop and startLoop() will return.
-		void quit();
+		void quit() noexcept;
 
 		// The id for the windows. Is the same as calling SDL_GetWindowID.
 		Uint32 getId() const;
 
 		// Return the window pointer. Use with care.
-		SDL_Window* getSdlWindow() const;
+		SDL_Window* getSdlWindow() const noexcept;
 
 		void setPosition(int x, int y);
 
@@ -73,19 +73,19 @@ namespace sdl {
 
 		void setWindowSize(int width, int height);
 
-		int getOpenGlMajorVersion() const;
+		int getOpenGlMajorVersion() const noexcept;
 
-		int getOpenGlMinorVersion() const;
+		int getOpenGlMinorVersion() const noexcept;
 
-		void setGlClear(GLbitfield glBitfield);
+		void setGlClear(GLbitfield glBitfield) noexcept;
 
-		GLbitfield getGlClear() const;
+		GLbitfield getGlClear() const noexcept;
 
 		// Add a delay in the loop, add a sleeping time before frame swapping. Less than 10 ms may 
 		// not effect anything, is plattform dependent.
-		void setLoopSleepingTime(int sleepingTime);
+		void setLoopSleepingTime(int sleepingTime) noexcept;
 		
-		int getLoopSleepingTime() const;
+		int getLoopSleepingTime() const noexcept;
 
 	protected:
 		virtual void initOpenGl();
@@ -134,7 +134,7 @@ namespace sdl {
 		bool resizable_ = true;
 	};
 
-	inline void Window::quit() {
+	inline void Window::quit() noexcept {
 		quit_ = true;
 	}
 
@@ -142,31 +142,31 @@ namespace sdl {
 		return SDL_GetWindowID(window_);
 	}
 
-	inline SDL_Window* Window::getSdlWindow() const {
+	inline SDL_Window* Window::getSdlWindow() const noexcept {
 		return window_;
 	}
 
-	inline int Window::getOpenGlMajorVersion() const {
+	inline int Window::getOpenGlMajorVersion() const noexcept {
 		return majorVersionGl_;
 	}
 
-	inline int Window::getOpenGlMinorVersion() const {
+	inline int Window::getOpenGlMinorVersion() const noexcept {
 		return minorVersionGl_;
 	}
 
-	inline void Window::setGlClear(GLbitfield glBitfield) {
+	inline void Window::setGlClear(GLbitfield glBitfield) noexcept {
 		glBitfield_ = glBitfield;
 	}
 
-	inline GLbitfield Window::getGlClear() const {
+	inline GLbitfield Window::getGlClear() const noexcept {
 		return glBitfield_;
 	}
 
-	inline void Window::setLoopSleepingTime(int sleepingTime) {
+	inline void Window::setLoopSleepingTime(int sleepingTime) noexcept {
 		sleepingTime_ = sleepingTime;
 	}
 
-	inline int Window::getLoopSleepingTime() const {
+	inline int Window::getLoopSleepingTime() const noexcept {
 		return sleepingTime_;
 	}
 

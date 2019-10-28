@@ -1,59 +1,60 @@
 #include "testshader.h"
 #include "types.h"
 
-TestShader::TestShader(const std::string& vShader, const std::string& fShader) {
-	shaderProgram_.bindAttribute("aPos");
-	shaderProgram_.bindAttribute("aTex");
-	shaderProgram_.loadAndLinkFromFile(vShader, fShader);
+#include <sdl/window.h>
 
-	shaderProgram_.useProgram();
-    
-    aPosIndex_ = shaderProgram_.getAttributeLocation("aPos");
-    aTexIndex_ = shaderProgram_.getAttributeLocation("aTex");
-    
-    uProjIndex_ = shaderProgram_.getUniformLocation("uProj");
-    uModelIndex_ = shaderProgram_.getUniformLocation("uModel");
-    uColorIndex_ = shaderProgram_.getUniformLocation("uColor");
-    uIsTexIndex_ = shaderProgram_.getUniformLocation("uIsTexture");
+TestShader::TestShader(const std::string& vShader, const std::string& fShader) {
+	shader_.bindAttribute("aPos");
+	shader_.bindAttribute("aTex");
+	shader_.bindAttribute("aColor");
+	shader_.bindAttribute("aTexture");
+	shader_.loadAndLinkFromFile(vShader, fShader);
+
+	shader_.useProgram();
+
+	// Collect the vertex buffer attributes indexes.
+	aPosIndex_ = shader_.getAttributeLocation("aPos");
+	aTexIndex_ = shader_.getAttributeLocation("aTex");
+	aColorIndex_ = shader_.getAttributeLocation("aColor");
+	aTextureIndex_ = shader_.getAttributeLocation("aTexture");
+
+	// Collect the vertex buffer uniforms indexes.
+	uProjIndex_ = shader_.getUniformLocation("uProj");
+	uModelIndex_ = shader_.getUniformLocation("uModel");
 }
 
 void TestShader::useProgram() const {
-	shaderProgram_.useProgram();
+	shader_.useProgram();
 }
 
 void TestShader::setVertexAttribPointer() const {
+	size_t size = 0;
+
 	glEnableVertexAttribArray(aPosIndex_);
-	glVertexAttribPointer(aPosIndex_, 2, GL_FLOAT, GL_FALSE, vertexSizeInBytes(), (GLvoid*) (sizeof(GLfloat) * 0));
+	glVertexAttribPointer(aPosIndex_, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid*) size);
+	size += sizeof(Vertex::pos_);
+
 	glEnableVertexAttribArray(aTexIndex_);
-	glVertexAttribPointer(aTexIndex_, 2, GL_FLOAT, GL_FALSE, vertexSizeInBytes(), (GLvoid*) (sizeof(GLfloat) * 2));
+	glVertexAttribPointer(aTexIndex_, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid*) size);
+	size += sizeof(Vertex::tex_);
+
+	glEnableVertexAttribArray(aColorIndex_);
+	glVertexAttribPointer(aColorIndex_, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid*) size);
+	size += sizeof(Vertex::color_);
+
+	glEnableVertexAttribArray(aTextureIndex_);
+	glVertexAttribPointer(aTextureIndex_, 1, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid*) size);
 	sdl::assertGlError();
 }
 
-void TestShader::setProjectionMatrixU(const Mat44& matrix) const {
-	shaderProgram_.useProgram();
-    glUniformMatrix4fv(uProjIndex_, 1, false, glm::value_ptr(matrix));
+// Uniforms. -------------------------------------------
+
+void TestShader::setProjectionMatrix(const Mat44& matrix) const {
+	shader_.useProgram();
+	glUniformMatrix4fv(uProjIndex_, 1, false, glm::value_ptr(matrix));
 }
 
-void TestShader::setModelMatrixU(const Mat44& matrix) const {
-	shaderProgram_.useProgram();
-    glUniformMatrix4fv(uModelIndex_, 1, false, glm::value_ptr(matrix));
-}
-
-void TestShader::setColorU(float red, float green, float blue, float alpha) const {
-	shaderProgram_.useProgram();
-    glUniform4f(uColorIndex_, red, green, blue, alpha);
-}
-
-void TestShader::setColorU(const Color& color) const {
-	shaderProgram_.useProgram();
-    glUniform4f(uColorIndex_, color.r, color.g, color.b, color.a);
-}
-
-void TestShader::setTextureU(bool texture) const {
-	shaderProgram_.useProgram();
-    if (texture) {
-        glUniform1f(uIsTexIndex_, 1);
-    } else {
-        glUniform1f(uIsTexIndex_, 0);
-    }
+void TestShader::setModelMatrix(const Mat44& matrix) const {
+	shader_.useProgram();
+	glUniformMatrix4fv(uModelIndex_, 1, false, glm::value_ptr(matrix));
 }

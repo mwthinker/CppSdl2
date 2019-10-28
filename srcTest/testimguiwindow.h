@@ -29,7 +29,7 @@ private:
 	void initBatchTriangles();
 	void initBatchTrianglesIndexes();
 
-    std::shared_ptr<TestShader2> shader_;
+    std::shared_ptr<TestShader> shader_;
     std::shared_ptr<BatchTriangles> batch_;
 	std::shared_ptr<BatchTrianglesIndexes> batchIndexes_;
 };

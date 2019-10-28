@@ -7,3 +7,4 @@ spdlog
 fmt
 glm
 imgui
+catch2

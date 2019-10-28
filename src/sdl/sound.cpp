@@ -91,11 +91,11 @@ namespace sdl {
 		}
 	}
 
-	float Sound::getVolume() const {
+	float Sound::getVolume() const noexcept {
 		return volume_;
 	}
 
-	bool Sound::isValid() const {
+	bool Sound::isValid() const noexcept {
 		return soundBuffer_ ? soundBuffer_->valid : false;
 	}
 

@@ -2,27 +2,15 @@
 #define CPPSDL2_SDL_TEXTURE_H
 
 #include "opengl.h"
-
-#include <SDL_image.h>
+#include "rect.h"
 
 #include <string>
 #include <memory>
 #include <functional>
-#include <algorithm>
-#include <utility>
 
 namespace sdl {
 
-	namespace helper {
-
-		// Assumes that the surface is in RGBA.
-		void flipVertical(SDL_Surface* surface);
-
-		SDL_Surface* createSurface(int w, int h);
-
-		SDL_Surface* createSurface(int w, int h, uint8_t r, uint8_t g, uint8_t b, uint8_t a = 255);
-
-	}
+	class Surface;
 
 	class Texture {
 	public:
@@ -30,109 +18,34 @@ namespace sdl {
 		friend class Text;
 
 		Texture() = default;
-
-		// Loads a image from a file. It stores the image in memory and no opengl
-		// code are of use in the constructor (safe to call constructor in other threads).
-		explicit Texture(const std::string& filename, const std::function<void()>& filter = []() {
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-		});
-
-		// Create a empty texture.
-		explicit Texture(int width, int height, const std::function<void()>& filter = []() {
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-		});
-
-		// Create a filled rgba texture.
-		explicit Texture(int width, int height, uint8_t, uint8_t g, uint8_t b, uint8_t a = 255, const std::function<void()> & filter = []() {
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-		});
+		~Texture();
 
 		Texture(const Texture& texture) = default;
 		Texture& operator=(const Texture& texture) = default;
 
 		Texture(Texture&& texture) noexcept;
 		Texture& operator=(Texture&& texture) noexcept;
+		
+		void bind() const;
 
-		bool operator==(const Texture& texture) const;
-
-		bool operator!=(const Texture& texture) const;
-
-		// Binds the texture to the target. First call, copies 
-		// the image data to graphic memory.
-		void bindTexture() const;
-
-		std::pair<int, int> getSize() const {
-			return {width_, height_};
-		}
-
-		// Return the width of the image in pixels.
-		int getWidth() const {
-			return width_;
-		}
-
-		// Return the height of the image in pixels. 
-		int getHeight() const {
-			return height_;
-		}
-
-		// Return true if the image is loaded correctly. It may however not been loaded
-		// to graphic memory despite the result of this function.
-		bool isValid() const {
-			return imageData_ != nullptr;
-		}
-
-		// Return zero if no texture is binded
-		GLuint getGlTexture() const {
-			return isValid()? imageData_->texture_ : 0;
-		}
-
-	private:
-		// The texture object takes over the ownership of the surface and is responsible of deallocation.
-		// Not safe to use surface outside this class after calling the constuctor.
-		explicit Texture(SDL_Surface* surface, const std::function<void()>& filter = []() {
+		void texImage(const Surface& surface, std::function<void()>&& filter = []() {
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 		});
 
-		class ImageData {
-		public:
-			ImageData(std::function<void()> filter);
+		void texSubImage(const Surface& surface, const Rect& dst);
 
-			ImageData(SDL_Surface* surface, std::function<void()> filter);
-
-			~ImageData();
-
-			// Is not copyable.
-			ImageData(const ImageData&) = delete;
-
-			// Is not copyable.
-			ImageData& operator=(const ImageData&) = delete;
-
-			void loadImageToGraphic() const;
-
-			// Is mutable in order for the bind() function to be const.
-			// It's ok beacause the variables can be seen as cache variables.
-			// So the external "constness" is preserved.
-			mutable SDL_Surface* preLoadSurface_ = nullptr;
-			mutable GLuint texture_ = 0;
-			std::function<void()> filter_ = [](){};
-		};
+		void generate();
 		
-		std::shared_ptr<ImageData> imageData_ = nullptr;
-		mutable bool firstCallBind_ = true;
-		int width_ = 0, height_ = 0;
+		bool isValid() const noexcept;
+
+		bool operator==(const Texture& texture) const noexcept;
+		
+		bool operator!=(const Texture& texture) const noexcept;
+
+	private:
+		GLuint texture_ = 0;
 	};
-
-	inline bool Texture::operator==(const Texture& texture) const {
-		return imageData_ == texture.imageData_;
-	}
-
-	inline bool Texture::operator!=(const Texture& other) const {
-		return !(*this == other);
-	}
 
 } // Namespace sdl.
 

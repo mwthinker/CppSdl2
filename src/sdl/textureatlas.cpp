@@ -3,179 +3,143 @@
 
 namespace sdl {
 
-	void TextureAtlas::uploadSdlSurfaceToTexture(SDL_Surface* image, SDL_Rect dstRec, Texture& texture) {
-		// In computer memory?
-		if (texture.imageData_->texture_ == 0) {
-			image = SDL_ConvertSurface(image, texture.imageData_->preLoadSurface_->format, 0);
-			SDL_BlitSurface(image, 0, texture.imageData_->preLoadSurface_, &dstRec);
-		} else { // In graphic memory.
-			helper::flipVertical(image);
-			SDL_Surface* surface = helper::createSurface(image->w, image->h);
-			SDL_BlitSurface(image, 0, surface, &image->clip_rect);
-			texture.bindTexture();
-			glTexSubImage2D(GL_TEXTURE_2D, 0,
-				dstRec.x, texture.height_ - image->h - dstRec.y, // Sdl uses upp-left, opengl uses down-left.
-				image->w, image->h,
-				GL_RGBA,
-				GL_UNSIGNED_BYTE,
-				surface->pixels);
-			SDL_FreeSurface(surface);
-		}
-	}
-
-	std::shared_ptr<TextureAtlas::Node> TextureAtlas::Node::createRoot(std::shared_ptr<Node>& root,
-		int width, int height, SDL_Surface* image, int border) {
+	std::shared_ptr<TextureAtlas::Node> TextureAtlas::createRoot(std::unique_ptr<Node>& root,
+		int width, int height, const Surface& surface, int border) {
 		
 		// Image doesn't fit?
-		if (image->w > width || image->h > height) {
+		if (surface.getWidth() > width || surface.getHeight() > height) {
 			// Image to large!
 			return nullptr;
 		}
-		root = std::make_shared<Node>(0, 0, width, height);
-		return root->insert(image, border);
+
+		root = std::make_unique<Node>(Rect{0, 0, width, height});
+		return root->insert(surface, border);
 	}
 
-	TextureAtlas::Node::Node(int x, int y, int w, int h) : image_(nullptr), rect_{x, y, w, h} {
+	TextureAtlas::Node::Node(Rect rect) : rect_{rect} {
 	}
 
-	std::shared_ptr<TextureAtlas::Node> TextureAtlas::Node::insert(SDL_Surface* image, int border) {
+	std::shared_ptr<TextureAtlas::Node> TextureAtlas::Node::insert(const Surface& surface, int border) {
 		// Is not a leaf!
-		if (left_ != 0 && right_ != 0) {
-			auto node = left_->insert(image, border);
-			if (node != nullptr) {
+		if (left_ != nullptr && right_ != nullptr) {
+			if (auto node = left_->insert(surface, border); node != nullptr) {
 				// Image inserted.
 				return node;
 			}
-			// Image didn't fit, try the other node.
-			return right_->insert(image, border);
+			// Image did not fit, try the other node.
+			return right_->insert(surface, border);
 		} else {
-			if (image_ != nullptr) {
+			if (image) {
 				// Node is already filled!
 				return nullptr;
 			}
-			
-			if (image->w + 2 * border > rect_.w || image->h + 2 * border > rect_.h) {
+
+			if (surface.getWidth() + 2 * border > rect_.w || surface.getHeight() + 2 * border > rect_.h) {
 				// Image to large!
 				return nullptr;
 			}
 
 			// Fits perfectly?
-			if (image->w + 2 * border == rect_.w && image->h + 2 * border == rect_.h) {
-				image_ = image;
+			if (surface.getWidth() + 2 * border == rect_.w && surface.getHeight() + 2 * border == rect_.h) {
+				image = true;
 				return shared_from_this();
 			}
 
 			// Split the node in half.
-			if (rect_.w - image->w < rect_.h - image->h) { // Split vertical.
-				left_ = std::make_shared<Node>(rect_.x, rect_.y,
-					rect_.w, image->h + 2 * border); // Up.
+			if (rect_.w - surface.getWidth() < rect_.h - surface.getHeight()) { // Split vertical.
+				left_ = std::make_shared<Node>(Rect{rect_.x, rect_.y,
+					rect_.w, surface.getHeight() + 2 * border}); // Up.
 
-				right_ = std::make_shared<Node>(rect_.x, rect_.y + image->h + 2 * border,
-					rect_.w, rect_.h - image->h - 2 * border); // Down.
+				right_ = std::make_shared<Node>(Rect{rect_.x, rect_.y + surface.getHeight() + 2 * border,
+					rect_.w, rect_.h - surface.getHeight() - 2 * border}); // Down.
 			
 			} else { // Split horizontal.
-				left_ = std::make_shared<Node>(rect_.x, rect_.y,
-					image->w + 2 * border, rect_.h); // Left.
+				left_ = std::make_shared<Node>(Rect{rect_.x, rect_.y,
+					surface.getWidth() + 2 * border, rect_.h}); // Left.
 				
-				right_ = std::make_shared<Node>(rect_.x + image->w + 2 * border, rect_.y,
-					rect_.w - image->w - 2 * border, rect_.h); // Right.
+				right_ = std::make_shared<Node>(Rect{rect_.x + surface.getWidth() + 2 * border, rect_.y,
+					rect_.w - surface.getWidth() - 2 * border, rect_.h}); // Right.
 			}
 
 			// Insert the image in the left node.
-			return left_->insert(image, border);
+			return left_->insert(surface, border);
 		}
 	}
 
-	TextureAtlas::TextureAtlas(int width, int height, const std::function<void()>& filter)
-		: texture_(width, height, filter), root_(nullptr), width_(width), height_(width) {
+	TextureAtlas::TextureAtlas(int width, int height, std::function<void()>&& filter)
+		: sprite_{Surface{width, height}, std::move(filter)} {
+
 	}
 
 	TextureAtlas::TextureAtlas(TextureAtlas&& other) noexcept :
-		texture_(std::move(other.texture_)), images_(std::move(other.images_)),
-		root_(std::move(other.root_)), width_(other.width_), height_(other.height_) {
-
-		other.width_ = 0;
-		other.height_ = 0;
+		sprite_{std::move(other.sprite_)},
+		images_{std::move(other.images_)},
+		root_{std::move(other.root_)} {
 	}
 
 	TextureAtlas& TextureAtlas::operator=(TextureAtlas&& other) noexcept {
-		texture_ = std::move(other.texture_);
+		sprite_ = std::move(other.sprite_);
 		images_ = std::move(other.images_);
 		root_ = std::move(other.root_);
-		width_ = other.width_;
-		height_ = other.height_;
-
-		other.width_ = 0;
-		other.height_ = 0;
 		return *this;
 	}
 
-	Sprite TextureAtlas::add(const std::string& filename, int border, const std::string& uniqueKey) {
+	const Sprite& TextureAtlas::add(const std::string& filename, int border, const std::string& uniqueKey) {
 		std::string key = filename + uniqueKey;
 		auto it = images_.find(key);
 		if (it == images_.end()) {
-			SDL_Surface* image = IMG_Load(filename.c_str());
-			if (image != nullptr) {
-				Sprite sprite = add(image, border, key);
-				SDL_FreeSurface(image);
-				return sprite;
+			Surface surface{filename};
+			if (surface.isLoaded()) {
+				return add(std::move(surface), border, key);
 			} else {
 				logger()->warn("[TextureAtlas] Image {} failed to load: {}", filename, IMG_GetError());
-				return Sprite();
+				return empty_;
 			}
 		}
 		return it->second;
 	}
 
-	Sprite TextureAtlas::add(const Texture& image, int border, const std::string& key) {
-		if (image.imageData_ != nullptr && image.imageData_->preLoadSurface_ != nullptr) {
-			return add(image.imageData_->preLoadSurface_, border, key);
-		}
-		logger()->warn("[TextureAtlas] Texture already binded or no image loaded");
-		return Sprite();
-	}
-
-	Sprite TextureAtlas::add(SDL_Surface* image, int border, const std::string& key) {
+	const Sprite& TextureAtlas::add(const Surface& surface, int border, const std::string& key) {
 		auto it = images_.find(key);
 		if (key.empty() || it == images_.end()) {
-			std::shared_ptr<Node> node = nullptr;
-			if (texture_.isValid()) {
+			if (surface.isLoaded()) {
+				std::shared_ptr<Node> node;
 				if (root_) {
-					node = root_->insert(image, border);
+					node = root_->insert(surface, border);
 				} else {
-					node = Node::createRoot(root_, width_, height_, image, border);
+					node = createRoot(root_,
+						sprite_.getTextureWidth(), sprite_.getTextureHeight(),
+						surface, border);
 				}
 				if (node) {
 					// Only when atlas is not full.
-					SDL_Rect rect = node->getRect();
+					Rect rect = node->getRect();
 					rect.w -= 2 * border;
 					rect.h -= 2 * border;
 					rect.x += border;
 					rect.y += border;
-					uploadSdlSurfaceToTexture(image, rect, texture_);
-					// If key is empty, then the default sprite is overridden.
-					Sprite& sprite = images_[key];
-					sprite = Sprite(texture_,
-						(float) rect.x, (float) (texture_.getHeight() - rect.y - image->h),
-						(float) image->w, (float) image->h);
-					return sprite;
+					sprite_.blit(surface, rect);
+					return images_[key] = Sprite{sprite_, rect};
 				} else {
 					logger()->warn("[TextureAtlas] Not enough image space to insert image");
-					return Sprite();
+					return empty_;
 				}
 			} else {
-				return Sprite();
+				return empty_;
 			}
 		}
 		return it->second; // Return already loaded sprite.
 	}
 
-	Sprite TextureAtlas::get(const std::string& key) const {
-		auto it = images_.find(key);
-		if (it != images_.end()) {
+	const Sprite& TextureAtlas::get(const std::string& key) const {
+		if (auto it = images_.find(key); it != images_.end()) {
 			return it->second;
 		}
-		return Sprite();
+		return empty_;
+	}
+
+	const Sprite& TextureAtlas::get() const {
+		return sprite_;
 	}
 
 } // Namespace sdl.

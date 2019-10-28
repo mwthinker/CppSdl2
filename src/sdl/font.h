@@ -2,7 +2,6 @@
 #define CPPSDL2_SDL_FONT_H
 
 #include <string>
-#include <memory>
 
 #include <SDL_ttf.h>
 
@@ -10,48 +9,31 @@ namespace sdl {
 
 	class Font {
 	public:
-		Font() noexcept;
+		Font() noexcept = default;
+		~Font();
 
-		Font(const Font& font) = default;
-		Font& operator=(const Font& font) = default;
+		Font(const std::string& filename, int characterSize);
 
-		Font(Font&& font) noexcept;
-		Font& operator=(Font&& font) noexcept;
+		Font(const Font&) = delete;
+		Font& operator=(const Font&) = delete;
+
+		Font(Font&& other) noexcept;
+		Font& operator=(Font&& other) noexcept;
 
 		bool operator==(const Font& font) const noexcept;
 
 		bool operator!=(const Font& font) const noexcept;
 
-		Font(const std::string& filename, int characterSize);
-
 		int getCharacterSize() const noexcept;
 
-		// Use with care! Return a pointer to the font data.
-		TTF_Font* getTtfFont() const noexcept;
+		bool isLoaded()  const noexcept;
 
 	private:
-		struct FontData {
-			FontData(TTF_Font* font) noexcept;
-			~FontData();
+		friend class Surface;
 
-			TTF_Font* font = nullptr;
-		};
-
-		std::shared_ptr<FontData> fontData_;
-		int characterSize_ = 0;
+		TTF_Font* font_{};
+		int characterSize_{};
 	};
-
-	inline bool Font::operator==(const Font& font) const noexcept {
-		return fontData_ == font.fontData_;
-	}
-
-	inline bool Font::operator!=(const Font& other) const noexcept {
-		return !(*this == other);
-	}
-
-	inline int Font::getCharacterSize() const noexcept {
-		return characterSize_;
-	}
 
 } // Namespace sdl.
 

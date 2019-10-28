@@ -27,6 +27,7 @@ set(IMGUI_SOURCE
 
 set(SOURCES
 	src/sdl/batch.h
+	src/sdl/color.h
 	src/sdl/font.cpp
 	src/sdl/font.h
 	src/sdl/gamecontroller.cpp
@@ -38,12 +39,15 @@ set(SOURCES
 	src/sdl/music.h
 	src/sdl/opengl.cpp
 	src/sdl/opengl.h
+	src/sdl/rect.h
 	src/sdl/shaderprogram.cpp
 	src/sdl/shaderprogram.h
 	src/sdl/sound.cpp
 	src/sdl/sound.h
 	src/sdl/sprite.cpp
 	src/sdl/sprite.h
+	src/sdl/surface.cpp
+	src/sdl/surface.h
 	src/sdl/text.cpp
 	src/sdl/text.h
 	src/sdl/textureatlas.cpp
@@ -64,6 +68,7 @@ find_package(SDL2-image CONFIG REQUIRED)
 find_package(SDL2-mixer CONFIG REQUIRED)
 find_package(SDL2-ttf CONFIG REQUIRED)
 find_package(glm CONFIG REQUIRED)
+find_package(fmt CONFIG REQUIRED)
 find_package(spdlog CONFIG REQUIRED)
 
 message(STATUS "Add ImGui as dependencie: -DCppSdl2ImGui=1")
@@ -90,6 +95,7 @@ target_link_libraries(CppSdl2
 		SDL2::SDL2_ttf
 		SDL2::SDL2_mixer
 		GLEW::GLEW
+		fmt::fmt fmt::fmt-header-only
 		spdlog::spdlog
 		glm
 		${ImGuiLib}
@@ -112,10 +118,8 @@ if (CppSdl2Test)
 		srcTest/logger.h
 		srcTest/types.h
 		srcTest/main.cpp
-		srcTest/testshader.cpp
 		srcTest/testshader.h
-		srcTest/testshader2.h
-		srcTest/testshader2.cpp
+		srcTest/testshader.cpp
 		srcTest/testwindow2.h
 		srcTest/testwindow.cpp
 		srcTest/testwindow.h
@@ -135,3 +139,28 @@ if (CppSdl2Test)
 	
 	file(COPY dataTest/. DESTINATION ${CMAKE_CURRENT_BINARY_DIR}) # Copy data to build folder.
 endif ()
+
+find_package(Catch2 CONFIG)
+if (Catch2_FOUND)
+	message(STATUS "CppSdl2CatchTest is available to add: -DCppSdl2CatchTest=1")
+	option(CppSdl2CatchTest "Add CppSdl2CatchTest project." OFF)
+
+	if (CppSdl2CatchTest)
+		set(SOURCES_TEST
+			srcCatchTest/main.cpp
+			srcCatchTest/speedtest.cpp
+			srcCatchTest/tests.cpp
+		)
+	
+		add_executable(CppSdl2CatchTest ${SOURCES_TEST})
+		add_compile_definitions(CATCH_CONFIG_ENABLE_BENCHMARKING)
+
+		target_link_libraries(CppSdl2CatchTest
+			PRIVATE
+				CppSdl2
+				Catch2::Catch2
+		)
+	endif (CppSdl2CatchTest)
+else (Catch2_FOUND)
+	message(STATUS "Catch2 not found, CppSdl2CatchTest not created")
+endif (Catch2_FOUND)

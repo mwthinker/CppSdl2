@@ -7,46 +7,53 @@
 
 namespace sdl {
 
-	Font::Font() noexcept : characterSize_{0} {
-	}
-
-	Font::Font(Font&& font) noexcept : fontData_{std::move(font.fontData_)}, characterSize_{font.characterSize_} {
-	}
-	
-	Font& Font::operator=(Font&& font) noexcept {
-		if (font.fontData_) {
-			fontData_ = std::move(fontData_);
-			characterSize_ = font.characterSize_;
-			font.characterSize_ = 0;
+	Font::~Font() {
+		if (font_ != nullptr) {
+			TTF_CloseFont(font_);
 		}
-		return *this;
 	}
 
-	Font::Font(const std::string& filename, int characterSize) :
-	    fontData_(nullptr), characterSize_(0) {
+	Font::Font(const std::string& filename, int characterSize) {
+		font_ = TTF_OpenFont(filename.c_str(), characterSize);
 
-		if (TTF_Font* font = TTF_OpenFont(filename.c_str(), characterSize);
-			font != nullptr) {
-			
-			fontData_ = std::make_shared<FontData>(font);
+		if (font_ != nullptr) {
 			characterSize_ = characterSize;
-			TTF_SetFontHinting(font, TTF_HINTING_LIGHT);
+			TTF_SetFontHinting(font_, TTF_HINTING_LIGHT);
 		} else {
 			logger()->error("[Font] Error font: {}", TTF_GetError());
 		}
 	}
 
-	TTF_Font* Font::getTtfFont() const noexcept {
-		return fontData_ != nullptr ? fontData_->font : nullptr;
+	Font::Font(Font&& other) noexcept : font_{other.font_}, 
+		characterSize_{other.characterSize_} {
+
+		other.font_ = nullptr;
+		other.characterSize_ = 0;
 	}
 
-	Font::FontData::FontData(TTF_Font* font) noexcept : font(font) {
+	Font& Font::operator=(Font&& other) noexcept {
+		font_ = other.font_;
+		characterSize_ = other.characterSize_;
+
+		other.font_ = nullptr;
+		other.characterSize_ = 0;
+		return *this;
 	}
 
-	Font::FontData::~FontData() {
-		if (font != 0) {
-			TTF_CloseFont(font);
-		}
+	bool Font::operator==(const Font& font) const noexcept {
+		return font_ == font.font_;
+	}
+
+	bool Font::operator!=(const Font& other) const noexcept {
+		return font_ != other.font_;
+	}
+
+	int Font::getCharacterSize() const noexcept {
+		return characterSize_;
+	}
+
+	bool Font::isLoaded() const noexcept {
+		return font_ != nullptr;
 	}
 
 } // Namespace sdl.

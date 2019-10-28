@@ -4,6 +4,7 @@
 #include "opengl.h"
 #include "texture.h"
 #include "sprite.h"
+#include "surface.h"
 
 #include <string>
 #include <memory>
@@ -14,7 +15,7 @@ namespace sdl {
 	// The packing algortihm is from http://www.blackpawn.com/texts/lightmaps/default.html.
 	class TextureAtlas {
 	public:
-		TextureAtlas(int width, int height, const std::function<void()>& filter = []() {
+		TextureAtlas(int width, int height, std::function<void()>&& filter = []() {
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 		});
@@ -25,56 +26,49 @@ namespace sdl {
 		TextureAtlas(TextureAtlas&&) noexcept;
 		TextureAtlas& operator=(TextureAtlas&&) noexcept;
 
-		Sprite add(const std::string& filename, int border = 0, const std::string& uniqueKey = "");
+		const Sprite& add(const std::string& filename, int border = 0, const std::string& uniqueKey = "");
+		
+		const Sprite& add(const Surface& texture, int border = 0, const std::string& uniqueKey = "");
 
-		// Add the image to the texture atlas. Return true if successful, 
-		// else it return false.
-		Sprite add(const Texture& image, int border = 0, const std::string& key = "");
+		const Sprite& get(const std::string& key) const;
 
-		const Texture& getTexture() const {
-			return texture_;
-		}
-
-		Sprite get(const std::string& key) const;
+		const Sprite& get() const;
 
 	private:
-		static void uploadSdlSurfaceToTexture(SDL_Surface* image, SDL_Rect dstRec, Texture& texture);
-
-		Sprite add(SDL_Surface* image, int border, const std::string& key);
-
 		class Node : public std::enable_shared_from_this<Node> {
 		public:
-			// Create a new root node with plane, dimension defined by width and height, and 
-			// a first image added at the top left corner of the defined plane.
-			// Return the node containing the image if sucsessfull, else null
-			// is returned.
-			static std::shared_ptr<Node> createRoot(std::shared_ptr<Node>& root, int width, int height, SDL_Surface* image, int border);
-
 			// Insert an image on the plane, dimensions defined by the root node.
 			// Should only be called by the root node.
-			// Return the node containing the image if sucsessfull, else null
+			// Return the node containing the image if successful, else null
 			// is returned.
-			std::shared_ptr<Node> insert(SDL_Surface* image, int border);
+			std::shared_ptr<Node> insert(const Surface& surface, int border);
 
-			Node(int x, int y, int w, int h);
+			Node(Rect rect);
 
 			// Return the coordinate for the node. (x,y) represents the
 			// up-left coordinate of the rectangle. Including the border.
-			SDL_Rect getRect() const {
+			Rect getRect() const {
 				return rect_;
 			}
 
+			bool image = false;
 		private:
-			SDL_Surface* image_;
 			std::shared_ptr<Node> left_;
 			std::shared_ptr<Node> right_;
-			SDL_Rect rect_;
+			Rect rect_ = {};
 		};
 
-		Texture texture_;
+		// Create a new root node with plane, dimension defined by width and height, and 
+		// a first image added at the top left corner of the defined plane.
+		// Return the node containing the image if successful, else null
+		// is returned.
+		static std::shared_ptr<Node> createRoot(std::unique_ptr<Node>& root,
+			int width, int height, const Surface& surface, int border);
+
+		Sprite sprite_;
 		std::map<std::string, Sprite> images_;
-		std::shared_ptr<Node> root_;
-		int width_ = 0, height_ = 0;
+		std::unique_ptr<Node> root_;
+		const Sprite empty_ = {};
 	};
 
 } // Namespace sdl.

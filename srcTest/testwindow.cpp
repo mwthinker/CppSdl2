@@ -14,89 +14,79 @@ namespace {
 	void printGameControllerButton(Uint8 button) {
 		switch (button) {
 			case SDL_CONTROLLER_BUTTON_A:
-				std::cout << "SDL_CONTROLLER_BUTTON_A" << std::endl;
+				std::cout << "SDL_CONTROLLER_BUTTON_A";
 				break;
 			case SDL_CONTROLLER_BUTTON_B:
-				std::cout << "SDL_CONTROLLER_BUTTON_B" << std::endl;
+				std::cout << "SDL_CONTROLLER_BUTTON_B";
 				break;
 			case SDL_CONTROLLER_BUTTON_X:
-				std::cout << "SDL_CONTROLLER_BUTTON_X" << std::endl;
+				std::cout << "SDL_CONTROLLER_BUTTON_X";
 				break;
 			case SDL_CONTROLLER_BUTTON_Y:
-				std::cout << "SDL_CONTROLLER_BUTTON_Y" << std::endl;
+				std::cout << "SDL_CONTROLLER_BUTTON_Y";
 				break;
 			case SDL_CONTROLLER_BUTTON_BACK:
-				std::cout << "SDL_CONTROLLER_BUTTON_BACK" << std::endl;
+				std::cout << "SDL_CONTROLLER_BUTTON_BACK";
 				break;
 			case SDL_CONTROLLER_BUTTON_GUIDE:
-				std::cout << "SDL_CONTROLLER_BUTTON_GUIDE" << std::endl;
+				std::cout << "SDL_CONTROLLER_BUTTON_GUIDE";
 				break;
 			case SDL_CONTROLLER_BUTTON_START:
-				std::cout << "SDL_CONTROLLER_BUTTON_START" << std::endl;
+				std::cout << "SDL_CONTROLLER_BUTTON_START";
 				break;
 			case SDL_CONTROLLER_BUTTON_LEFTSTICK:
-				std::cout << "SDL_CONTROLLER_BUTTON_LEFTSTICK" << std::endl;
+				std::cout << "SDL_CONTROLLER_BUTTON_LEFTSTICK";
 				break;
 			case SDL_CONTROLLER_BUTTON_RIGHTSTICK:
-				std::cout << "SDL_CONTROLLER_BUTTON_RIGHTSTICK" << std::endl;
+				std::cout << "SDL_CONTROLLER_BUTTON_RIGHTSTICK";
 				break;
 			case SDL_CONTROLLER_BUTTON_LEFTSHOULDER:
-				std::cout << "SDL_CONTROLLER_BUTTON_LEFTSHOULDER" << std::endl;
+				std::cout << "SDL_CONTROLLER_BUTTON_LEFTSHOULDER";
 				break;
 			case SDL_CONTROLLER_BUTTON_RIGHTSHOULDER:
-				std::cout << "SDL_CONTROLLER_BUTTON_RIGHTSHOULDER" << std::endl;
+				std::cout << "SDL_CONTROLLER_BUTTON_RIGHTSHOULDER";
 				break;
 			case SDL_CONTROLLER_BUTTON_DPAD_UP:
-				std::cout << "SDL_CONTROLLER_BUTTON_DPAD_UP" << std::endl;
+				std::cout << "SDL_CONTROLLER_BUTTON_DPAD_UP";
 				break;
 			case SDL_CONTROLLER_BUTTON_DPAD_DOWN:
-				std::cout << "SDL_CONTROLLER_BUTTON_DPAD_DOWN" << std::endl;
+				std::cout << "SDL_CONTROLLER_BUTTON_DPAD_DOWN";
 				break;
 			case SDL_CONTROLLER_BUTTON_DPAD_LEFT:
-				std::cout << "SDL_CONTROLLER_BUTTON_DPAD_LEFT" << std::endl;
+				std::cout << "SDL_CONTROLLER_BUTTON_DPAD_LEFT";
 				break;
 			case SDL_CONTROLLER_BUTTON_DPAD_RIGHT:
-				std::cout << "SDL_CONTROLLER_BUTTON_DPAD_RIGHT" << std::endl;
+				std::cout << "SDL_CONTROLLER_BUTTON_DPAD_RIGHT";
 				break;
 			case SDL_CONTROLLER_BUTTON_MAX:
-				std::cout << "SDL_CONTROLLER_BUTTON_MAX" << std::endl;
+				std::cout << "SDL_CONTROLLER_BUTTON_MAX";
 				break;
 		}
+		std::cout << "\n";
 	}
 
 }
 
-TestWindow::TestWindow(sdl::Sprite sprite) : Window(2, 1), sprite_(sprite) {
+TestWindow::TestWindow(const sdl::Sprite& sprite) : Window{2, 1}, sprite_{sprite} {
 	sdl::Window::setWindowSize(512, 512);
 	sdl::Window::setTitle("Test");
 	sdl::Window::setIcon("tetris.bmp");
-	controllerEvent_ = 0;
 }
 
 void TestWindow::update(double deltaTime) {
-	Mat44 m = glm::ortho(-0.5f * sprite_.getWidth(), 0.5f * sprite_.getHeight(), -0.5f * sprite_.getHeight(), 0.5f * sprite_.getHeight());
-	//Mat44 m = Mat44() sdl::getScaleMatrix44<float>(sprite_.getWidth(), sprite_.getHeight())*mw::getTranslateMatrix44<float>(0.5, 0.5);
-	//Mat44 m2 = m * sdl::getTranslateMatrix44<float>(getWidth() * 0.5f, getHeight() * 0.5f) * mw::getScaleMatrix44<float>(sprite2_.getWidth(), sprite2_.getHeight());
-	//glm::translate(m, )
-
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 	// Update model matrix.
 	shader_->useProgram();
-	shader_->setColorU(1, 1, 1);
-	shader_->setModelMatrixU(m);
-	shader_->setTextureU(true);
 	sprite_.bindTexture();
-	//data1_->drawTRIANGLES();
-	shader_->setColorU(1, 1, 1);
-	//shader_->setModelMatrixU(m2);
-	//data1_->drawTRIANGLES();
-	shader_->setColorU(1, 0, 0);
-	//shader_->setModelMatrixU(m2);
-	
-	//drawText_->draw();
-	
+	shader_->setModelMatrix(Mat44(1));
+	shader_->setProjectionMatrix(Mat44(1));
+	batch_->draw();	
+
+	text_.bindTexture();
+	batch2_->draw();
+
 	glDisable(GL_BLEND);
 	sdl::assertGlError();
 }
@@ -116,8 +106,12 @@ void TestWindow::eventUpdate(const SDL_Event& windowEvent) {
 						quit();
 					}
 					break;
-				case SDL_WINDOWEVENT_RESIZED:
+				case SDL_WINDOWEVENT_SIZE_CHANGED:
+					std::cout << "SDL_WINDOWEVENT_SIZE_CHANGED" << std::endl;
 					resize(windowEvent.window.data1, windowEvent.window.data2);
+					break;
+				case SDL_WINDOWEVENT_RESIZED:
+					std::cout << "SDL_WINDOWEVENT_RESIZED" << std::endl;
 					break;
 				case SDL_WINDOWEVENT_FOCUS_GAINED:
 					if (windowEvent.window.windowID == getId()) {
@@ -140,7 +134,7 @@ void TestWindow::eventUpdate(const SDL_Event& windowEvent) {
 					break;
 				case SDLK_SPACE:
 					if (func_) {
-						func_();
+ 						func_();
 					}
 					break;
 				case SDLK_ESCAPE:
@@ -210,7 +204,8 @@ void TestWindow::eventUpdate(const SDL_Event& windowEvent) {
 void TestWindow::resize(int w, int h) {
 	glViewport(0, 0, w, h);
 	//shader_->setProjectionMatrixU(mw::getOrthoProjectionMatrix44<GLfloat>(0, (GLfloat) w, 0, (GLfloat) h));
-	shader_->setProjectionMatrixU(glm::ortho(-0.5f * sprite_.getWidth(), 0.5f * sprite_.getHeight(), -0.5f * sprite_.getHeight(), 0.5f * sprite_.getHeight()));
+	//shader_->setProjectionMatrixU(mw::getOrthoProjectionMatrix44<GLfloat>(0, (GLfloat) w, 0, (GLfloat) h));
+	//shader_->setProjectionMatrix(glm::ortho(-0.5f * sprite_.getWidth(), 0.5f * sprite_.getHeight(), -0.5f * sprite_.getHeight(), 0.5f * sprite_.getHeight()));
 }
 
 void TestWindow::removeGamepad(SDL_JoystickID instanceId) {
@@ -227,28 +222,22 @@ void TestWindow::removeGamepad(SDL_JoystickID instanceId) {
 
 void TestWindow::initPreLoop() {
 	setLoopSleepingTime(10);
-
-	focus_ = true;
-	shader_ = std::make_shared<TestShader>("testShader2_1.ver.glsl", "testShader2_1.fra.glsl");
-	sdl::Font font("Ubuntu-B.ttf", 60);
-	//text_ = sdl::Text("hej", font);
+	sdl::Font font{"Ubuntu-B.ttf", 60};
+	shader_ = std::make_shared<TestShader>("testShader2_2_1.ver.glsl", "testShader2_2_1.fra.glsl");
+	batch_ = std::make_shared<BatchTriangles>(shader_, GL_DYNAMIC_DRAW);
 	shader_->useProgram();
 	glClearColor(0, 0, 0, 1);
 	resize(getWidth(), getHeight());
-	//data1_ = std::make_shared<TestShaderData>(shader_);
-	// Testing empty data.
-	//data1_->begin();
-	//data1_->addEmptySquareTRIANGLES();
-	//data1_->end();
-	// Use real data.
-	//data1_->begin();
-	//data1_->addSquareTRIANGLES(-0.5, -0.5, 0.5, -0.5, 0.5, 0.5, -0.5, 0.5, sprite_);
-	//data1_->end();
-
-	//drawText_ = std::make_shared<DrawText>(shader_, text_, 0.f, 0.f);
-	//buffer1_.addVertexData(data1_);
-	//buffer1_.addVertexData(drawText_);
-	//buffer1_.uploadToGraphicCard();
+	
+	batch_->init();
+	batch_->addRectangle(-1.f, -1.f, 2.f, 2.f, sprite_);
+	batch_->uploadToGraphicCard();
+	
+	batch2_ = std::make_shared<BatchTriangles>(shader_, GL_DYNAMIC_DRAW);
+	text_ = {"Testing", font};
+	batch2_->init();
+	batch2_->addRectangle(0, 0, 1, 1, text_.getSprite());
+	batch2_->uploadToGraphicCard();
 
 	sdl::GameController::loadGameControllerMappings("gamecontrollerdb.txt");
 }

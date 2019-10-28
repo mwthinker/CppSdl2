@@ -55,7 +55,7 @@ namespace sdl {
 		void useProgram() const;
 
 		// Return if the shader program is linked.
-		bool isLinked() const {
+		bool isLinked() const noexcept {
 			return programObjectId_ != 0;
 		}
 

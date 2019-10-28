@@ -1,4 +1,5 @@
 #include "sprite.h"
+#include "surface.h"
 #include "opengl.h"
 
 #include <string>
@@ -6,62 +7,132 @@
 
 namespace sdl {
 
-	Sprite::Sprite(const std::string& image, const std::function<void()>& filter) :
-		texture_(image, filter),
-		dx_(static_cast<float>(texture_.getWidth())),
-		dy_(static_cast<float>(texture_.getHeight())) {
+	Sprite::Sprite(const std::string& image, std::function<void()>&& filter) :
+		image_{std::make_shared<ImageVariant>()} {
+		
+		Surface surface{image};
+		textureWidth_ = surface.getWidth();
+		textureHeight_ = surface.getHeight();
+		*image_ = SurfaceData{std::move(surface), filter};
 	}
 
-	Sprite::Sprite(const Texture& texture)
-		: Sprite(texture, 0, 0, static_cast<float>(texture.getWidth()), static_cast<float>(texture.getHeight())) {
+	Sprite::Sprite(Surface&& surface, std::function<void()>&& filter) :
+		image_{std::make_shared<ImageVariant>()},
+		rect_{0, 0, surface.getWidth(), surface.getHeight()},
+		textureWidth_{surface.getWidth()}, textureHeight_{surface.getHeight()} {
+
+		*image_ = SurfaceData{std::move(surface), filter};
 	}
 
-	Sprite::Sprite(const Texture& texture, float x, float y, float dx, float dy) :
-		texture_(texture),
-		x_(x),
-		y_(y),
-		dx_(dx),
-		dy_(dy) {
+	Sprite::Sprite(Surface&& surface, const Rect& rect, std::function<void()>&& filter) :
+		image_{std::make_shared<ImageVariant>()},
+		rect_{rect},
+		textureWidth_{surface.getWidth()}, textureHeight_{surface.getHeight()} {
+
+		*image_ = SurfaceData{std::move(surface), filter};
 	}
 
 	Sprite::Sprite(Sprite&& sprite) noexcept :
-		texture_(std::move(sprite.texture_)),
-		x_(sprite.x_), y_(sprite.y_), dx_(sprite.dx_), dy_(sprite.dy_) {
+		image_{std::move(sprite.image_)},
+		rect_{sprite.rect_},
+		textureWidth_{sprite.textureWidth_}, textureHeight_{sprite.textureHeight_} {
 
-		sprite.x_ = 0;
-		sprite.y_ = 0;
-		sprite.dx_ = 0;
-		sprite.dy_ = 0;
+		sprite.rect_ = {};
+		sprite.textureWidth_ = 0;
+		sprite.textureHeight_ = 0;
 	}
 
 	Sprite& Sprite::operator=(Sprite&& sprite) noexcept {
-		texture_ = std::move(sprite.texture_);
-		x_ = sprite.x_;
-		y_ = sprite.y_;
-		dx_ = sprite.dx_;
-		dy_ = sprite.dy_;
+		image_ = std::move(sprite.image_);
+		rect_ = sprite.rect_;
+		textureWidth_ = sprite.textureWidth_;
+		textureHeight_ = sprite.textureHeight_;
 
-		sprite.x_ = 0;
-		sprite.y_ = 0;
-		sprite.dx_ = 0;
-		sprite.dy_ = 0;
+		sprite.rect_ = {};
+		sprite.textureWidth_ = 0;
+		sprite.textureHeight_ = 0;
 		return *this;
 	}
 
-	void Sprite::setTexture(const Texture& texture) {
-		texture_ = texture;
-		x_ = 0;
-		y_ = 0;
-		dx_ = (float) texture.getWidth();
-		dy_ = (float) texture.getHeight();
+	Sprite::Sprite(const Sprite& sprite, const Rect& rect) :
+		image_{sprite.image_}, rect_{rect},
+		textureWidth_{sprite.textureWidth_}, textureHeight_{sprite.textureHeight_} {
+
 	}
 
-	void Sprite::setTexture(const Texture& texture, float x, float y, float dx, float dy) {
-		texture_ = texture;
-		x_ = x;
-		y_ = y;
-		dx_ = dx;
-		dy_ = dy;
+	void Sprite::bindTexture() const {
+		if (image_) {
+			if (std::holds_alternative<SurfaceData>(*image_)) {
+				Texture texture{};
+				texture.generate();
+				texture.texImage(std::get<SurfaceData>(*image_).surface, std::move(std::get<SurfaceData>(*image_).filter));
+				texture.bind();
+				*image_ = std::move(texture);
+			} else {
+				std::get<Texture>(*image_).bind();
+			}
+		}
+	}
+
+	float Sprite::getX() const noexcept {
+		return static_cast<float>(rect_.x);
+	}
+
+	float Sprite::getY() const noexcept {
+		return static_cast<float>(rect_.y);
+	}
+
+	std::pair<float, float> Sprite::getPosition() const noexcept {
+		return {getX(), getY()};
+	}
+
+	float Sprite::getWidth() const noexcept {
+		return static_cast<float>(rect_.w);
+	}
+
+	float Sprite::getHeight() const noexcept {
+		return static_cast<float>(rect_.h);
+	}
+
+	std::pair<float, float> Sprite::getSize() const noexcept {
+		return {getWidth(), getHeight()};
+	}
+
+	int Sprite::getTextureWidth() const noexcept {
+		return textureWidth_;
+	}
+
+	int Sprite::getTextureHeight() const noexcept {
+		return textureHeight_;
+	}
+
+	std::pair<int, int> Sprite::getTextureSize() const noexcept {
+		return {textureWidth_, textureHeight_};
+	}
+
+	bool Sprite::isValid() const noexcept {
+		if (image_) {
+			if (std::holds_alternative<SurfaceData>(*image_)) {
+				return std::get<SurfaceData>(*image_).surface.isLoaded();
+			} else {
+				return std::get<Texture>(*image_).isValid();
+			}
+		}
+		return false;
+	}
+
+	bool Sprite::equalSource(const Sprite& s1, const Sprite& s2) noexcept {
+		return s1.image_ == s2.image_;
+	}
+
+	void Sprite::blit(const Surface& src, const Rect& dstRect) {
+		if (image_) {
+			if (std::holds_alternative<SurfaceData>(*image_)) {
+				std::get<SurfaceData>(*image_).surface.blitSurface(src, dstRect);
+			} else {
+				std::get<Texture>(*image_).texSubImage(src, dstRect);
+			}
+		}
 	}
 
 } // Namespace sdl.

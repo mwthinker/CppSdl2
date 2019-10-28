@@ -15,9 +15,9 @@ namespace sdl {
 
 		~Sound();
 
-		bool operator==(const Sound& sound) const;
+		bool operator==(const Sound& sound) const noexcept;
 
-		bool operator!=(const Sound& sound) const;
+		bool operator!=(const Sound& sound) const noexcept;
 
 		// Loads a soundfile and creates a sound.
 		explicit Sound(const std::string& filename);
@@ -49,13 +49,13 @@ namespace sdl {
 		void setVolume(float volume);
 
 		// Get the volume. A value between [0,1].
-		float getVolume() const;
+		float getVolume() const noexcept;
 
 		// Use with care! Return the pointer to the Mix_Chunk data.
-		Mix_Chunk* getMixChunk() const;
+		Mix_Chunk* getMixChunk() const noexcept;
 
 		// Is sound in memory.
-		bool isValid() const;
+		bool isValid() const noexcept;
 
 	private:
 		struct SoundBuffer {
@@ -89,15 +89,15 @@ namespace sdl {
 		static int lastId_;
 	};
 
-	inline Mix_Chunk* Sound::getMixChunk() const {
+	inline Mix_Chunk* Sound::getMixChunk() const noexcept {
 		return soundBuffer_ ? soundBuffer_->mixChunk : nullptr;
 	}
 
-	inline bool Sound::operator==(const Sound& sound) const {
+	inline bool Sound::operator==(const Sound& sound) const noexcept {
 		return soundBuffer_ != nullptr && soundBuffer_ == sound.soundBuffer_;
 	}
 
-	inline bool Sound::operator!=(const Sound& other) const {
+	inline bool Sound::operator!=(const Sound& other) const noexcept {
 		return !(*this == other);
 	}
 

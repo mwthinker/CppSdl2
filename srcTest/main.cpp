@@ -19,21 +19,21 @@
 
 // Test to load directly to ram memory.
 void testLoadTextureAtlas() {
-	sdl::Texture a(200, 100, 255, 0, 0); // Red block.
-	sdl::Texture b(100, 200, 0, 255, 0); // Green block.
-	sdl::Texture c(200, 200, 0, 0, 255); // Blue block.
-	sdl::Texture d(30, 30, 255, 255, 255); // White block.
+	sdl::Surface red{200, 100, sdl::RED};
+	sdl::Surface green{100, 200, sdl::GREEN};
+	sdl::Surface blue{200, 200, sdl::BLUE};
+	sdl::Surface white{30, 30, sdl::WHITE};
 
-	sdl::TextureAtlas atlas(512, 512);
+	sdl::TextureAtlas atlas{512, 512};
 
 	sdl::Sprite s = atlas.add("tetris.bmp", 1);
 	s = atlas.add("cross.png", 1);
-	s = atlas.add(a, 1);
-	s = atlas.add(b, 1);
-	s = atlas.add(c, 1);
-	s = atlas.add(d, 1);
+	s = atlas.add(red, 1);
+	s = atlas.add(green, 1);
+	s = atlas.add(blue, 1);
+	s = atlas.add(white, 1);
 
-	TestWindow w(atlas.getTexture());
+	TestWindow w{atlas.get()};
 	w.startLoop();
 
 	logger()->info("[testLoadTextureAtlas] Successfully!");
@@ -41,15 +41,15 @@ void testLoadTextureAtlas() {
 
 // Test to load directly to graphic memory. And draw the total texture and the newly added sprite.
 void testLoadTextureAtlas2() {
-	sdl::Texture a(200, 100, 255, 0, 0); // Red block.
-	sdl::Texture b(100, 200, 0, 255, 0); // Green block.
-	sdl::Texture c(200, 200, 0, 0, 255); // Blue block.
-	sdl::Texture d(30, 30, 255, 255, 255); // White block.
+	sdl::Surface red{200, 100, sdl::RED};
+	sdl::Surface green{100, 200, sdl::GREEN};
+	sdl::Surface blue{200, 200, sdl::BLUE};
+	sdl::Surface white{30, 30, sdl::WHITE};
 
-	sdl::TextureAtlas atlas(512, 512);
-	TestWindow w(atlas.getTexture());
+	sdl::TextureAtlas atlas{512, 512};
+	TestWindow w{atlas.get()};
 	int nbr = 0;
-	std::function<void()> func = [&]() {
+	auto func = [&]() {
 		++nbr;
 		sdl::Sprite sprite;
 		switch (nbr) {
@@ -60,27 +60,26 @@ void testLoadTextureAtlas2() {
 				sprite = atlas.add("cross.png", 1);
 				break;
 			case 3:
-				sprite = atlas.add(a, 10);
+				sprite = atlas.add(red, 10);
 				break;
 			case 4:
-				sprite = atlas.add(b, 5);
+				sprite = atlas.add(green, 5);
 				break;
 			case 5:
-				sprite = atlas.add(c, 50);
+				sprite = atlas.add(blue, 50);
 				break;
 			case 6:
-				sprite = atlas.add(d, 20);
+				sprite = atlas.add(white, 20);
 				break;
 			default:
 			{
-				sprite = atlas.add(d, 1);
+				sprite = atlas.add(white, 1);
 				break;
 			}
 		}
-		if (!sprite.getTexture().isValid()) {
+		if (!sprite.isValid()) {
 			logger()->warn("[testLoadTextureAtlas2] Number {} failed to be inserted!", nbr);
 		}
-		w.setCenteredSprite(sprite);
 	};
 
 	w.setSpaceFunction(func);
@@ -93,7 +92,7 @@ void testBatchWindow() {
 	// Test opengl versions.
 	for (int i = 2; i <= 4; ++i) {
 		try {
-			TestWindow2 w(i, 1);
+			TestWindow2 w{i, 1};
 			std::stringstream stream;
 			stream << "OpenGl Version " << i << "." << 1;
 			logger()->info("[testBatchWindow] ", stream.str());
@@ -122,10 +121,10 @@ void showHelp(const std::string& programName) {
 	std::cout << "Options:\n";
 	std::cout << "\t" << "-h --help                show this help" << "\n";
 	std::cout << "\t" << "-1                       testLoadTextureAtlas" << "\n";
-	std::cout << "\t" << "-1                       testLoadTextureAtlas2" << "\n";
-	std::cout << "\t" << "-1                       testBatchWindow" << "\n";
+	std::cout << "\t" << "-2                       testLoadTextureAtlas2" << "\n";
+	std::cout << "\t" << "-3                       testBatchWindow" << "\n";
 #if IMGUI_LIB
-	std::cout << "\t" << "-1                       testImGuiWindow" << "\n";
+	std::cout << "\t" << "-4                       testImGuiWindow" << "\n";
 #endif // IMGUI_LIB
 }
 
@@ -137,11 +136,11 @@ void runAll() {
 }
 
 int main(int argc, char** argv) {
-	sdl::InitSdl sdl(SDL_INIT_VIDEO | SDL_INIT_AUDIO | SDL_INIT_GAMECONTROLLER);
+	sdl::InitSdl sdl{SDL_INIT_VIDEO | SDL_INIT_AUDIO | SDL_INIT_GAMECONTROLLER};
 	   
 	if (argc >= 2) {
 		std::string programName = *argv;
-		std::string code(*(argv + 1));
+		std::string code{*(argv + 1)};
 		if (code == "-h" || code == "--help") {
 			showHelp(programName);
 			return 0;

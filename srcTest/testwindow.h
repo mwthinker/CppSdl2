@@ -1,7 +1,6 @@
 #ifndef TESTWINDOW_H
 #define TESTWINDOW_H
 
-#include "testshader.h"
 #include "batchtriangles.h"
 
 #include <sdl/window.h>
@@ -14,15 +13,11 @@
 
 class TestWindow : public sdl::Window {
 public:
-	TestWindow(sdl::Sprite sprite = sdl::Sprite());
+	TestWindow(const sdl::Sprite& sprite = {});
 
 	// Execute the function when space bar is pressed.
-	void setSpaceFunction(const std::function<void()> func) {
+	void setSpaceFunction(const std::function<void()>& func) {
 		func_ = func;
-	}
-
-	void setCenteredSprite(const sdl::Sprite& sprite) {
-		sprite2_ = sprite;
 	}
 
 private:
@@ -36,15 +31,17 @@ private:
 
 	void removeGamepad(SDL_JoystickID instanceId);
 
-	bool focus_;
+	bool focus_ = true;
 	sdl::Sprite sprite_;
-	sdl::Sprite sprite2_;
-	int controllerEvent_;
+	sdl::Text text_;
+	int controllerEvent_ = 0;
 	
 	std::function<void()> func_;
-	std::shared_ptr<BatchTriangles> batch_;
 
 	std::shared_ptr<TestShader> shader_;
+	std::shared_ptr<BatchTriangles> batch_;
+	std::shared_ptr<BatchTriangles> batch2_;
+	
 	std::vector<sdl::GameController> gameControllers_;
 };
 

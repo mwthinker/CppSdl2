@@ -1,15 +1,16 @@
 #ifndef BATCHTRIANGLES_H
 #define BATCHTRIANGLES_H
 
-#include "testshader2.h"
+#include "testshader.h"
 
 #include <sdl/batch.h>
 #include <sdl/sprite.h>
+#include <sdl/text.h>
 #include <sdl/vertexarrayobject.h>
 
 class BatchTriangles {
 public:
-	BatchTriangles(const std::shared_ptr<TestShader2>& shader, GLenum usage);
+	BatchTriangles(const std::shared_ptr<TestShader>& shader, GLenum usage);
 
 	virtual ~BatchTriangles() = default;
 
@@ -17,13 +18,13 @@ public:
 
 	void uploadToGraphicCard();
 
-	void addTriangle(const TestShader2::Vertex& v1, const TestShader2::Vertex& v2, const TestShader2::Vertex& v3);
+	void addTriangle(const TestShader::Vertex& v1, const TestShader::Vertex& v2, const TestShader::Vertex& v3);
 
 	void addRectangle(float x, float y, float w, float h);
 
 	void addRectangle(float x, float y, float w, float h, const sdl::Sprite& sprite);
 
-	void addRectangle(const TestShader2::Vertex& v1, const TestShader2::Vertex& v2, const TestShader2::Vertex& v3, const TestShader2::Vertex& v4);
+	void addRectangle(const TestShader::Vertex& v1, const TestShader::Vertex& v2, const TestShader::Vertex& v3, const TestShader::Vertex& v4);
 
 	void addCircle(float x, float y, float radius, const int iterations = 40);
 
@@ -38,8 +39,8 @@ public:
 	void draw() const;
 
 private:
-	std::shared_ptr<TestShader2> shader_;
-	sdl::Batch<TestShader2::Vertex> batch_;
+	std::shared_ptr<TestShader> shader_;
+	sdl::Batch<TestShader::Vertex> batch_;
 	sdl::VertexArrayObject vao_;
 };
 

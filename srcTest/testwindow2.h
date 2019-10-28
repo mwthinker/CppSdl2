@@ -1,7 +1,7 @@
 #ifndef TESTWINDOW2_H
 #define TESTWINDOW2_H
 
-#include "testshader2.h"
+#include "testshader.h"
 #include "batchtriangles.h"
 #include "types.h"
 
@@ -10,25 +10,25 @@
 
 class TestWindow2 : public sdl::Window {
 public:
-	TestWindow2(int majorGlVersion, int minorGlVersion) : Window(majorGlVersion, minorGlVersion), textureAtlas_(2048, 2048) {
+	TestWindow2(int majorGlVersion, int minorGlVersion)
+		: Window{majorGlVersion, minorGlVersion} {
 	}
 
 private:
 	void initPreLoop() override {
-		shader_ = std::make_shared<TestShader2>("testShader2_2_1.ver.glsl", "testShader2_2_1.fra.glsl");
+		shader_ = std::make_shared<TestShader>("testShader2_2_1.ver.glsl", "testShader2_2_1.fra.glsl");
 		sprite_ = textureAtlas_.add("tetris.bmp");
 
 		batch_ = std::make_shared<BatchTriangles>(shader_, GL_DYNAMIC_DRAW);
 
 		resize(sdl::Window::getWidth(), sdl::Window::getHeight());
-		shader_->setModelMatrix(Mat44(1));
-		shader_->setProjectionMatrix(Mat44(1));
-
+		shader_->setModelMatrix(Mat44{1});
+		shader_->setProjectionMatrix(Mat44{1});
 		
 		batch_->addRectangle(0.1f, 0.4f, 0.2f, 0.2f);
-		batch_->addTriangle(TestShader2::Vertex(0, 0), TestShader2::Vertex(0.3f, 0), TestShader2::Vertex(0.3f, 0.3f));
+		batch_->addTriangle({0, 0}, {0.3f, 0}, {0.3f, 0.3f});
 		batch_->addCircle(-0.5f, 0.5f, 0.3f, 40);
-		batch_->addRectangle(TestShader2::Vertex(-0.3f, -0.2f), TestShader2::Vertex(0, 0), TestShader2::Vertex(0.f, 0.1f), TestShader2::Vertex(-0.2f, 0.2f));
+		batch_->addRectangle({-0.3f, -0.2f}, {0, 0}, {0.f, 0.1f}, {-0.2f, 0.2f});
 
 		batch_->addCircle(0.5f, -0.5f, 0.3f, 0.6f, 30);
 
@@ -91,10 +91,10 @@ private:
 		sdl::assertGlError();
 	}
 
-	std::shared_ptr<TestShader2> shader_;
+	std::shared_ptr<TestShader> shader_;
 	std::shared_ptr<BatchTriangles> batch_;
 	sdl::Sprite sprite_;
-	sdl::TextureAtlas textureAtlas_;
+	sdl::TextureAtlas textureAtlas_{2048, 2048};
 };
 
 #endif // TESTWINDOW2_H

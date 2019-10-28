@@ -202,36 +202,30 @@ namespace sdl {
 	}
 
 	std::pair<int, int> Window::getSize() const {
-		std::pair<int, int> pair;
 		if (window_) {
+			std::pair<int, int> pair;
 			SDL_GetWindowSize(window_, &pair.first, &pair.second);
-		} else {
-			pair.first = width_;
-			pair.second = height_;
+			return pair;
 		}
-		return pair;
+		return {width_, height_};;
 	}
 
 	std::pair<int, int> Window::getDrawableSize() const {
-		std::pair<int, int> pair;
 		if (window_) {
+			std::pair<int, int> pair;
 			SDL_GL_GetDrawableSize(window_, &pair.first, &pair.second);
-		} else {
-			pair.first = width_;
-			pair.second = height_;
+			return pair;
 		}
-		return pair;
+		return {width_, height_};;
 	}
 
 	std::pair<int, int> Window::getWindowPosition() const {
-		std::pair<int, int> pair;
 		if (window_) {
+			std::pair<int, int> pair;
 			SDL_GetWindowPosition(window_, &pair.first, &pair.second);
-		} else {
-			pair.first = x_;
-			pair.second = y_;
+			return pair;
 		}
-		return pair;
+		return {x_, y_};
 	}
 
 	void Window::setWindowSize(int width, int height) {
@@ -244,13 +238,11 @@ namespace sdl {
 		}
 	}
 
-	// Return the current windows width in pixels.
-	int Window::getWidth() const {
+	int Window::getWidth() const noexcept {
 		return getSize().first;
 	}
 
-	// Return the current windows height in pixels.
-	int Window::getHeight() const {
+	int Window::getHeight() const noexcept {
 		return getSize().second;
 	}
 
