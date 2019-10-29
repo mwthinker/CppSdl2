@@ -95,4 +95,8 @@ namespace sdl {
 		return texture_ != texture.texture_;
 	}
 
+	GLuint Texture::getGlTexture() const noexcept{
+		return texture_;
+	}
+
 } // Namespace sdl.

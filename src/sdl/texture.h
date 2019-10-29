@@ -43,6 +43,8 @@ namespace sdl {
 		
 		bool operator!=(const Texture& texture) const noexcept;
 
+		GLuint getGlTexture() const noexcept;
+
 	private:
 		GLuint texture_ = 0;
 	};
