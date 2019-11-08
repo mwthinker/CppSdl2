@@ -23,8 +23,8 @@ namespace sdl {
 		TextureAtlas(const TextureAtlas&) = delete;
 		TextureAtlas& operator=(const TextureAtlas&) = delete;
 
-		TextureAtlas(TextureAtlas&&) noexcept;
-		TextureAtlas& operator=(TextureAtlas&&) noexcept;
+		TextureAtlas(TextureAtlas&&) = default;
+		TextureAtlas& operator=(TextureAtlas&&) = default;
 
 		const Sprite& add(const std::string& filename, int border = 0, const std::string& uniqueKey = "");
 		

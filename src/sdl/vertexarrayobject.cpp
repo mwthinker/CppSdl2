@@ -15,15 +15,16 @@ namespace sdl {
 	}
 
 	VertexArrayObject::VertexArrayObject(VertexArrayObject&& other) noexcept
-		: vao_(other.vao_) {
-
-		other.vao_ = 0;
+		: vao_{std::exchange(other.vao_, 0)} {
 	}
 	
 	VertexArrayObject& VertexArrayObject::operator=(VertexArrayObject&& other) noexcept {
-		vao_ = other.vao_;
-		
-		other.vao_ = 0;
+		if (vao_ != 0) {
+			glDeleteVertexArrays(1, &vao_);
+			logger()->debug("[VertexArrayObject] Deleted vao: {}", vao_);
+			assertGlError();
+		}
+		vao_ = std::exchange(other.vao_, 0);
 		return *this;
 	}
 

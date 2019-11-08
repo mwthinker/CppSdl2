@@ -33,8 +33,8 @@ namespace sdl {
 		Surface(const Surface& surface) = delete;
 		Surface& operator=(const Surface& surface) = delete;
 
-		Surface(Surface&& texture) noexcept;
-		Surface& operator=(Surface&& texture) noexcept;
+		Surface(Surface&& other) noexcept;
+		Surface& operator=(Surface&& other) noexcept;
 
 		bool isLoaded() const noexcept;
 

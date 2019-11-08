@@ -72,24 +72,23 @@ namespace sdl {
 	ShaderProgram::ShaderProgram(ShaderProgram&& other) noexcept :
 		attributes_{std::move(other.attributes_)},
 		uniforms_{std::move(other.uniforms_)},
-		programObjectId_{other.programObjectId_} {
-
-		other.programObjectId_ = 0;
+		programObjectId_{std::exchange(other.programObjectId_, 0)} {
 	}
 
 	ShaderProgram& ShaderProgram::operator=(ShaderProgram&& other) noexcept {
+		if (programObjectId_ != 0) {
+			glDeleteProgram(programObjectId_);
+			assertGlError();
+		}
+		
 		attributes_ = std::move(other.attributes_);
 		uniforms_ = std::move(other.uniforms_);
-		programObjectId_ = other.programObjectId_;
-
-		other.programObjectId_ = 0;
+		programObjectId_ = std::exchange(other.programObjectId_, 0);
 		return *this;
 	}
 
 	ShaderProgram::~ShaderProgram() {
-		// Opengl program loaded? And the opengl context active?
 		if (programObjectId_ != 0) {
-			// Is called if the program is valid and therefore need to be cleaned up.
 			glDeleteProgram(programObjectId_);
 			assertGlError();
 		}

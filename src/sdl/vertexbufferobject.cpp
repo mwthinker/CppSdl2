@@ -23,23 +23,18 @@ namespace sdl {
 	}
 
 	VertexBufferObject::VertexBufferObject(VertexBufferObject&& other) noexcept : 
-		vboId_{other.vboId_}, size_{other.size_}, target_{other.target_}, usage_{other.usage_} {
-
-		other.vboId_ = 0;
-		other.size_ = 0;
-		other.target_ = 0;
-		other.usage_ = 0;
+		vboId_{std::exchange(other.vboId_, 0)}, size_{other.size_},
+		target_{other.target_}, usage_{other.usage_} {
 	}
 
 	VertexBufferObject& VertexBufferObject::operator=(VertexBufferObject&& other) noexcept {
-		vboId_ = other.vboId_;
+		if (vboId_ != 0) {
+			glDeleteBuffers(1, &vboId_);
+			assertGlError();
+		}
+		vboId_ = std::exchange(other.vboId_, 0);
 		size_ = other.size_;
 		target_ = other.target_;
-
-		other.vboId_ = 0;
-		other.size_ = 0;
-		other.target_ = 0;
-		other.usage_ = 0;
 		return *this;
 	}
 

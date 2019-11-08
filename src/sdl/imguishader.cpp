@@ -43,13 +43,6 @@ namespace sdl {
 		shader_{std::move(other.shader_)}, aPosIndex_{other.aPosIndex_},
 		aTexIndex_{other.aTexIndex_}, aColorIndex_{other.aColorIndex_},
 		uMatrixIndex_{other.uMatrixIndex_}, uTextureIndex_{other.uTextureIndex_} {
-
-		other.aPosIndex_ = -1;
-		other.aTexIndex_ = -1;
-		other.aColorIndex_ = -1;
-
-		other.uMatrixIndex_ = -1;
-		other.uTextureIndex_ = -1;
 	}
 
 	ImGuiShader& ImGuiShader::operator=(ImGuiShader&& other) noexcept {
@@ -59,14 +52,6 @@ namespace sdl {
 		aColorIndex_ = other.aColorIndex_;
 		uMatrixIndex_ = other.uMatrixIndex_;
 		uTextureIndex_ = other.uTextureIndex_;
-
-		other.aPosIndex_ = -1;
-		other.aTexIndex_ = -1;
-		other.aColorIndex_ = -1;
-
-		other.uMatrixIndex_ = -1;
-		other.uTextureIndex_ = -1;
-
 		return *this;
 	}
 

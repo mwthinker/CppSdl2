@@ -32,32 +32,23 @@ namespace sdl {
 		*image_ = SurfaceData{std::move(surface), filter};
 	}
 
-	Sprite::Sprite(Sprite&& sprite) noexcept :
-		image_{std::move(sprite.image_)},
-		rect_{sprite.rect_},
-		textureWidth_{sprite.textureWidth_}, textureHeight_{sprite.textureHeight_} {
-
-		sprite.rect_ = {};
-		sprite.textureWidth_ = 0;
-		sprite.textureHeight_ = 0;
+	Sprite::Sprite(Sprite&& other) noexcept :
+		image_{std::move(other.image_)},
+		rect_{other.rect_},
+		textureWidth_{other.textureWidth_}, textureHeight_{other.textureHeight_} {
 	}
 
-	Sprite& Sprite::operator=(Sprite&& sprite) noexcept {
-		image_ = std::move(sprite.image_);
-		rect_ = sprite.rect_;
-		textureWidth_ = sprite.textureWidth_;
-		textureHeight_ = sprite.textureHeight_;
-
-		sprite.rect_ = {};
-		sprite.textureWidth_ = 0;
-		sprite.textureHeight_ = 0;
+	Sprite& Sprite::operator=(Sprite&& other) noexcept {
+		image_ = std::move(other.image_);
+		rect_ = other.rect_;
+		textureWidth_ = other.textureWidth_;
+		textureHeight_ = other.textureHeight_;
 		return *this;
 	}
 
 	Sprite::Sprite(const Sprite& sprite, const Rect& rect) :
 		image_{sprite.image_}, rect_{rect},
 		textureWidth_{sprite.textureWidth_}, textureHeight_{sprite.textureHeight_} {
-
 	}
 
 	void Sprite::bindTexture() const {

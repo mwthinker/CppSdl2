@@ -71,19 +71,6 @@ namespace sdl {
 
 	}
 
-	TextureAtlas::TextureAtlas(TextureAtlas&& other) noexcept :
-		sprite_{std::move(other.sprite_)},
-		images_{std::move(other.images_)},
-		root_{std::move(other.root_)} {
-	}
-
-	TextureAtlas& TextureAtlas::operator=(TextureAtlas&& other) noexcept {
-		sprite_ = std::move(other.sprite_);
-		images_ = std::move(other.images_);
-		root_ = std::move(other.root_);
-		return *this;
-	}
-
 	const Sprite& TextureAtlas::add(const std::string& filename, int border, const std::string& uniqueKey) {
 		std::string key = filename + uniqueKey;
 		auto it = images_.find(key);

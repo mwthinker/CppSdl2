@@ -20,15 +20,15 @@ namespace sdl {
 	}
 	
 	Texture::Texture(Texture&& texture) noexcept :
-		texture_{texture.texture_} {
-		
-		texture.texture_ = 0;
+		texture_{std::exchange(texture.texture_, 0)} {
+
 	}
 
 	Texture& Texture::operator=(Texture&& texture) noexcept {
-		texture_ = texture.texture_;
-
-		texture.texture_ = 0;
+		if (texture_ != 0) {
+			glDeleteTextures(1, &texture_);
+		}
+		texture_ = std::exchange(texture.texture_, 0);
 		return *this;
 	}
 
@@ -42,21 +42,27 @@ namespace sdl {
 	}
 
 	void Texture::texImage(const Surface& surface, std::function<void()>&& filter) {
-		if (isValid() && surface.isLoaded()) {
-			glBindTexture(GL_TEXTURE_2D, texture_);
-			assertGlError();
-			filter();
-			glTexImage2D(GL_TEXTURE_2D, 0, surfaceFormat(surface.surface_),
-				surface.surface_->w, surface.surface_->h,
-				0,
-				surfaceFormat(surface.surface_),
-				GL_UNSIGNED_BYTE,
-				surface.surface_->pixels
-			);
-			assertGlError();
-		} else {
-			logger()->debug("[Texture] Failed to bind, must be generated first");
+		if (surface.isLoaded()) {
+			logger()->debug("[Texture] Failed to bind, must be loaded first");
+			return;
 		}
+
+		if (isValid()) {
+			logger()->debug("[Texture] Failed to bind, must be generated first");
+			return;
+		}
+		
+		glBindTexture(GL_TEXTURE_2D, texture_);
+		assertGlError();
+		filter();
+		glTexImage2D(GL_TEXTURE_2D, 0, surfaceFormat(surface.surface_),
+			surface.surface_->w, surface.surface_->h,
+			0,
+			surfaceFormat(surface.surface_),
+			GL_UNSIGNED_BYTE,
+			surface.surface_->pixels
+		);
+		assertGlError();
 	}
 
 	void Texture::texSubImage(const Surface& surface, const Rect& dst) {

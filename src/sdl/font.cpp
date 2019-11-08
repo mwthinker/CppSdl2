@@ -24,19 +24,15 @@ namespace sdl {
 		}
 	}
 
-	Font::Font(Font&& other) noexcept : font_{other.font_}, 
+	Font::Font(Font&& other) noexcept : font_{std::exchange(other.font_, nullptr)},
 		characterSize_{other.characterSize_} {
-
-		other.font_ = nullptr;
-		other.characterSize_ = 0;
 	}
 
 	Font& Font::operator=(Font&& other) noexcept {
-		font_ = other.font_;
-		characterSize_ = other.characterSize_;
-
-		other.font_ = nullptr;
-		other.characterSize_ = 0;
+		if (font_ != nullptr) {
+			TTF_CloseFont(font_);
+		}
+		font_ = std::exchange(other.font_, nullptr);
 		return *this;
 	}
 

@@ -34,11 +34,11 @@ namespace sdl {
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 		});
 
-		Sprite(const Sprite& sprite) = default;
-		Sprite& operator=(const Sprite& sprite) = default;
+		Sprite(const Sprite& other) = default;
+		Sprite& operator=(const Sprite& other) = default;
 
-		Sprite(Sprite&& sprite) noexcept;
-		Sprite& operator=(Sprite&& sprite) noexcept;
+		Sprite(Sprite&& other) noexcept;
+		Sprite& operator=(Sprite&& other) noexcept;
 
 		Sprite(const Sprite& sprite, const Rect& rect);
 
