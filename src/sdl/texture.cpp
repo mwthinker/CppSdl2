@@ -42,12 +42,12 @@ namespace sdl {
 	}
 
 	void Texture::texImage(const Surface& surface, std::function<void()>&& filter) {
-		if (surface.isLoaded()) {
+		if (!surface.isLoaded()) {
 			logger()->debug("[Texture] Failed to bind, must be loaded first");
 			return;
 		}
 
-		if (isValid()) {
+		if (!isValid()) {
 			logger()->debug("[Texture] Failed to bind, must be generated first");
 			return;
 		}
