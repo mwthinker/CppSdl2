@@ -88,5 +88,5 @@ void TestImGuiWindow::initBatchTrianglesIndexes() {
 	batchIndexes_->addCircle(-0.7f, -0.7f, 0.1f, 20);
 	batchIndexes_->init();
 	batchIndexes_->uploadToGraphicCard();
-	logger()->info("Batch using glDrawElements, size: {} MB", batchIndexes_->getVboSizeInMiB());
+	logger()->info("Batch using glDrawElements, size: {} MiB", batchIndexes_->getVboSizeInMiB());
 }
