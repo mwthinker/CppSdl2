@@ -378,7 +378,7 @@ namespace sdl {
 
 	template <class Vertex>
 	void Batch<Vertex>::pushBack(const Vertex& vertex) {
-		fullBatch_.push_back(vertex);
+		fullBatch_.pushBack(vertex);
 	}
 
 	template <class Vertex>
