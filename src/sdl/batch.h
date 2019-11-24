@@ -27,7 +27,7 @@ namespace sdl {
 		static_assert(std::is_integral<IndexType>(),
 			"IndexType must be a integral type ");
 	}
-
+	
 	inline void assertValidDrawMode(GLenum mode) {
 		assert(
 			GL_TRIANGLES == mode ||
@@ -180,13 +180,13 @@ namespace sdl {
 		template<class ...Indexes>
 		void addIndexes(Indexes&& ...indexes);
 
+		bool isEveryIndexSizeValid() const;
+
 	private:
 		void bindAndBufferData();
 		void bindAndBufferSubData();
 
-		bool isValidBatchView(const BatchView<Vertex>& batchView) const;
-
-		bool isEveryIndexSizeValid() const;
+		bool isValidBatchView(const BatchView<Vertex>& batchView) const;		
 
 		void assertIndexSizeIsValid(GLenum mode) const;
 		
@@ -445,7 +445,7 @@ namespace sdl {
 
 	template <class Vertex>
 	void Batch<Vertex>::assertIndexSizeIsValid(GLenum mode) const {
-		assert(mode != GL_TRIANGLES || (mode == GL_TRIANGLES && fullBatch_.getIndexesSize() % 3 == 0 && isEveryIndexSizeValid()));
+		assert(mode != GL_TRIANGLES || (mode == GL_TRIANGLES && fullBatch_.getIndexesSize() % 3 == 0));
 	}
 
 	// ---- Vertexes
