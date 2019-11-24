@@ -62,6 +62,14 @@ namespace sdl {
 			return value_.a;
 		}
 
+		bool operator==(const Color& other) const noexcept {
+			return toImU32() == other.toImU32();
+		}
+
+		bool operator!=(const Color& other) const noexcept {
+			return toImU32() != other.toImU32();
+		}
+
 	private:
 		glm::vec4 value_{};
 	};
