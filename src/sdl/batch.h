@@ -107,7 +107,7 @@ namespace sdl {
 
 		BatchView() noexcept {
 			IS_VERTEX_STANDARD_LAYOUT<Vertex>();
-		}	
+		}
 
 		BatchView(const BatchView&) noexcept = default;
 		BatchView& operator=(const BatchView&) noexcept = default;
