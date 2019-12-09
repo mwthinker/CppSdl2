@@ -17,6 +17,9 @@ project(CppSdl2
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+if (MSVC)
+	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /wd4275") # non - DLL-interface class 'class_1' used as base for DLL-interface class 'class_2'
+endif ()
 
 set(IMGUI_SOURCE
 	src/sdl/imguishader.cpp
@@ -34,6 +37,7 @@ set(SOURCES
 	src/sdl/gamecontroller.h
 	src/sdl/initsdl.cpp
 	src/sdl/initsdl.h
+	src/sdl/logger.cpp
 	src/sdl/logger.h
 	src/sdl/music.cpp
 	src/sdl/music.h
@@ -68,7 +72,6 @@ find_package(SDL2-image CONFIG REQUIRED)
 find_package(SDL2-mixer CONFIG REQUIRED)
 find_package(SDL2-ttf CONFIG REQUIRED)
 find_package(glm CONFIG REQUIRED)
-find_package(fmt CONFIG REQUIRED)
 find_package(spdlog CONFIG REQUIRED)
 
 message(STATUS "Add ImGui as dependencie: -DCppSdl2ImGui=1")
@@ -82,7 +85,6 @@ if (CppSdl2ImGui)
 endif ()
 
 add_library(CppSdl2 ${SOURCES})
-
 target_include_directories(CppSdl2
 	PUBLIC
 		"$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src>"
@@ -95,8 +97,7 @@ target_link_libraries(CppSdl2
 		SDL2::SDL2_ttf
 		SDL2::SDL2_mixer
 		GLEW::GLEW
-		fmt::fmt fmt::fmt-header-only
-		spdlog::spdlog
+		spdlog::spdlog spdlog::spdlog_header_only
 		glm
 		${ImGuiLib}
 )
@@ -131,7 +132,7 @@ if (CppSdl2Test)
 	endif ()
 	
 	add_executable(CppSdl2Test ${SOURCES_TEST})
-
+	
 	target_link_libraries(CppSdl2Test
 		PRIVATE
 			CppSdl2

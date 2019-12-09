@@ -39,7 +39,9 @@ void BatchTriangles::uploadToGraphicCard() {
 }
 
 void BatchTriangles::addTriangle(const TestShader::Vertex& v1, const TestShader::Vertex& v2, const TestShader::Vertex& v3) {
-	batch_.add(v1, v2, v3);
+    batch_.pushBack(v1);
+    batch_.pushBack(v2);
+    batch_.pushBack(v3);
 }
 
 void BatchTriangles::addRectangle(float x, float y, float w, float h) {
@@ -99,9 +101,9 @@ void BatchTriangles::addHexagon(float x, float y, float size) {
 	auto center = TestShader::Vertex{x, y};
 	center.color_ = sdl::Color{1.f, 0, 0, 1.f};
     for (int i = 0; i < 6; ++i) {
-        batch_.add(center);
-        batch_.add(createHexCornerVertex(center, size, i));
-        batch_.add(createHexCornerVertex(center, size, (i + 1) % 6));
+        batch_.pushBack(center);
+        batch_.pushBack(createHexCornerVertex(center, size, i));
+        batch_.pushBack(createHexCornerVertex(center, size, (i + 1) % 6));
     }
 }
 

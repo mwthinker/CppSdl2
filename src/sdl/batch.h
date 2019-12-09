@@ -56,9 +56,6 @@ namespace sdl {
 		void insert(InputIterator begin, InputIterator end);
 		
 		void pushBack(const Vertex& vertex);
-		
-		template<class ...Vertexes>
-		void add(Vertexes&& ...vertexes);
 
 		GLsizei getSize() const noexcept;
 
@@ -70,9 +67,6 @@ namespace sdl {
 		void insertIndexes(InputIterator begin, InputIterator end);
 
 		void pushBackIndex(GLint index);
-
-		template<class ...Indexes>
-		void addIndexes(Indexes&& ...vertexes);
 
 		GLsizei getIndexesSize() const noexcept;
 
@@ -163,9 +157,6 @@ namespace sdl {
 
 		void pushBack(const Vertex& vertex);
 
-		template<class ...Vertexes>
-		void add(Vertexes&& ...vertexes);
-
 		void startBatchView() noexcept;
 
 		void startAdding() noexcept;
@@ -176,9 +167,6 @@ namespace sdl {
 		void insertIndexes(InputIterator begin, InputIterator end);
 
 		void pushBackIndex(GLint index);
-
-		template<class ...Indexes>
-		void addIndexes(Indexes&& ...indexes);
 
 		bool isEveryIndexSizeValid() const;
 
@@ -382,13 +370,6 @@ namespace sdl {
 	}
 
 	template <class Vertex>
-	template<class ...Vertexes>
-	void Batch<Vertex>::add(Vertexes&&... pack) {
-		std::array<Vertex, sizeof...(Vertexes)> vertexes = {{ pack ... }};
-		insert(vertexes.begin(), vertexes.end());
-	}
-
-	template <class Vertex>
 	void Batch<Vertex>::startBatchView() noexcept {
 		if (fullBatch_.isIndexBatch()) {
 			currentViewIndex_ = static_cast<GLsizei>(fullBatch_.getIndexesSize());
@@ -432,13 +413,6 @@ namespace sdl {
 	}
 
 	template <class Vertex>
-	template<class ...Indexes>
-	void Batch<Vertex>::addIndexes(Indexes&& ...pack) {
-		std::array<GLint, sizeof...(Indexes)> indexes = {{ pack ... }};
-		insertIndexes(indexes.begin(), indexes.end());
-	}
-
-	template <class Vertex>
 	bool Batch<Vertex>::isEveryIndexSizeValid() const {
 		return fullBatch_.isEveryIndexSizeValid();
 	}
@@ -464,13 +438,6 @@ namespace sdl {
 	template <class Vertex>
 	void SubBatch<Vertex>::pushBack(const Vertex& vertex) {
 		vertexes_.push_back(vertex);
-	}
-
-	template <class Vertex>
-	template<class ...Vertexes>
-	void SubBatch<Vertex>::add(Vertexes&& ... pack) {
-		std::array<Vertex, sizeof...(Vertexes)> vertexes = {{ pack ... }};
-		insert(vertexes.begin(), vertexes.end());
 	}
 
 	template <class Vertex>
@@ -500,13 +467,6 @@ namespace sdl {
 	template <class Vertex>
 	void SubBatch<Vertex>::pushBackIndex(GLint index) {
 		indexes_.push_back(index);
-	}
-
-	template <class Vertex>
-	template<class ...Indexes>
-	void SubBatch<Vertex>::addIndexes(Indexes&& ...pack) {
-		std::array<GLint, sizeof...(Indexes)> indexes = {{ pack ... }};
-		insertIndexes(indexes.begin(), indexes.end());
 	}
 
 	template <class Vertex>

@@ -49,8 +49,13 @@ void BatchTrianglesIndexes::addTriangle(TestShader::Vertex v1, TestShader::Verte
 	v2.color_ = COLOR;
 	v3.color_ = COLOR;
 
-	batch_.add(v1, v2, v3);
-	batch_.addIndexes(0, 1, 2);
+	batch_.pushBack(v1);
+	batch_.pushBack(v2);
+	batch_.pushBack(v3);
+	
+	batch_.pushBackIndex(0);
+	batch_.pushBackIndex(2);
+	batch_.pushBackIndex(3);
 }
 
 void BatchTrianglesIndexes::addRectangle(float x, float y, float w, float h) {
@@ -67,15 +72,17 @@ void BatchTrianglesIndexes::addCircle(float x, float y, float radius, const int 
 	batch_.startAdding();
 	TestShader::Vertex center{x, y};
 	center.color_ = COLOR;
-	batch_.add(center);
+	batch_.pushBack(center);
     for (int i = 0; i < iterations; ++i) {
 		float rad = 2 * PI * i / iterations;
 		TestShader::Vertex circleVertex{x + radius * std::cos(rad), y + radius * std::sin(rad)};
 		circleVertex.color_ = COLOR;
-		batch_.add(circleVertex);
+		batch_.pushBack(circleVertex);
     }
 	for (int i = 1; i <= iterations; ++i) {
-		batch_.addIndexes(0, i, (i % iterations) + 1);
+		batch_.pushBackIndex(0);
+		batch_.pushBackIndex(i);
+		batch_.pushBackIndex((i % iterations) + 1);
 	}
 }
 
@@ -83,14 +90,16 @@ void BatchTrianglesIndexes::addHexagon(float x, float y, float size) {
 	batch_.startAdding();
 	TestShader::Vertex center{x, y};
     center.color_ = COLOR;
-	batch_.add(center);
+	batch_.pushBack(center);
     for (int i = 0; i < 6; ++i) {
 		auto vertex = createHexCornerVertex(center, size, i);
 		vertex.color_ = COLOR;
-        batch_.add(vertex);
+        batch_.pushBack(vertex);
     }
 	for (int i = 1; i <= 6; ++i) {
-		batch_.addIndexes(0, i, (i % 6) + 1);
+		batch_.pushBackIndex(0);
+		batch_.pushBackIndex(i);
+		batch_.pushBackIndex((i % 6) + 1);
 	}
 }
 
