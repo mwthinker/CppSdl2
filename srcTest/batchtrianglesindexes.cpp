@@ -54,8 +54,8 @@ void BatchTrianglesIndexes::addTriangle(TestShader::Vertex v1, TestShader::Verte
 	batch_.pushBack(v3);
 	
 	batch_.pushBackIndex(0);
+	batch_.pushBackIndex(1);
 	batch_.pushBackIndex(2);
-	batch_.pushBackIndex(3);
 }
 
 void BatchTrianglesIndexes::addRectangle(float x, float y, float w, float h) {

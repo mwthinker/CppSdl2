@@ -13,21 +13,20 @@ namespace sdl {
 
 	namespace {
 		
-		void initGlew() {
-			GLenum status = glewInit();
-			if (GLEW_OK == status) {
-				logger()->info("[Window] glewInit succeeded");
+		void initGlad() {
+			if (gladLoadGLLoader((GLADloadproc) SDL_GL_GetProcAddress)) {
+				logger()->info("[Window] gladLoadGLLoader succeeded");
 			} else {
-				logger()->error("[Window] glewInit failed, something is seriously wrong: {}", glewGetErrorString(status));
+				logger()->error("[Window] gladLoadGLLoader failed, something is seriously wrong");
 				throw std::exception{};
 			}
-			glGetError(); // Ignore, silly error which glew may cause.
 		}
 
 	}
 
 	Window::Window(int majorVersionGl, int minorVersionGl) :
 		majorVersionGl_{majorVersionGl}, minorVersionGl_{minorVersionGl} {
+		assert(majorVersionGl > 0 && minorVersionGl > 0);
 
 		logger()->info("[Window] Creating Window");
 	}
@@ -42,6 +41,8 @@ namespace sdl {
 		if (SDL_GL_SetSwapInterval(1) < 0) {
 			logger()->warn("[Window] Warning: Unable to set VSync! SDL Error: ", SDL_GetError());
 		}
+		
+		initGlad();
 
         logger()->info("[Window] Setup OpenGl version: {}.{}", majorVersionGl_, minorVersionGl_);
 		if (char* version = (char*) glGetString(GL_VERSION)) {
@@ -51,8 +52,6 @@ namespace sdl {
 			logger()->error("[Window] Error: unknown OpenGL version loadad!");
 			throw std::exception{};
 		}
-
-		initGlew();
 	}
 
 	Window::~Window() {

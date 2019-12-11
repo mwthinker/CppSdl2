@@ -1,7 +1,12 @@
 #ifndef CPPSDL2_SDL_OPENGL_H
 #define CPPSDL2_SDL_OPENGL_H
 
-#include <GL/glew.h>
+
+#ifdef _WIN32
+#include <windows.h>
+#endif
+
+#include <glad/glad.h>
 
 namespace sdl {
 

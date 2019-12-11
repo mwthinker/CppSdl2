@@ -66,7 +66,7 @@ set(SOURCES
 	src/sdl/window.h
 )
 
-find_package(GLEW CONFIG REQUIRED)
+find_package(glad CONFIG REQUIRED)
 find_package(SDL2 CONFIG REQUIRED)
 find_package(SDL2-image CONFIG REQUIRED)
 find_package(SDL2-mixer CONFIG REQUIRED)
@@ -96,7 +96,7 @@ target_link_libraries(CppSdl2
 		SDL2::SDL2_image
 		SDL2::SDL2_ttf
 		SDL2::SDL2_mixer
-		GLEW::GLEW
+		glad::glad
 		spdlog::spdlog spdlog::spdlog_header_only
 		glm
 		${ImGuiLib}

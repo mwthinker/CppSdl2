@@ -21,8 +21,6 @@ namespace sdl {
 					return "GL_INVALID_FRAMEBUFFER_OPERATION";
 				case GL_CONTEXT_LOST:
 					return "GL_CONTEXT_LOST";
-				case GL_TABLE_TOO_LARGE:
-					return "GL_TABLE_TOO_LARGE";
 			}
 			return "";
 		}
