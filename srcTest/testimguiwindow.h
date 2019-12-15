@@ -22,7 +22,7 @@ private:
 
 	void initOpenGl() override;
 
-    void imGuiPreUpdate(double deltaTime) override;
+    void imGuiPreUpdate(const std::chrono::nanoseconds& deltaTime) override;
 
 	void eventUpdate(const SDL_Event& windowEvent) override;
 

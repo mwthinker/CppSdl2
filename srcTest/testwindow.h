@@ -23,7 +23,7 @@ public:
 private:
 	void initPreLoop() override;
 
-    void update(double deltaTime) override;
+    void update(const std::chrono::nanoseconds& deltaTime) override;
 
 	void eventUpdate(const SDL_Event& windowEvent) override;
 

@@ -5,6 +5,8 @@
 
 #include <SDL.h>
 
+
+#include <chrono>
 #include <string>
 #include <utility>
 
@@ -80,12 +82,10 @@ namespace sdl {
 		void setGlClear(GLbitfield glBitfield) noexcept;
 
 		GLbitfield getGlClear() const noexcept;
-
-		// Add a delay in the loop, add a sleeping time before frame swapping. Less than 10 ms may 
-		// not effect anything, is plattform dependent.
-		void setLoopSleepingTime(int sleepingTime) noexcept;
 		
-		int getLoopSleepingTime() const noexcept;
+		void setLoopSleepingTime(const std::chrono::nanoseconds& delay) noexcept;
+		
+		std::chrono::nanoseconds getLoopSleepingTime() const noexcept;
 
 	protected:
 		virtual void initOpenGl();
@@ -101,7 +101,7 @@ namespace sdl {
 
 		// Is called by the loop. The frequency in which this function is called is fixed
 		// by the vertical frequency of the monitor (VSYNC) or the sleeping time of the loop.
-		virtual void update(double deltaTime) {
+		virtual void update(const std::chrono::high_resolution_clock::duration& deltaTime) {
 		}
 
 		// Is called by the loop. Is called when ever a SDL_EVENT occurs.
@@ -123,7 +123,7 @@ namespace sdl {
 		int x_ = SDL_WINDOWPOS_UNDEFINED;
 		int y_ = SDL_WINDOWPOS_UNDEFINED;
 		
-		int sleepingTime_ = -1;
+		std::chrono::nanoseconds sleepingTime_{0};
 		const int majorVersionGl_ = DEFAULT_MAJOR_VERSION_GL, minorVersionGl_ = DEFAULT_MINOR_VERSION_GL;
 		
 		GLbitfield glBitfield_ = GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT;
@@ -162,11 +162,11 @@ namespace sdl {
 		return glBitfield_;
 	}
 
-	inline void Window::setLoopSleepingTime(int sleepingTime) noexcept {
-		sleepingTime_ = sleepingTime;
+	inline void Window::setLoopSleepingTime(const std::chrono::nanoseconds& delay) noexcept {
+		sleepingTime_ = delay;
 	}
 
-	inline int Window::getLoopSleepingTime() const noexcept {
+	inline std::chrono::nanoseconds Window::getLoopSleepingTime() const noexcept {
 		return sleepingTime_;
 	}
 

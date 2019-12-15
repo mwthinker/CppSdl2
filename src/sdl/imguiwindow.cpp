@@ -78,7 +78,7 @@ namespace sdl {
 		ImGui_ImplOpenGL3_NewFrame();
 	}
 
-	void ImGuiWindow::update(double deltaTime) {
+	void ImGuiWindow::update(const std::chrono::nanoseconds& deltaTime) {
         imGuiPreUpdate(deltaTime);
 
 		ImGui_ImplSDL2_NewFrame(deltaTime);
@@ -217,18 +217,18 @@ namespace sdl {
 		}
 	}
 
-	void ImGuiWindow::ImGui_ImplSDL2_NewFrame(double deltaTime) {
+	void ImGuiWindow::ImGui_ImplSDL2_NewFrame(const std::chrono::high_resolution_clock::duration& deltaTime) {
 		auto& io = ImGui::GetIO();
 		IM_ASSERT(io.Fonts->IsBuilt() && "Font atlas not built! It is generally built by the renderer back-end. Missing call to renderer _NewFrame() function? e.g. ImGui_ImplOpenGL3_NewFrame().");
 
 		// Setup display size (every frame to accommodate for window resizing)
 		auto [w, h] = getSize();
 		auto [displayW, displayH] = getDrawableSize();		
-		io.DisplaySize = {(float) w, (float) h};
+		io.DisplaySize = { static_cast<float>(w), static_cast<float>(h) };
 		if (w > 0 && h > 0) {
-			io.DisplayFramebufferScale = {(float) displayW / w, (float) displayH / h };
+			io.DisplayFramebufferScale = {static_cast<float>(displayW) / w, static_cast<float>(displayH) / h };
 		}
-		io.DeltaTime = (float) deltaTime;
+		io.DeltaTime = std::chrono::duration<float>(deltaTime).count();
 		ImGui_ImplSDL2_UpdateMousePosAndButtons();
 		ImGui_ImplSDL2_UpdateMouseCursor();
 	}
@@ -238,7 +238,7 @@ namespace sdl {
 
 		// Set OS mouse position if requested (rarely used, only when ImGuiConfigFlags_NavEnableSetMousePos is enabled by user)
 		if (io.WantSetMousePos) {
-			SDL_WarpMouseInWindow(getSdlWindow(), (int) io.MousePos.x, (int) io.MousePos.y);
+			SDL_WarpMouseInWindow(getSdlWindow(), static_cast<int>(io.MousePos.x), static_cast<int>(io.MousePos.y));
 		} else {
 			io.MousePos = ImVec2(-FLT_MAX, -FLT_MAX);
 		}
@@ -258,13 +258,13 @@ namespace sdl {
 		SDL_GetGlobalMouseState(&mx, &my);
 		mx -= wx;
 		my -= wy;
-		io.MousePos = {(float) mx, (float) my};		
+		io.MousePos = {static_cast<float>(mx), static_cast<float>(my)};
 
 		// SDL_CaptureMouse() let the OS know e.g. that our imgui drag outside the SDL window boundaries shouldn't e.g. trigger the OS window resize cursor.
 		SDL_CaptureMouse(ImGui::IsAnyMouseDown()? SDL_TRUE : SDL_FALSE);
 #else
 		if (SDL_GetWindowFlags(g_Window) & SDL_WINDOW_INPUT_FOCUS) {
-			io.MousePos = {(float) mx, (float) my};
+			io.MousePos = {static_cast<float>(mx), static_cast<float>(my)};
 		}
 #endif
 	}
@@ -306,8 +306,8 @@ namespace sdl {
 	// Note that this implementation is little overcomplicated because we are saving/setting up/restoring every OpenGL state explicitly, in order to be able to run within any OpenGL engine that doesn't do so.
 	void ImGuiWindow::ImGui_ImplOpenGL3_RenderDrawData(ImDrawData* drawData) {
 		// Avoid rendering when minimized, scale coordinates for retina displays (screen coordinates != framebuffer coordinates)
-		int fbWidth = (int) (drawData->DisplaySize.x * drawData->FramebufferScale.x);
-		int fbHeight = (int) (drawData->DisplaySize.y * drawData->FramebufferScale.y);
+		int fbWidth = static_cast<int>(drawData->DisplaySize.x * drawData->FramebufferScale.x);
+		int fbHeight = static_cast<int>(drawData->DisplaySize.y * drawData->FramebufferScale.y);
 		if (fbWidth <= 0 || fbHeight <= 0) {
 			return;
 		}
@@ -327,7 +327,7 @@ namespace sdl {
 
 		// Setup viewport, orthographic projection matrix
 		// Our visible imgui space lies from drawData->DisplayPos (top left) to drawData->DisplayPos+data_data->DisplaySize (bottom right). DisplayMin is typically (0,0) for single viewport apps.
-		glViewport(0, 0, (GLsizei) fbWidth, (GLsizei) fbHeight);
+		glViewport(0, 0, static_cast<GLsizei>(fbWidth), static_cast<GLsizei>(fbHeight));
 
 		const auto projMatrix = glm::ortho(drawData->DisplayPos.x, drawData->DisplayPos.x + drawData->DisplaySize.x,
 			drawData->DisplayPos.y + drawData->DisplaySize.y, drawData->DisplayPos.y);

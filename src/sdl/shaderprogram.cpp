@@ -61,7 +61,7 @@ namespace sdl {
 			if (file.empty()) {
 				return "";
 			}
-			std::ifstream inFile(file);
+			std::ifstream inFile{file};
 			std::stringstream stream;
 			stream << inFile.rdbuf();
 			return stream.str();

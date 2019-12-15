@@ -124,10 +124,10 @@ namespace sdl {
 			auto currentTime = std::chrono::high_resolution_clock::now();
 			auto delta = currentTime - time;
 			time = currentTime;
-			update(std::chrono::duration<double>(delta).count());
+			update(delta);
 
-			if (sleepingTime_ >= 0) {
-				SDL_Delay(sleepingTime_);
+			if (sleepingTime_ > std::chrono::nanoseconds{0}) {
+				std::this_thread::sleep_for(sleepingTime_);
 			}
 			SDL_GL_SwapWindow(window_);
 		}

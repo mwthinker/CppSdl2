@@ -29,11 +29,11 @@ namespace sdl {
 		const ImGuiShader& getImGuiShader() const;
 
 	private:
-        virtual void update(double deltaTime) override final;
+        virtual void update(const std::chrono::high_resolution_clock::duration& deltaTime) override final;
 
-        virtual void imGuiPreUpdate(double deltaTime) {};
-        virtual void imGuiPostUpdate(double deltaTime) {};
-        virtual void imGuiUpdate(double deltaTime) {};
+        virtual void imGuiPreUpdate(const std::chrono::high_resolution_clock::duration& deltaTime) {};
+        virtual void imGuiPostUpdate(const std::chrono::high_resolution_clock::duration& deltaTime) {};
+        virtual void imGuiUpdate(const std::chrono::high_resolution_clock::duration& deltaTime) {};
 
 		struct GLState {
 			GLenum lastActiveTexture = 0;
@@ -70,7 +70,7 @@ namespace sdl {
 		bool ImGui_ImplSDL2_ProcessEvent(const SDL_Event& sdlEvent);
 		void ImGui_ImplSDL2_Init();
 		void ImGui_ImplSDL2_Shutdown();
-		void ImGui_ImplSDL2_NewFrame(double deltaTime);
+		void ImGui_ImplSDL2_NewFrame(const std::chrono::nanoseconds& deltaTime);
 
 		// ImGui OpenGL3 specific code.
 		void ImGui_ImplOpenGL3_Init();

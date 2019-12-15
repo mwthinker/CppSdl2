@@ -73,7 +73,7 @@ TestWindow::TestWindow(const sdl::Sprite& sprite) : Window{2, 1}, sprite_{sprite
 	sdl::Window::setIcon("tetris.bmp");
 }
 
-void TestWindow::update(double deltaTime) {
+void TestWindow::update(const std::chrono::nanoseconds& deltaTime) {
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
@@ -221,7 +221,7 @@ void TestWindow::removeGamepad(SDL_JoystickID instanceId) {
 }
 
 void TestWindow::initPreLoop() {
-	setLoopSleepingTime(10);
+	setLoopSleepingTime(std::chrono::milliseconds{10});
 	sdl::Font font{"Ubuntu-B.ttf", 60};
 	shader_ = std::make_shared<TestShader>("testShader2_2_1.ver.glsl", "testShader2_2_1.fra.glsl");
 	batch_ = std::make_shared<BatchTriangles>(shader_, GL_DYNAMIC_DRAW);
