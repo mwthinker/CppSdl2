@@ -5,6 +5,7 @@
 
 #include <SDL_image.h>
 
+#include <thread>
 #include <chrono>
 #include <sstream>
 #include <stdexcept>
