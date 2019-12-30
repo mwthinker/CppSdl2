@@ -22,7 +22,7 @@ namespace sdl {
 		void initMixer();
 		void initJoystick();
 
-		Uint32 flags_ = 0;
+		Uint32 flags_{};
 	};
 
 } // Namespace sdl.

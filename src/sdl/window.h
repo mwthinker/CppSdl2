@@ -5,7 +5,6 @@
 
 #include <SDL.h>
 
-
 #include <chrono>
 #include <string>
 #include <utility>

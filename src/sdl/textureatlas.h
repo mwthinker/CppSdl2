@@ -8,11 +8,11 @@
 
 #include <string>
 #include <memory>
-#include <map>
+#include <unordered_map>
 
 namespace sdl {
 
-	// The packing algortihm is from http://www.blackpawn.com/texts/lightmaps/default.html.
+	// The packing algorithm is from http://www.blackpawn.com/texts/lightmaps/default.html.
 	class TextureAtlas {
 	public:
 		TextureAtlas(int width, int height, std::function<void()>&& filter = []() {
@@ -66,9 +66,8 @@ namespace sdl {
 			int width, int height, const Surface& surface, int border);
 
 		Sprite sprite_;
-		std::map<std::string, Sprite> images_;
+		mutable std::unordered_map<std::string, Sprite> images_;
 		std::unique_ptr<Node> root_;
-		const Sprite empty_ = {};
 	};
 
 } // Namespace sdl.

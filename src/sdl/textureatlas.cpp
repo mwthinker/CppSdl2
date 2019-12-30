@@ -80,7 +80,7 @@ namespace sdl {
 				return add(std::move(surface), border, key);
 			} else {
 				logger()->warn("[TextureAtlas] Image {} failed to load: {}", filename, IMG_GetError());
-				return empty_;
+				return images_[""];
 			}
 		}
 		return it->second;
@@ -109,10 +109,10 @@ namespace sdl {
 					return images_[key] = Sprite{sprite_, rect};
 				} else {
 					logger()->warn("[TextureAtlas] Not enough image space to insert image");
-					return empty_;
+					return images_[""];
 				}
 			} else {
-				return empty_;
+				return images_[""];
 			}
 		}
 		return it->second; // Return already loaded sprite.
@@ -122,7 +122,7 @@ namespace sdl {
 		if (auto it = images_.find(key); it != images_.end()) {
 			return it->second;
 		}
-		return empty_;
+		return images_[""];
 	}
 
 	const Sprite& TextureAtlas::get() const {

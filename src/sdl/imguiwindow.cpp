@@ -234,7 +234,7 @@ namespace sdl {
 	}
 
 	void ImGuiWindow::ImGui_ImplSDL2_UpdateMousePosAndButtons() {
-		ImGuiIO& io = ImGui::GetIO();
+		auto& io = ImGui::GetIO();
 
 		// Set OS mouse position if requested (rarely used, only when ImGuiConfigFlags_NavEnableSetMousePos is enabled by user)
 		if (io.WantSetMousePos) {
@@ -244,7 +244,7 @@ namespace sdl {
 		}
 
 		int mx, my;
-		Uint32 mouseButtons = SDL_GetMouseState(&mx, &my);
+		auto mouseButtons = SDL_GetMouseState(&mx, &my);
 		io.MouseDown[0] = mousePressed_[0] || (mouseButtons & SDL_BUTTON(SDL_BUTTON_LEFT)) != 0;  // If a mouse press event came, always pass it as "mouse held this frame", so we don't miss click-release events that are shorter than 1 frame.
 		io.MouseDown[1] = mousePressed_[1] || (mouseButtons & SDL_BUTTON(SDL_BUTTON_RIGHT)) != 0;
 		io.MouseDown[2] = mousePressed_[2] || (mouseButtons & SDL_BUTTON(SDL_BUTTON_MIDDLE)) != 0;
@@ -271,14 +271,8 @@ namespace sdl {
 
 	void ImGuiWindow::ImGui_ImplOpenGL3_Init() {
 		initiatedOpenGl_ = true;
-		ImGuiIO& io = ImGui::GetIO();
+		auto& io = ImGui::GetIO();
 		io.BackendRendererName = "imgui_impl_opengl3";
-
-		// Make a dummy GL call (we don't actually need the result)
-		// IF YOU GET A CRASH HERE: it probably means that you haven't initialized the OpenGL function loader used by this code.
-		// Desktop OpenGL 3/4 need a function loader. See the IMGUI_IMPL_OPENGL_LOADER_xxx explanation above.
-		GLint currentTexture;
-		glGetIntegerv(GL_TEXTURE_BINDING_2D, &currentTexture);
 	}
 
 	void ImGuiWindow::ImGui_ImplOpenGL3_Shutdown() {
@@ -306,8 +300,8 @@ namespace sdl {
 	// Note that this implementation is little overcomplicated because we are saving/setting up/restoring every OpenGL state explicitly, in order to be able to run within any OpenGL engine that doesn't do so.
 	void ImGuiWindow::ImGui_ImplOpenGL3_RenderDrawData(ImDrawData* drawData) {
 		// Avoid rendering when minimized, scale coordinates for retina displays (screen coordinates != framebuffer coordinates)
-		int fbWidth = static_cast<int>(drawData->DisplaySize.x * drawData->FramebufferScale.x);
-		int fbHeight = static_cast<int>(drawData->DisplaySize.y * drawData->FramebufferScale.y);
+		auto fbWidth = static_cast<int>(drawData->DisplaySize.x * drawData->FramebufferScale.x);
+		auto fbHeight = static_cast<int>(drawData->DisplaySize.y * drawData->FramebufferScale.y);
 		if (fbWidth <= 0 || fbHeight <= 0) {
 			return;
 		}
@@ -539,12 +533,12 @@ namespace sdl {
 	}
 
 	void ImGuiWindow::ImGui_ImplSDL2_UpdateMouseCursor() {
-		ImGuiIO& io = ImGui::GetIO();
+		auto& io = ImGui::GetIO();
 		if (io.ConfigFlags & ImGuiConfigFlags_NoMouseCursorChange) {
 			return;
 		}
 
-		ImGuiMouseCursor imGuiCursor = ImGui::GetMouseCursor();
+		auto imGuiCursor = ImGui::GetMouseCursor();
 		if (io.MouseDrawCursor || imGuiCursor == ImGuiMouseCursor_None) {
 			// Hide OS mouse cursor if imgui is drawing it or if it wants no cursor
 			SDL_ShowCursor(SDL_FALSE);

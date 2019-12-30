@@ -58,6 +58,8 @@ set(SOURCES
 	src/sdl/textureatlas.h
 	src/sdl/texture.cpp
 	src/sdl/texture.h
+	src/sdl/textureview.cpp
+	src/sdl/textureview.h
 	src/sdl/vertexarrayobject.cpp
 	src/sdl/vertexarrayobject.h
 	src/sdl/vertexbufferobject.cpp
