@@ -37,7 +37,7 @@ namespace sdl {
 			return value_ != other.value_;
 		}
 
-		constexpr operator ImU32() const noexcept {
+		constexpr ImU32 toImU32() const noexcept {
 			return value_;
 		}
 		
