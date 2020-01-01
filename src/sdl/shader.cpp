@@ -1,4 +1,4 @@
-#include "imguishader.h"
+#include "shader.h"
 #include "logger.h"
 #include "vertex.h"
 
@@ -26,7 +26,7 @@ namespace sdl {
 
 	}
 
-	ImGuiShader::ImGuiShader(const GLchar* vShade, const GLchar* fShader) {
+	Shader::Shader(const GLchar* vShade, const GLchar* fShader) {
 		shader_.bindAttribute(A_POS);
 		shader_.bindAttribute(A_TEX);
 		shader_.bindAttribute(A_COL);
@@ -49,11 +49,11 @@ namespace sdl {
 		}
 	}
 
-	void ImGuiShader::useProgram() const {
+	void Shader::useProgram() const {
 		shader_.useProgram();
 	}
 
-	void ImGuiShader::setVertexAttribPointer() const {
+	void Shader::setVertexAttribPointer() const {
 		if (shader_.isLinked()) {
 			glEnableVertexAttribArray(aPos_);
 			glVertexAttribPointer(aPos_, sizeof(Vertex::pos) / sizeof(GLfloat) , GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid*) offsetof(Vertex, pos));
@@ -71,11 +71,11 @@ namespace sdl {
 		}
 	}
 
-	void ImGuiShader::setMatrix(const glm::mat4& matrix) const {
+	void Shader::setMatrix(const glm::mat4& matrix) const {
 		glUniformMatrix4fv(uMat_, 1, GL_FALSE, glm::value_ptr(matrix));
 	}
 
-	void ImGuiShader::setTextureId(GLint textureId) const {
+	void Shader::setTextureId(GLint textureId) const {
 		if (textureId < 0) {
 			glUniform1f(uUseTexture_, 0.f);
 		} else {

@@ -33,7 +33,7 @@ namespace sdl {
 			return -1;
 		}
 
-		constexpr std::pair<const GLchar*, const GLchar*> getShader(int glslVersion) {
+		constexpr std::pair<const GLchar*, const GLchar*> getShaderGlsl(int glslVersion) {
 			if (glslVersion == 330) {
 				return {getImGuiVertexShaderGlsl_330(), getImGuiFragmentShaderGlsl_330()};
 			}
@@ -424,8 +424,8 @@ namespace sdl {
 
 		// Parse GLSL version string
 		auto glslVersion = getGlslVersion(sdl::Window::getOpenGlMajorVersion(), sdl::Window::getOpenGlMinorVersion());
-		auto [vertexShader, fragmentShader] = getShader(glslVersion);
-		shader_ = sdl::ImGuiShader{vertexShader, fragmentShader};
+		auto [vertexShader, fragmentShader] = getShaderGlsl(glslVersion);
+		shader_ = sdl::Shader{vertexShader, fragmentShader};
 
 		// Create buffers
         imGuiVbo_.generate();
@@ -441,7 +441,7 @@ namespace sdl {
 	}
 
 	void ImGuiWindow::ImGui_ImplOpenGL3_DestroyDeviceObjects() {
-        shader_ = sdl::ImGuiShader();
+		shader_ = sdl::Shader{};
 		ImGui_ImplOpenGL3_DestroyFontsTexture();
 	}
 

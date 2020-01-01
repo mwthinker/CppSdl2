@@ -2,7 +2,7 @@
 #define CPPSDL2_IMGUIWINDOW_H
 
 #include "window.h"
-#include "imguishader.h"
+#include "shader.h"
 #include "vertexbufferobject.h"
 #include "vertexarrayobject.h"
 
@@ -26,7 +26,7 @@ namespace sdl {
 
 		virtual void eventUpdate(const SDL_Event& windowEvent) override;
 
-		const ImGuiShader& getImGuiShader() const;
+		const Shader& getShader() const;
 
 	private:
         virtual void update(const std::chrono::high_resolution_clock::duration& deltaTime) override final;
@@ -99,7 +99,7 @@ namespace sdl {
 		VertexBufferObject imGuiVbo_;
 		VertexBufferObject imGuiElementsVbo_;
 
-		sdl::ImGuiShader shader_;
+		sdl::Shader shader_;
 		
 		bool showDemoWindow_ = true;
 		bool initiatedOpenGl_ = false;
@@ -117,7 +117,7 @@ namespace sdl {
 		showDemoWindow_ = show;
 	}
 
-    inline const ImGuiShader& ImGuiWindow::getImGuiShader() const {
+    inline const Shader& ImGuiWindow::getShader() const {
 	    return shader_;
 	}
 

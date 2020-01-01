@@ -28,8 +28,6 @@ set(SOURCES
 	src/sdl/font.h
 	src/sdl/gamecontroller.cpp
 	src/sdl/gamecontroller.h
-	src/sdl/imguishader.cpp
-	src/sdl/imguishader.h
 	src/sdl/imguiwindow.h
 	src/sdl/imguiwindow.cpp
 	src/sdl/initsdl.cpp
@@ -41,6 +39,8 @@ set(SOURCES
 	src/sdl/opengl.cpp
 	src/sdl/opengl.h
 	src/sdl/rect.h
+	src/sdl/shader.cpp
+	src/sdl/shader.h
 	src/sdl/shaderprogram.cpp
 	src/sdl/shaderprogram.h
 	src/sdl/sound.cpp

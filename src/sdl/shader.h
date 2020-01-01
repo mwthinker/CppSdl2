@@ -1,5 +1,5 @@
-#ifndef CPPSDL2_SDL_IMGUISHADER_H
-#define CPPSDL2_SDL_IMGUISHADER_H
+#ifndef CPPSDL2_SDL_SHADER_H
+#define CPPSDL2_SDL_SHADER_H
 
 #include "shaderprogram.h"
 
@@ -44,16 +44,16 @@ void main() {
 )";
 	}
 
-	class ImGuiShader {
+	class Shader {
 	public:
-		ImGuiShader() = default;
-		ImGuiShader(const GLchar* vShade, const GLchar* fShader);
+		Shader() = default;
+		Shader(const GLchar* vShade, const GLchar* fShader);
 
-		ImGuiShader(const ImGuiShader&) = delete;
-		ImGuiShader& operator=(const ImGuiShader&) = delete;
+		Shader(const Shader&) = delete;
+		Shader& operator=(const Shader&) = delete;
 
-		ImGuiShader(ImGuiShader&& other) noexcept = default;
-		ImGuiShader& operator=(ImGuiShader&& other) noexcept = default;
+		Shader(Shader&& other) noexcept = default;
+		Shader& operator=(Shader&& other) noexcept = default;
 
 		void useProgram() const;
 
@@ -79,4 +79,4 @@ void main() {
 
 } // Namespace sdl.
 
-#endif // CPPSDL2_SDL_IMGUISHADER_H
+#endif // CPPSDL2_SDL_SHADER_H
