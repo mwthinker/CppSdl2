@@ -36,6 +36,10 @@ namespace sdl {
 		constexpr bool operator!=(const Color& other) const noexcept {
 			return value_ != other.value_;
 		}
+
+		constexpr operator ImU32() const noexcept {
+			return value_;
+		}
 		
 	private:
 		uint32_t value_{};
