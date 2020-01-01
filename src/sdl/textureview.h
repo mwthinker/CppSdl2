@@ -13,6 +13,8 @@ namespace sdl {
 
 		TextureView(const Texture& texture, float x, float y, float dx, float dy) noexcept;
 
+		TextureView(const TextureView& view, float x, float y, float dx, float dy) noexcept;
+
 		TextureView(const TextureView& texture) noexcept = default;
 		
 		TextureView& operator=(const TextureView& texture) noexcept = default;
