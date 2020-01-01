@@ -28,6 +28,8 @@ set(SOURCES
 	src/sdl/font.h
 	src/sdl/gamecontroller.cpp
 	src/sdl/gamecontroller.h
+	src/sdl/graphic.cpp
+	src/sdl/graphic.h
 	src/sdl/imguiwindow.h
 	src/sdl/imguiwindow.cpp
 	src/sdl/initsdl.cpp

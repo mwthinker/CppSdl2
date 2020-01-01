@@ -3,6 +3,8 @@
 
 #include "color.h"
 
+#include <glm/glm.hpp>
+
 namespace sdl {
 	
 	struct Vertex {
