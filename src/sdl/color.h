@@ -10,6 +10,8 @@ namespace sdl {
 
 	class Color {
 	public:
+		constexpr Color() noexcept = default;
+
 		explicit constexpr Color(uint32_t value) : value_{value} {
 		}
 
@@ -42,7 +44,7 @@ namespace sdl {
 		}
 		
 	private:
-		uint32_t value_{};
+		uint32_t value_{0xff'ff'ff'ff};
 	};
 
 	const Color WHITE{1, 1, 1};
