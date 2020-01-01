@@ -57,6 +57,7 @@ set(SOURCES
 	src/sdl/texture.h
 	src/sdl/textureview.cpp
 	src/sdl/textureview.h
+	src/sdl/vertex.h
 	src/sdl/vertexarrayobject.cpp
 	src/sdl/vertexarrayobject.h
 	src/sdl/vertexbufferobject.cpp

@@ -39,7 +39,7 @@ void TestShader::setVertexAttribPointer() const {
 	size += sizeof(Vertex::tex_);
 
 	glEnableVertexAttribArray(aColorIndex_);
-	glVertexAttribPointer(aColorIndex_, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid*) size);
+	glVertexAttribPointer(aColorIndex_, 4, GL_UNSIGNED_BYTE, GL_TRUE, sizeof(Vertex), (GLvoid*) size);
 	size += sizeof(Vertex::color_);
 
 	glEnableVertexAttribArray(aTextureIndex_);

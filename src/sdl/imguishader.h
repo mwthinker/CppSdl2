@@ -10,19 +10,19 @@ namespace sdl {
 	constexpr const GLchar* getImGuiVertexShaderGlsl_330() {
 		return R"(#version 330 core
 
-uniform mat4 ProjMtx;
+uniform mat4 uMat;
 
-in vec2 Position;
-in vec2 UV;
-in vec4 Color;
+in vec2 aPos;
+in vec2 aTex;
+in vec4 aColor;
 
-out vec2 Frag_UV;
-out vec4 Frag_Color;
+out vec2 fragTex;
+out vec4 fragColor;
 
 void main() {
-    Frag_UV = UV;
-    Frag_Color = Color;
-    gl_Position = ProjMtx * vec4(Position.xy,0,1);
+    fragTex = aTex;
+    fragColor = aColor;
+    gl_Position = uMat * vec4(aPos.xy, 0, 1);
 }
 )";
 	}
@@ -30,15 +30,16 @@ void main() {
 	constexpr const GLchar* getImGuiFragmentShaderGlsl_330() {
 		return R"(#version 330 core
 
-uniform sampler2D Texture;
+uniform sampler2D uTexture;
+uniform float uUseTexture;
 
-in vec2 Frag_UV;
-in vec4 Frag_Color;
+in vec2 fragTex;
+in vec4 fragColor;
 
 out vec4 Out_Color;
 
 void main() {
-    Out_Color = Frag_Color * texture(Texture, Frag_UV.st);
+    Out_Color = fragColor * (texture(uTexture, fragTex.st) * uUseTexture + (1 - uUseTexture));
 }
 )";
 	}
@@ -51,26 +52,29 @@ void main() {
 		ImGuiShader(const ImGuiShader&) = delete;
 		ImGuiShader& operator=(const ImGuiShader&) = delete;
 
-		ImGuiShader(ImGuiShader&& other) noexcept;
-		ImGuiShader& operator=(ImGuiShader&& other) noexcept;
+		ImGuiShader(ImGuiShader&& other) noexcept = default;
+		ImGuiShader& operator=(ImGuiShader&& other) noexcept = default;
 
 		void useProgram() const;
 
 		void setVertexAttribPointer() const;
 
-		void setMatrix(const glm::mat4x4& matrix) const;
+		void setMatrix(const glm::mat4& matrix) const;
 
 		void setTextureId(GLint textureId) const;
 
 	private:
 		sdl::ShaderProgram shader_;
 		
-		GLuint aPosIndex_ = -1;
-		GLuint aTexIndex_ = -1;
-		GLuint aColorIndex_ = -1;
-		
-		GLuint uMatrixIndex_ = -1;
-		GLuint uTextureIndex_ = -1;
+		// Vertex buffer attributes.
+		GLuint aPos_ = -1;
+		GLuint aTex_ = -1;
+		GLuint aColor_ = -1;
+
+		// Vertex buffer uniforms.
+		GLuint uMat_ = -1;
+		GLuint uTexture_ = -1;
+		GLuint uUseTexture_ = -1;
 	};
 
 } // Namespace sdl.

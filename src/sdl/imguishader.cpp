@@ -1,5 +1,6 @@
 #include "imguishader.h"
 #include "logger.h"
+#include "vertex.h"
 
 #include <imgui.h>
 #include <glm/gtc/type_ptr.hpp>
@@ -8,12 +9,20 @@ namespace sdl {
 
 	namespace {
 
-		constexpr const char* A_POS = "Position";
-		constexpr const char* A_TEX = "UV";
-		constexpr const char* A_COL = "Color";
+		constexpr const GLchar* A_POS = "aPos";
+		constexpr const GLchar* A_TEX = "aTex";
+		constexpr const GLchar* A_COL = "aColor";
 
-		constexpr const char* U_MAT = "ProjMtx";
-		constexpr const char* U_TEXTURE = "Texture";
+		constexpr const GLchar* U_MAT = "uMat";
+		constexpr const GLchar* U_TEXTURE = "uTexture";
+		constexpr const GLchar* U_USE_TEXTURE = "uUseTexture";
+
+		constexpr void VERTEX_EQUAL_IMDRAWVERT() {
+			static_assert(sizeof(ImDrawVert::col) == sizeof(Vertex::color));
+			static_assert(sizeof(ImDrawVert::pos) == sizeof(Vertex::pos));
+			static_assert(sizeof(ImDrawVert::uv) == sizeof(Vertex::tex));
+			static_assert(sizeof(ImDrawVert) == sizeof(Vertex));
+		}
 
 	}
 
@@ -27,32 +36,17 @@ namespace sdl {
 
 		if (shader_.isLinked()) {
 			// Collect the vertex buffer attributes indexes.
-			aPosIndex_ = shader_.getAttributeLocation(A_POS);
-			aTexIndex_ = shader_.getAttributeLocation(A_TEX);
-			aColorIndex_ = shader_.getAttributeLocation(A_COL);
-			
+			aPos_ = shader_.getAttributeLocation(A_POS);
+			aTex_ = shader_.getAttributeLocation(A_TEX);
+			aColor_ = shader_.getAttributeLocation(A_COL);
+
 			// Collect the vertex buffer uniforms indexes.
-			uMatrixIndex_ = shader_.getUniformLocation(U_MAT);
-			uTextureIndex_ = shader_.getUniformLocation(U_TEXTURE);
+			uMat_ = shader_.getUniformLocation(U_MAT);
+			uTexture_ = shader_.getUniformLocation(U_TEXTURE);
+			uUseTexture_ = shader_.getUniformLocation(U_USE_TEXTURE);
 		} else {
-			logger()->warn("[ImGuiShader] failed to create ImGuiShader, shader not linked");
+			logger()->warn("[Shader] failed to create VinShader, shader not linked");
 		}
-	}
-
-	ImGuiShader::ImGuiShader(ImGuiShader&& other) noexcept :
-		shader_{std::move(other.shader_)}, aPosIndex_{other.aPosIndex_},
-		aTexIndex_{other.aTexIndex_}, aColorIndex_{other.aColorIndex_},
-		uMatrixIndex_{other.uMatrixIndex_}, uTextureIndex_{other.uTextureIndex_} {
-	}
-
-	ImGuiShader& ImGuiShader::operator=(ImGuiShader&& other) noexcept {
-		shader_ = std::move(other.shader_);
-		aPosIndex_ = other.aPosIndex_;
-		aTexIndex_ = other.aTexIndex_;
-		aColorIndex_ = other.aColorIndex_;
-		uMatrixIndex_ = other.uMatrixIndex_;
-		uTextureIndex_ = other.uTextureIndex_;
-		return *this;
 	}
 
 	void ImGuiShader::useProgram() const {
@@ -61,28 +55,33 @@ namespace sdl {
 
 	void ImGuiShader::setVertexAttribPointer() const {
 		if (shader_.isLinked()) {
-			glEnableVertexAttribArray(aPosIndex_);
-			glVertexAttribPointer(aPosIndex_, 2, GL_FLOAT, GL_FALSE, sizeof(ImDrawVert), (GLvoid*) IM_OFFSETOF(ImDrawVert, pos));
+			glEnableVertexAttribArray(aPos_);
+			glVertexAttribPointer(aPos_, sizeof(Vertex::pos) / sizeof(GLfloat) , GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid*) offsetof(Vertex, pos));
 			sdl::assertGlError();
 
-			glEnableVertexAttribArray(aTexIndex_);
-			glVertexAttribPointer(aTexIndex_, 2, GL_FLOAT, GL_FALSE, sizeof(ImDrawVert), (GLvoid*) IM_OFFSETOF(ImDrawVert, uv));
+			glEnableVertexAttribArray(aTex_);
+			glVertexAttribPointer(aTex_, sizeof(Vertex::tex) / sizeof(GLfloat), GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid*) offsetof(Vertex, tex));
 			sdl::assertGlError();
 
-			glEnableVertexAttribArray(aColorIndex_);
-			glVertexAttribPointer(aColorIndex_, 4, GL_UNSIGNED_BYTE, GL_TRUE, sizeof(ImDrawVert), (GLvoid*) IM_OFFSETOF(ImDrawVert, col));
+			glEnableVertexAttribArray(aColor_);
+			glVertexAttribPointer(aColor_, 4, GL_UNSIGNED_BYTE, GL_TRUE, sizeof(Vertex), (GLvoid*) offsetof(Vertex, color));
 			sdl::assertGlError();
 		} else {
-			logger()->warn("[ImGuiShader] setVertexAttribPointer failed, shader not linked");
+			logger()->warn("[Shader] setVertexAttribPointer failed, shader not linked");
 		}
 	}
 
-	void ImGuiShader::setMatrix(const glm::mat4x4& matrix) const {
-		glUniformMatrix4fv(uMatrixIndex_, 1, GL_FALSE, glm::value_ptr(matrix));
+	void ImGuiShader::setMatrix(const glm::mat4& matrix) const {
+		glUniformMatrix4fv(uMat_, 1, GL_FALSE, glm::value_ptr(matrix));
 	}
 
 	void ImGuiShader::setTextureId(GLint textureId) const {
-		glUniform1i(uTextureIndex_, textureId);
+		if (textureId < 0) {
+			glUniform1f(uUseTexture_, 0.f);
+		} else {
+			glUniform1i(uTexture_, textureId);
+			glUniform1f(uUseTexture_, 1.f);
+		}
 	}
 
 } // Namespace sdl.
