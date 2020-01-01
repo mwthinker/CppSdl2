@@ -21,13 +21,6 @@ if (MSVC)
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /wd4275") # non - DLL-interface class 'class_1' used as base for DLL-interface class 'class_2'
 endif ()
 
-set(IMGUI_SOURCE
-	src/sdl/imguishader.cpp
-	src/sdl/imguishader.h
-	src/sdl/imguiwindow.h
-	src/sdl/imguiwindow.cpp
-)
-
 set(SOURCES
 	src/sdl/batch.h
 	src/sdl/color.h
@@ -35,6 +28,10 @@ set(SOURCES
 	src/sdl/font.h
 	src/sdl/gamecontroller.cpp
 	src/sdl/gamecontroller.h
+	src/sdl/imguishader.cpp
+	src/sdl/imguishader.h
+	src/sdl/imguiwindow.h
+	src/sdl/imguiwindow.cpp
 	src/sdl/initsdl.cpp
 	src/sdl/initsdl.h
 	src/sdl/logger.cpp
@@ -75,16 +72,7 @@ find_package(SDL2-mixer CONFIG REQUIRED)
 find_package(SDL2-ttf CONFIG REQUIRED)
 find_package(glm CONFIG REQUIRED)
 find_package(spdlog CONFIG REQUIRED)
-
-message(STATUS "Add ImGui as dependencie: -DCppSdl2ImGui=1")
-option(CppSdl2ImGui "Add ImGui as dependencie" OFF)
-set(ImGuiLib "")
-if (CppSdl2ImGui)
-	find_package(imgui CONFIG REQUIRED)
-	
-	set(SOURCES "${SOURCES};${IMGUI_SOURCE}")
-	set(ImGuiLib "imgui::imgui")
-endif ()
+find_package(imgui CONFIG REQUIRED)
 
 add_library(CppSdl2 ${SOURCES})
 target_include_directories(CppSdl2
@@ -101,7 +89,7 @@ target_link_libraries(CppSdl2
 		glad::glad
 		spdlog::spdlog spdlog::spdlog_header_only
 		glm
-		${ImGuiLib}
+		imgui::imgui
 )
 
 message(STATUS "CppSdl2Test is available to add: -DCppSdl2Test=1")

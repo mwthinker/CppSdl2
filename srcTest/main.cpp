@@ -89,26 +89,20 @@ void testLoadTextureAtlas2() {
 }
 
 void testBatchWindow() {
-	// Test opengl versions.
-	for (int i = 2; i <= 4; ++i) {
-		try {
-			TestWindow2 w{i, 1};
-			std::stringstream stream;
-			stream << "OpenGl Version " << i << "." << 1;
-			logger()->info("[testBatchWindow] ", stream.str());
-			w.setTitle(stream.str());
-			w.startLoop();
-		} catch (std::runtime_error& runtimeError) {
-			logger()->error("[testBatchWindow] Runtime exception: {}", runtimeError.what());
-		}
+	try {
+		TestWindow2 w{3, 3};
+		std::string glVersion{"OpenGl Version 3.3"};
+		logger()->info("[testBatchWindow] {}", glVersion);
+		w.setTitle(glVersion);
+		w.startLoop();
+	} catch (std::runtime_error& runtimeError) {
+		logger()->error("[testBatchWindow] Runtime exception: {}", runtimeError.what());
 	}
 }
 
 void testImGuiWindow() {
-#if IMGUI_LIB
 	TestImGuiWindow w;
 	w.startLoop();
-#endif // IMGUI_LIB
 }
 
 void showHelp(const std::string& programName) {
@@ -123,9 +117,7 @@ void showHelp(const std::string& programName) {
 	std::cout << "\t" << "-1                       testLoadTextureAtlas" << "\n";
 	std::cout << "\t" << "-2                       testLoadTextureAtlas2" << "\n";
 	std::cout << "\t" << "-3                       testBatchWindow" << "\n";
-#if IMGUI_LIB
 	std::cout << "\t" << "-4                       testImGuiWindow" << "\n";
-#endif // IMGUI_LIB
 }
 
 void runAll() {
@@ -154,13 +146,8 @@ int main(int argc, char** argv) {
 			testBatchWindow();
 			return 0;
 		} else if (code == "-4") {
-#if IMGUI_LIB
 			testImGuiWindow();
-			return 0;
-#else
-			std::cout << "ImGui not compiled, must add preprocessor IMGUI_LIB\n";
-#endif // IMGUI_LIB
-			
+			return 0;			
 		} else {
 			std::cout << "Incorrect argument " << code << "\n";
 		}
