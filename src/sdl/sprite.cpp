@@ -70,6 +70,15 @@ namespace sdl {
 		}
 	}
 
+	TextureView Sprite::getTextureView() const {
+		try {
+			return {std::get<Texture>(*image_), getX(), getY(), getWidth(), getHeight()};
+		}
+		catch (std::bad_variant_access&) {
+			return {};
+		}
+	}
+
 	float Sprite::getX() const noexcept {
 		return static_cast<float>(rect_.x);
 	}

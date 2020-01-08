@@ -16,7 +16,8 @@ namespace sdl {
 		return root->insert(surface, border);
 	}
 
-	TextureAtlas::Node::Node(Rect rect) : rect_{rect} {
+	TextureAtlas::Node::Node(Rect rect)
+		: rect_{rect} {
 	}
 
 	std::shared_ptr<TextureAtlas::Node> TextureAtlas::Node::insert(const Surface& surface, int border) {
@@ -127,6 +128,17 @@ namespace sdl {
 
 	const Sprite& TextureAtlas::get() const {
 		return sprite_;
+	}
+
+	TextureView TextureAtlas::getTextureView(const std::string& key) const {
+		if (auto it = images_.find(key); it != images_.end()) {
+			return it->second.getTextureView();
+		}
+		return {};
+	}
+
+	TextureView TextureAtlas::getTextureView() const {
+		return {};
 	}
 
 } // Namespace sdl.

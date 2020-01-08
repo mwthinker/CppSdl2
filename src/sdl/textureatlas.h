@@ -5,6 +5,7 @@
 #include "texture.h"
 #include "sprite.h"
 #include "surface.h"
+#include "textureview.h"
 
 #include <string>
 #include <memory>
@@ -33,6 +34,10 @@ namespace sdl {
 		const Sprite& get(const std::string& key) const;
 
 		const Sprite& get() const;
+
+		TextureView getTextureView() const;
+
+		TextureView getTextureView(const std::string& key) const;
 
 	private:
 		class Node : public std::enable_shared_from_this<Node> {

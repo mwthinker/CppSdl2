@@ -3,6 +3,7 @@
 
 #include "texture.h"
 #include "surface.h"
+#include "textureview.h"
 #include "rect.h"
 
 #include <string>
@@ -43,6 +44,8 @@ namespace sdl {
 		Sprite(const Sprite& sprite, const Rect& rect);
 
 		void bindTexture() const;
+
+		TextureView getTextureView() const;
 
 		// Return the lower left x position of the image drawn.
 		float getX() const noexcept;
