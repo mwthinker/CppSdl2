@@ -67,14 +67,14 @@ void main() {
 		sdl::ShaderProgram shader_;
 		
 		// Vertex buffer attributes.
-		GLuint aPos_{-1};
-		GLuint aTex_{-1};
-		GLuint aColor_{-1};
+		int aPos_{-1};
+		int aTex_{-1};
+		int aColor_{-1};
 
 		// Vertex buffer uniforms.
-		GLuint uMat_{-1};
-		GLuint uTexture_{-1};
-		GLuint uUseTexture_{-1};
+		int uMat_{-1};
+		int uTexture_{-1};
+		int uUseTexture_{-1};
 	};
 
 } // Namespace sdl.
