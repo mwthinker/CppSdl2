@@ -24,7 +24,7 @@ namespace sdl {
 		static void unbind();
 
 	private:
-		GLuint vao_ = 0;
+		GLuint vao_{};
 	};
 
 } // Namespace sdl.

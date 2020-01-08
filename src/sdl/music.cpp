@@ -5,8 +5,8 @@
 
 namespace sdl {
 
-	Music::Music(const std::string& filename) :
-		musicBuffer_{std::make_shared<MusicBuffer>(filename)} {
+	Music::Music(const std::string& filename)
+		: musicBuffer_{std::make_shared<MusicBuffer>(filename)} {
 	}
 
 	void Music::play(int loops) {

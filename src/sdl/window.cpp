@@ -25,10 +25,11 @@ namespace sdl {
 
 	}
 
-	Window::Window(int majorVersionGl, int minorVersionGl) :
-		majorVersionGl_{majorVersionGl}, minorVersionGl_{minorVersionGl} {
+	Window::Window(int majorVersionGl, int minorVersionGl)
+		: majorVersionGl_{majorVersionGl}
+		, minorVersionGl_{minorVersionGl} {
+		
 		assert(majorVersionGl > 0 && minorVersionGl > 0);
-
 		logger()->info("[Window] Creating Window");
 	}
 

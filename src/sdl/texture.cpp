@@ -19,8 +19,8 @@ namespace sdl {
 		}
 	}
 	
-	Texture::Texture(Texture&& texture) noexcept :
-		texture_{std::exchange(texture.texture_, 0)} {
+	Texture::Texture(Texture&& texture) noexcept
+		: texture_{std::exchange(texture.texture_, 0)} {
 
 	}
 

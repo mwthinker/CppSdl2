@@ -7,8 +7,8 @@
 
 namespace sdl {
 
-	Sprite::Sprite(const std::string& image, std::function<void()>&& filter) :
-		image_{std::make_shared<ImageVariant>()} {
+	Sprite::Sprite(const std::string& image, std::function<void()>&& filter)
+		: image_{std::make_shared<ImageVariant>()} {
 		
 		Surface surface{image};
 		textureWidth_ = surface.getWidth();
@@ -16,26 +16,29 @@ namespace sdl {
 		*image_ = SurfaceData{std::move(surface), filter};
 	}
 
-	Sprite::Sprite(Surface&& surface, std::function<void()>&& filter) :
-		image_{std::make_shared<ImageVariant>()},
-		rect_{0, 0, surface.getWidth(), surface.getHeight()},
-		textureWidth_{surface.getWidth()}, textureHeight_{surface.getHeight()} {
+	Sprite::Sprite(Surface&& surface, std::function<void()>&& filter)
+		: image_{std::make_shared<ImageVariant>()}
+		, rect_{0, 0, surface.getWidth(), surface.getHeight()}
+		, textureWidth_{surface.getWidth()}
+		, textureHeight_{surface.getHeight()} {
 
 		*image_ = SurfaceData{std::move(surface), filter};
 	}
 
-	Sprite::Sprite(Surface&& surface, const Rect& rect, std::function<void()>&& filter) :
-		image_{std::make_shared<ImageVariant>()},
-		rect_{rect},
-		textureWidth_{surface.getWidth()}, textureHeight_{surface.getHeight()} {
+	Sprite::Sprite(Surface&& surface, const Rect& rect, std::function<void()>&& filter)
+		: image_{std::make_shared<ImageVariant>()}
+		, rect_{rect}
+		, textureWidth_{surface.getWidth()}
+		, textureHeight_{surface.getHeight()} {
 
 		*image_ = SurfaceData{std::move(surface), filter};
 	}
 
-	Sprite::Sprite(Sprite&& other) noexcept :
-		image_{std::move(other.image_)},
-		rect_{other.rect_},
-		textureWidth_{other.textureWidth_}, textureHeight_{other.textureHeight_} {
+	Sprite::Sprite(Sprite&& other) noexcept
+		: image_{std::move(other.image_)}
+		, rect_{other.rect_}
+		, textureWidth_{other.textureWidth_}
+		, textureHeight_{other.textureHeight_} {
 	}
 
 	Sprite& Sprite::operator=(Sprite&& other) noexcept {
@@ -46,9 +49,11 @@ namespace sdl {
 		return *this;
 	}
 
-	Sprite::Sprite(const Sprite& sprite, const Rect& rect) :
-		image_{sprite.image_}, rect_{rect},
-		textureWidth_{sprite.textureWidth_}, textureHeight_{sprite.textureHeight_} {
+	Sprite::Sprite(const Sprite& sprite, const Rect& rect)
+		: image_{sprite.image_}
+		, rect_{rect}
+		, textureWidth_{sprite.textureWidth_}
+		, textureHeight_{sprite.textureHeight_} {
 	}
 
 	void Sprite::bindTexture() const {

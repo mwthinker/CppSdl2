@@ -42,7 +42,7 @@ namespace sdl {
 
 	private:
 		Sprite sprite_;
-		int characterSize_;
+		int characterSize_{};
 	};
 
 } // Namespace sdl.

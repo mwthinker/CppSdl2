@@ -10,14 +10,11 @@ namespace sdl {
 	}
 
 	GameController::GameController(GameController&& other) noexcept
-		: gameController_{other.gameController_} {
-
-		other.gameController_ = nullptr;
+		: gameController_{std::exchange(other.gameController_, nullptr)} {
 	}
 
 	GameController& GameController::operator=(GameController&& other) noexcept {
-		gameController_ = other.gameController_;
-		other.gameController_ = nullptr;
+		gameController_ = std::exchange(other.gameController_,  nullptr);
 		return *this;
 	}
 

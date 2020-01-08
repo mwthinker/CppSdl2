@@ -12,11 +12,13 @@ namespace sdl {
 	public:
 		constexpr Color() noexcept = default;
 
-		explicit constexpr Color(uint32_t value) : value_{value} {
+		explicit constexpr Color(uint32_t value)
+			: value_{value} {
 		}
 
-		Color(float red, float green, float blue, float alpha = 1.f) noexcept : 
-			value_{ImGui::ColorConvertFloat4ToU32({red, green, blue, alpha})} {
+		Color(float red, float green, float blue, float alpha = 1.f) noexcept
+			: value_{ImGui::ColorConvertFloat4ToU32({red, green, blue, alpha})} {
+			
 			assert(red >= 0 || green >= 0 || blue >= 0 || alpha >= 0);
 		}
 

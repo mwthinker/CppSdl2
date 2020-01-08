@@ -62,8 +62,8 @@ namespace sdl {
 			explicit SoundBuffer(const std::string& filename);
 			~SoundBuffer();
 
-			Mix_Chunk* mixChunk = nullptr;
-			bool valid = true;
+			Mix_Chunk* mixChunk{};
+			bool valid{true};
 			std::string error;
 
 			static std::map<int, int> channelList;// <channel, sound id>
@@ -82,9 +82,9 @@ namespace sdl {
 
 		std::shared_ptr<SoundBuffer> soundBuffer_;
 
-		float volume_ = 1.f;
-		int channel_ = -1;
-		int id_ = 0;
+		float volume_{1.f};
+		int channel_{-1};
+		int id_{};
 
 		static int lastId_;
 	};

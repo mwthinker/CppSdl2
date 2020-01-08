@@ -113,24 +113,24 @@ namespace sdl {
 
 		std::string title_;
 
-		SDL_Window* window_ = nullptr;
-		SDL_GLContext glContext_ = nullptr;
-		SDL_Surface* icon_ = nullptr;
+		SDL_Window* window_{};
+		SDL_GLContext glContext_{};
+		SDL_Surface* icon_{};
 		
 		int width_ = DEFAULT_WIDTH;
 		int height_ = DEFAULT_HEIGHT;
 		int x_ = SDL_WINDOWPOS_UNDEFINED;
 		int y_ = SDL_WINDOWPOS_UNDEFINED;
 		
-		std::chrono::nanoseconds sleepingTime_{0};
+		std::chrono::nanoseconds sleepingTime_{};
 		const int majorVersionGl_ = DEFAULT_MAJOR_VERSION_GL, minorVersionGl_ = DEFAULT_MINOR_VERSION_GL;
 		
 		GLbitfield glBitfield_ = GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT;
 		
-		bool quit_ = false;
-		bool fullScreen_ = false;
-		bool bordered_ = true;
-		bool resizable_ = true;
+		bool quit_{};
+		bool fullScreen_{};
+		bool bordered_{true};
+		bool resizable_{true};
 	};
 
 	inline void Window::quit() noexcept {

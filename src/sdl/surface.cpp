@@ -105,7 +105,8 @@ namespace sdl {
 		SDL_FreeSurface(surface_);
 	}
 
-	Surface::Surface(Surface&& other) noexcept : surface_{std::exchange(other.surface_, nullptr)} {
+	Surface::Surface(Surface&& other) noexcept
+		: surface_{std::exchange(other.surface_, nullptr)} {
 	}
 
 	Surface& Surface::operator=(Surface&& other) noexcept {

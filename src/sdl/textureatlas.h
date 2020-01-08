@@ -51,11 +51,11 @@ namespace sdl {
 				return rect_;
 			}
 
-			bool image = false;
+			bool image{};
 		private:
 			std::shared_ptr<Node> left_;
 			std::shared_ptr<Node> right_;
-			Rect rect_ = {};
+			Rect rect_{};
 		};
 
 		// Create a new root node with plane, dimension defined by width and height, and 

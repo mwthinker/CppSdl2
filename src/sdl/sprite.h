@@ -81,8 +81,9 @@ namespace sdl {
 		using ImageVariant = std::variant<SurfaceData, Texture>;
 		mutable std::shared_ptr<ImageVariant> image_;
 
-		Rect rect_ {};
-		int textureWidth_ = 0, textureHeight_ = 0;
+		Rect rect_{};
+		int textureWidth_{}
+		int textureHeight_{};
 	};
 
 } // Namespace sdl.

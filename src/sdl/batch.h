@@ -109,17 +109,19 @@ namespace sdl {
 		BatchView& operator=(BatchView&&) noexcept = default;
 
 	private:
-		BatchView(GLenum mode, GLsizei index, GLsizei size) noexcept :
-			mode_{mode}, index_{index}, size_{size} {
+		BatchView(GLenum mode, GLsizei index, GLsizei size) noexcept
+			: mode_{mode}
+			, index_{index}
+			, size_{size} {
 
 			assertValidDrawMode(mode);
 			assert(index_ >= 0 && size_ >= 0);
 			IS_VERTEX_STANDARD_LAYOUT<Vertex>();
 		}
 
-		GLenum mode_ = 0;
-		GLsizei index_ = 0;
-		GLsizei size_ = 0;
+		GLenum mode_{};
+		GLsizei index_{};
+		GLsizei size_{};
 	};
 
 	template <class Vertex>
@@ -182,9 +184,9 @@ namespace sdl {
 		sdl::VertexBufferObject vbo_;
 		sdl::VertexBufferObject vboIndexes_;
 		
-		GLsizei currentViewIndex_ = 0;
-		GLuint currentIndexesIndex_ = 0;
-		GLenum usage_ = 0;
+		GLsizei currentViewIndex_{};
+		GLuint currentIndexesIndex_{};
+		GLenum usage_{};
 	};
 
 	template <class Vertex>

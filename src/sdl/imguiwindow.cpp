@@ -42,12 +42,6 @@ namespace sdl {
 		
 	}
 
-	ImGuiWindow::ImGuiWindow() {
-		for (auto& cursor : mouseCursors_) {
-			cursor = nullptr;
-		}
-	}
-
 	ImGuiWindow::~ImGuiWindow() {
         if (clipboardTextData_) {
             SDL_free(clipboardTextData_);

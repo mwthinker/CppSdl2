@@ -13,7 +13,7 @@ namespace sdl {
 
 	class ImGuiWindow : public sdl::Window {
 	public:
-		ImGuiWindow();
+		ImGuiWindow() = default;
 		virtual ~ImGuiWindow();
 
 		bool isShowDemoWindow() const;
@@ -36,33 +36,33 @@ namespace sdl {
         virtual void imGuiUpdate(const std::chrono::high_resolution_clock::duration& deltaTime) {};
 
 		struct GLState {
-			GLenum lastActiveTexture = 0;
+			GLenum lastActiveTexture{};
 
-			GLint lastProgram = 0;
-			GLint lastTexture = 0;
+			GLint lastProgram{};
+			GLint lastTexture{};
 #ifdef GL_SAMPLER_BINDING
-			GLint lastSampler = 0;
+			GLint lastSampler{};
 #endif
-			GLint lastArrayBuffer = 0;
-			GLint lastVertexArray = 0;
+			GLint lastArrayBuffer{};
+			GLint lastVertexArray{};
 #ifdef GL_POLYGON_MODE
-			GLint lastPolygonMode[2] = {0, 0};
+			GLint lastPolygonMode[2]{};
 #endif
-			GLint lastViewport[4] = {0, 0, 0, 0};
-			GLint lastScissorBox[4] = {0, 0, 0, 0};
-			GLenum lastBlendSrcRgb = 0;
-			GLenum lastBlendDstRgb = 0;
-			GLenum lastBlendSrcAlpha = 0;
-			GLenum lastBlendDstAlpha = 0;
-			GLenum lastBlendEquationRgb = 0;
-			GLenum lastBlendEquationAlpha = 0;
-			GLboolean lastEnableBlend = GL_FALSE;
-			GLboolean lastEnableCullFace = GL_FALSE;
-			GLboolean lastEnableDepthTest = GL_FALSE;
-			GLboolean lastEnableScissorTest = GL_FALSE;
-			bool clipOriginLowerLeft = false;
+			GLint lastViewport[4]{};
+			GLint lastScissorBox[4]{};
+			GLenum lastBlendSrcRgb{};
+			GLenum lastBlendDstRgb{};
+			GLenum lastBlendSrcAlpha{};
+			GLenum lastBlendDstAlpha{};
+			GLenum lastBlendEquationRgb{};
+			GLenum lastBlendEquationAlpha{};
+			GLboolean lastEnableBlend{GL_FALSE};
+			GLboolean lastEnableCullFace{GL_FALSE};
+			GLboolean lastEnableDepthTest{GL_FALSE};
+			GLboolean lastEnableScissorTest{GL_FALSE};
+			bool clipOriginLowerLeft{};
 #if defined(GL_CLIP_ORIGIN) && !defined(__APPLE__)
-			GLenum lastClipOrigin = 0;
+			GLenum lastClipOrigin{};
 #endif
 		};
 
@@ -101,12 +101,12 @@ namespace sdl {
 
 		sdl::Shader shader_;
 		
-		bool showDemoWindow_ = true;
-		bool initiatedOpenGl_ = false;
-		bool initiatedSdl_ = false;
+		bool showDemoWindow_{};
+		bool initiatedOpenGl_{};
+		bool initiatedSdl_{};
         
-		char* clipboardTextData_ = nullptr;
-		GLuint imGuiFontTexture_ = 0;
+		char* clipboardTextData_{};
+		GLuint imGuiFontTexture_{};
 	};
 
 	inline bool ImGuiWindow::isShowDemoWindow() const {

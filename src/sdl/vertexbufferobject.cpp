@@ -22,9 +22,11 @@ namespace sdl {
 		}
 	}
 
-	VertexBufferObject::VertexBufferObject(VertexBufferObject&& other) noexcept : 
-		vboId_{std::exchange(other.vboId_, 0)}, size_{other.size_},
-		target_{other.target_}, usage_{other.usage_} {
+	VertexBufferObject::VertexBufferObject(VertexBufferObject&& other) noexcept
+		: vboId_{std::exchange(other.vboId_, 0)}
+		, size_{other.size_}
+		, target_{other.target_}
+		, usage_{other.usage_} {
 	}
 
 	VertexBufferObject& VertexBufferObject::operator=(VertexBufferObject&& other) noexcept {

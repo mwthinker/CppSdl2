@@ -46,7 +46,7 @@ namespace sdl {
 		GLuint getGlTexture() const noexcept;
 
 	private:
-		GLuint texture_ = 0;
+		GLuint texture_{};
 	};
 
 } // Namespace sdl.

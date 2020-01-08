@@ -42,10 +42,10 @@ namespace sdl {
 		}
 
 	private:
-		float x_ = 0;
-		float y_ = 0;
-		float dx_ = 1;
-		float dy_ = 1;
+		float x_{0};
+		float y_{0};
+		float dx_{1};
+		float dy_{1};
 		GLuint texture_{};
 	};
 
