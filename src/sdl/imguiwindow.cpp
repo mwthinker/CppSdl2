@@ -42,6 +42,10 @@ namespace sdl {
 		
 	}
 
+	ImGuiWindow::ImGuiWindow(int majorVersionGl, int minorVersionGl)
+		: Window{majorVersionGl, minorVersionGl} {
+	}
+
 	ImGuiWindow::~ImGuiWindow() {
         if (clipboardTextData_) {
             SDL_free(clipboardTextData_);

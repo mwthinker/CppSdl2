@@ -14,6 +14,9 @@ namespace sdl {
 	class ImGuiWindow : public sdl::Window {
 	public:
 		ImGuiWindow() = default;
+
+		ImGuiWindow(int majorVersionGl, int minorVersionGl);
+
 		virtual ~ImGuiWindow();
 
 		bool isShowDemoWindow() const;
