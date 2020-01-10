@@ -73,12 +73,13 @@ namespace sdl {
 
 		ImGui_ImplSDL2_Init();
 		ImGui_ImplOpenGL3_Init();
-		ImGui_ImplOpenGL3_NewFrame();
 	}
 
 	void ImGuiWindow::update(const std::chrono::nanoseconds& deltaTime) {
-        imGuiPreUpdate(deltaTime);
-
+		ImGui_ImplOpenGL3_NewFrame();
+		
+		imGuiPreUpdate(deltaTime);
+		
 		ImGui_ImplSDL2_NewFrame(deltaTime);
 		ImGui::NewFrame();
 	
@@ -389,8 +390,9 @@ namespace sdl {
 		// Upload texture to graphics system
 		GLint lastTexture;
 		glGetIntegerv(GL_TEXTURE_BINDING_2D, &lastTexture);
-		glGenTextures(1, &imGuiFontTexture_);
-		glBindTexture(GL_TEXTURE_2D, imGuiFontTexture_);
+		
+		imGuiFontTexture_.generate();
+		imGuiFontTexture_.bind();
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 #ifdef GL_UNPACK_ROW_LENGTH
@@ -407,10 +409,8 @@ namespace sdl {
 
 	void ImGuiWindow::ImGui_ImplOpenGL3_DestroyFontsTexture() {
 		if (imGuiFontTexture_) {
-			ImGuiIO& io = ImGui::GetIO();
-			glDeleteTextures(1, &imGuiFontTexture_);
+			auto& io = ImGui::GetIO();
 			io.Fonts->TexID = 0;
-			imGuiFontTexture_ = 0;
 		}
 	}
 

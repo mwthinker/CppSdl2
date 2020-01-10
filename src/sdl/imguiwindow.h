@@ -3,6 +3,7 @@
 
 #include "window.h"
 #include "shader.h"
+#include "texture.h"
 #include "vertexbufferobject.h"
 #include "vertexarrayobject.h"
 
@@ -109,7 +110,7 @@ namespace sdl {
 		bool initiatedSdl_{};
         
 		char* clipboardTextData_{};
-		GLuint imGuiFontTexture_{};
+		Texture imGuiFontTexture_;
 	};
 
 	inline bool ImGuiWindow::isShowDemoWindow() const {
