@@ -23,6 +23,13 @@ namespace sdl {
 			}
 		}
 
+		constexpr int DEFAULT_MAJOR_VERSION_GL{3};
+		constexpr int DEFAULT_MINOR_VERSION_GL{3};
+
+	}
+
+	Window::Window()
+		: Window{DEFAULT_MAJOR_VERSION_GL, DEFAULT_MINOR_VERSION_GL} {
 	}
 
 	Window::Window(int majorVersionGl, int minorVersionGl)
@@ -70,45 +77,60 @@ namespace sdl {
 	}
 
 	void Window::startLoop() {
-		logger()->info("[Window] Init loop");
-		if (!window_) {
-			Uint32 flags = SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL;
-			if (resizable_) {
-				flags |= SDL_WINDOW_RESIZABLE;
-			}
-
-			if (!bordered_) {
-				flags |= SDL_WINDOW_BORDERLESS;
-			}
-
-			initOpenGl();
-
-			window_ = SDL_CreateWindow(
-				title_.c_str(),
-				x_,	y_,
-				width_,	height_,
-				flags
-			);
-
-			if (window_ == nullptr) {
-				logger()->error("[Window] SDL_CreateWindow failed: {}", SDL_GetError());
-				throw std::exception();
-			} else {
-				logger()->info("[Window] Windows {} created: \n\t(x, y) = ({}, {}) \n\t(w, h) = ({}, {}) \n\tflags = {}", title_, x_ == SDL_WINDOWPOS_UNDEFINED? -1 : x_, y_ == SDL_WINDOWPOS_UNDEFINED ? -1 : y_, width_, height_, flags);
-			}
-
-			if (icon_) {
-				logger()->debug("[Window] Windows icon updated");
-				SDL_SetWindowIcon(window_, icon_);
-				SDL_FreeSurface(icon_);
-				icon_ = nullptr;
-			}
-			quit_ = false;
-
-			setupOpenGlContext();
-			initPreLoop();
-			runLoop();
+		if (window_) {
+			return;
 		}
+
+		logger()->info("[Window] Init loop");
+		Uint32 flags = SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL;
+		if (resizable_) {
+			flags |= SDL_WINDOW_RESIZABLE;
+		}
+
+		if (!bordered_) {
+			flags |= SDL_WINDOW_BORDERLESS;
+		}
+		
+		SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
+		SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, majorVersionGl_);
+		SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, minorVersionGl_);
+		SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
+#if _DEBUG
+		SDL_GL_SetAttribute(SDL_GL_CONTEXT_FLAGS, SDL_GL_CONTEXT_DEBUG_FLAG);
+#endif // _DEBUG
+		initOpenGl();
+
+		if (SDL_GL_LoadLibrary(nullptr) != 0) {
+			logger()->error("[Window] SDL_GL_LoadLibrary failed {}", SDL_GetError());
+			logger()->error("[Window] Failed to load OpenGL version {}.{}", majorVersionGl_, minorVersionGl_);
+			throw std::exception{};
+		}
+
+		window_ = SDL_CreateWindow(
+			title_.c_str(),
+			x_,	y_,
+			width_,	height_,
+			flags
+		);
+
+		if (window_ == nullptr) {
+			logger()->error("[Window] SDL_CreateWindow failed: {}", SDL_GetError());
+			throw std::exception();
+		} else {
+			logger()->info("[Window] Windows {} created: \n\t(x, y) = ({}, {}) \n\t(w, h) = ({}, {}) \n\tflags = {}", title_, x_ == SDL_WINDOWPOS_UNDEFINED? -1 : x_, y_ == SDL_WINDOWPOS_UNDEFINED ? -1 : y_, width_, height_, flags);
+		}
+
+		if (icon_) {
+			logger()->debug("[Window] Windows icon updated");
+			SDL_SetWindowIcon(window_, icon_);
+			SDL_FreeSurface(icon_);
+			icon_ = nullptr;
+		}
+		quit_ = false;
+
+		setupOpenGlContext();
+		initPreLoop();
+		runLoop();
 		logger()->info("[Window] Loop ended");
 	}
 
@@ -248,37 +270,25 @@ namespace sdl {
 	}
 
 	void Window::setFullScreen(bool fullScreen) {
-		if (window_) {
-			if (fullScreen != isFullScreen()) {
-				if (isFullScreen()) {
-					logger()->info("[Window] Fullscreen inactivated.");
-					SDL_SetWindowFullscreen(window_, 0);
-					SDL_SetWindowSize(window_, width_, height_);
-					if (!bordered_) {
-						logger()->info("[Window] Border inactivated.");
-						SDL_SetWindowBordered(window_, SDL_bool::SDL_FALSE);
-					}
-				} else {
-					logger()->info("[Window] Fullscreen activated.");
-					SDL_GetWindowSize(window_, &width_, &height_);
-					SDL_SetWindowFullscreen(window_, SDL_WINDOW_FULLSCREEN_DESKTOP);
-				}
+		if (fullScreen == isFullScreen()) {
+			return;
+		}
+		if (!window_) {
+			fullScreen_ = fullScreen;
+			return;
+		}
+		if (isFullScreen()) {
+			logger()->info("[Window] Fullscreen inactivated.");
+			SDL_SetWindowFullscreen(window_, 0);
+			SDL_SetWindowSize(window_, width_, height_);
+			if (!bordered_) {
+				logger()->info("[Window] Border inactivated.");
+				SDL_SetWindowBordered(window_, SDL_bool::SDL_FALSE);
 			}
 		} else {
-			fullScreen_ = fullScreen;
-		}
-	}
-	
-	void Window::initOpenGl() {
-		SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
-		SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, majorVersionGl_);
-		SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, minorVersionGl_);
-		SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
-
-		if (SDL_GL_LoadLibrary(nullptr) != 0) {
-			logger()->error("[Window] SDL_GL_LoadLibrary failed {}", SDL_GetError());
-			logger()->error("[Window] Failed to load OpenGL version {}.{}", majorVersionGl_, minorVersionGl_);
-			throw std::exception{};
+			logger()->info("[Window] Fullscreen activated.");
+			SDL_GetWindowSize(window_, &width_, &height_);
+			SDL_SetWindowFullscreen(window_, SDL_WINDOW_FULLSCREEN_DESKTOP);
 		}
 	}
 

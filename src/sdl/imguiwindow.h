@@ -24,8 +24,6 @@ namespace sdl {
 		void setShowDemoWindow(bool show);
 
 	protected:
-		virtual void initOpenGl() override;
-
 		virtual void initPreLoop() override;
 
 		virtual void eventUpdate(const SDL_Event& windowEvent) override;
@@ -33,11 +31,11 @@ namespace sdl {
 		const Shader& getShader() const;
 
 	private:
-        virtual void update(const std::chrono::high_resolution_clock::duration& deltaTime) override final;
+		virtual void update(const std::chrono::high_resolution_clock::duration& deltaTime) override final;
 
-        virtual void imGuiPreUpdate(const std::chrono::high_resolution_clock::duration& deltaTime) {};
-        virtual void imGuiPostUpdate(const std::chrono::high_resolution_clock::duration& deltaTime) {};
-        virtual void imGuiUpdate(const std::chrono::high_resolution_clock::duration& deltaTime) {};
+		virtual void imGuiPreUpdate(const std::chrono::high_resolution_clock::duration& deltaTime) {};
+		virtual void imGuiPostUpdate(const std::chrono::high_resolution_clock::duration& deltaTime) {};
+		virtual void imGuiUpdate(const std::chrono::high_resolution_clock::duration& deltaTime) {};
 
 		struct GLState {
 			GLenum lastActiveTexture;
@@ -97,7 +95,7 @@ namespace sdl {
 
 		GLState glState_{};
 		std::array<bool, 3> mousePressed_{};
-		std::array<SDL_Cursor*, ImGuiMouseCursor_COUNT> mouseCursors_{}; // Initiate in constructor.
+		std::array<SDL_Cursor*, ImGuiMouseCursor_COUNT> mouseCursors_{};
 
 		sdl::VertexArrayObject vao_;
 		VertexBufferObject imGuiVbo_;

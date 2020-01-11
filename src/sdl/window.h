@@ -16,7 +16,7 @@ namespace sdl {
 	// the window and origo is on the left down side.
 	class Window {
 	public:
-		Window() = default;
+		Window();
 
 		Window(int majorVersionGl, int minorVersionGl);
 
@@ -87,14 +87,13 @@ namespace sdl {
 		std::chrono::nanoseconds getLoopSleepingTime() const noexcept;
 
 	protected:
-		virtual void initOpenGl();
+		virtual void initOpenGl() {
+		}
 
 		virtual void initPreLoop() {
 		}
 
 	private:
-		static constexpr int DEFAULT_MAJOR_VERSION_GL = 3;
-		static constexpr int DEFAULT_MINOR_VERSION_GL = 3;
 		static constexpr int DEFAULT_WIDTH = 800;
 		static constexpr int DEFAULT_HEIGHT = 800;
 
@@ -123,7 +122,8 @@ namespace sdl {
 		int y_ = SDL_WINDOWPOS_UNDEFINED;
 		
 		std::chrono::nanoseconds sleepingTime_{};
-		const int majorVersionGl_ = DEFAULT_MAJOR_VERSION_GL, minorVersionGl_ = DEFAULT_MINOR_VERSION_GL;
+		const int majorVersionGl_;
+		const int minorVersionGl_;
 		
 		GLbitfield glBitfield_ = GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT;
 		
