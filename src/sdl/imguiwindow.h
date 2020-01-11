@@ -40,31 +40,31 @@ namespace sdl {
         virtual void imGuiUpdate(const std::chrono::high_resolution_clock::duration& deltaTime) {};
 
 		struct GLState {
-			GLenum lastActiveTexture{};
+			GLenum lastActiveTexture;
 
-			GLint lastProgram{};
-			GLint lastTexture{};
+			GLint lastProgram;
+			GLint lastTexture;
 #ifdef GL_SAMPLER_BINDING
-			GLint lastSampler{};
+			GLint lastSampler;
 #endif
-			GLint lastArrayBuffer{};
-			GLint lastVertexArray{};
+			GLint lastArrayBuffer;
+			GLint lastVertexArray;
 #ifdef GL_POLYGON_MODE
-			GLint lastPolygonMode[2]{};
+			GLint lastPolygonMode[2];
 #endif
-			GLint lastViewport[4]{};
-			GLint lastScissorBox[4]{};
-			GLenum lastBlendSrcRgb{};
-			GLenum lastBlendDstRgb{};
-			GLenum lastBlendSrcAlpha{};
-			GLenum lastBlendDstAlpha{};
-			GLenum lastBlendEquationRgb{};
-			GLenum lastBlendEquationAlpha{};
-			GLboolean lastEnableBlend{GL_FALSE};
-			GLboolean lastEnableCullFace{GL_FALSE};
-			GLboolean lastEnableDepthTest{GL_FALSE};
-			GLboolean lastEnableScissorTest{GL_FALSE};
-			bool clipOriginLowerLeft{};
+			GLint lastViewport[4];
+			GLint lastScissorBox[4];
+			GLenum lastBlendSrcRgb;
+			GLenum lastBlendDstRgb;
+			GLenum lastBlendSrcAlpha;
+			GLenum lastBlendDstAlpha;
+			GLenum lastBlendEquationRgb;
+			GLenum lastBlendEquationAlpha;
+			GLboolean lastEnableBlend;
+			GLboolean lastEnableCullFace;
+			GLboolean lastEnableDepthTest;
+			GLboolean lastEnableScissorTest;
+			bool clipOriginLowerLeft;
 #if defined(GL_CLIP_ORIGIN) && !defined(__APPLE__)
 			GLenum lastClipOrigin{};
 #endif
@@ -95,7 +95,7 @@ namespace sdl {
 
 		void setupVao();
 
-		GLState glState_;
+		GLState glState_{};
 		std::array<bool, 3> mousePressed_{};
 		std::array<SDL_Cursor*, ImGuiMouseCursor_COUNT> mouseCursors_{}; // Initiate in constructor.
 
