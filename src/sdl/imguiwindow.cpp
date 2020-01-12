@@ -121,7 +121,7 @@ namespace sdl {
 		auto [w, h] = getSize();
 
 		auto& canvasData = imGuiCanvases_.emplace_back(CanvasData{canvas, {pos.x, h - pos.y - size.y}, size});
-		ImGui::Button("HOHO",{size.x, size.y});
+		ImGui::Dummy({size.x, size.y});
 
 		ImGui::GetWindowDrawList()->AddCallback([](const ImDrawList*, const ImDrawCmd* cmd) {
 			auto data = static_cast<CanvasData*>(cmd->UserCallbackData);
