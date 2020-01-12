@@ -10,6 +10,42 @@
 #include <imgui.h>
 #include <array>
 
+#include <glm/glm.hpp>
+
+namespace ImGui {
+
+	template <class T>
+	bool Window(const char* name, bool* p_open, ImGuiWindowFlags flags, T&& t) {
+		bool success = ImGui::Begin(name, p_open, flags);
+		if (success) {
+			t();
+		}
+		ImGui::End();
+		return success;
+	}
+
+	template <class T>
+	bool Window(const char* name, bool* p_open, T&& t) {
+		bool success = ImGui::Begin(name, p_open);
+		if (success) {
+			t();
+		}
+		ImGui::End();
+		return success;
+	}
+
+	template <class T>
+	bool Window(const char* name, T&& t) {
+		bool success = ImGui::Begin(name);
+		if (success) {
+			t();
+		}
+		ImGui::End();
+		return success;
+	}
+
+}
+
 namespace sdl {
 
 	class ImGuiWindow : public sdl::Window {
@@ -24,6 +60,11 @@ namespace sdl {
 		void setShowDemoWindow(bool show);
 
 	protected:
+		using Canvas = std::function<void()>;
+
+		void imGuiCanvas(const glm::vec2& size, Canvas&& canvas);
+		void imGuiCanvas(Canvas&& canvas);
+
 		virtual void initPreLoop() override;
 
 		virtual void eventUpdate(const SDL_Event& windowEvent) override;
@@ -31,12 +72,6 @@ namespace sdl {
 		const Shader& getShader() const;
 
 	private:
-		virtual void update(const std::chrono::high_resolution_clock::duration& deltaTime) override final;
-
-		virtual void imGuiPreUpdate(const std::chrono::high_resolution_clock::duration& deltaTime) {};
-		virtual void imGuiPostUpdate(const std::chrono::high_resolution_clock::duration& deltaTime) {};
-		virtual void imGuiUpdate(const std::chrono::high_resolution_clock::duration& deltaTime) {};
-
 		struct GLState {
 			GLenum lastActiveTexture;
 
@@ -64,9 +99,15 @@ namespace sdl {
 			GLboolean lastEnableScissorTest;
 			bool clipOriginLowerLeft;
 #if defined(GL_CLIP_ORIGIN) && !defined(__APPLE__)
-			GLenum lastClipOrigin{};
+			GLenum lastClipOrigin;
 #endif
 		};
+
+		virtual void update(const std::chrono::high_resolution_clock::duration& deltaTime) override final;
+
+		virtual void imGuiPreUpdate(const std::chrono::high_resolution_clock::duration& deltaTime) {};
+		virtual void imGuiUpdate(const std::chrono::high_resolution_clock::duration& deltaTime) {};
+		virtual void imGuiPostUpdate(const std::chrono::high_resolution_clock::duration& deltaTime) {};
 
 		// ImGui SDL2 specific code.
 		bool ImGui_ImplSDL2_ProcessEvent(const SDL_Event& sdlEvent);
@@ -79,6 +120,7 @@ namespace sdl {
 		void ImGui_ImplOpenGL3_Shutdown();
 		void ImGui_ImplOpenGL3_NewFrame();
 		void ImGui_ImplOpenGL3_RenderDrawData(ImDrawData* drawData);
+		void ImGui_ImplOpenGL3_SetupRenderState(ImDrawData* drawData, int fbWidth, int fbHeight);
 		void ImGui_ImplSDL2_UpdateMousePosAndButtons();
 		const char* ImGui_ImplSDL2_GetClipboardText();
 		void ImGui_ImplSDL2_UpdateMouseCursor();
@@ -92,6 +134,13 @@ namespace sdl {
 		void restoreGlState();
 
 		void setupVao();
+
+		struct CanvasData {
+			Canvas canvas;
+			glm::vec2 pos;
+			glm::vec2 size;
+		};
+		std::vector<CanvasData> imGuiCanvases_;
 
 		GLState glState_{};
 		std::array<bool, 3> mousePressed_{};

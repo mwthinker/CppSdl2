@@ -110,6 +110,28 @@ namespace sdl {
 		ImGui_ImplOpenGL3_Init();
 	}
 
+	void ImGuiWindow::imGuiCanvas(Canvas&& canvas) {
+		auto windowSize = ImGui::GetWindowSize();
+		imGuiCanvas({windowSize.x, windowSize.y}, std::forward<Canvas>(canvas));
+	}
+
+	void ImGuiWindow::imGuiCanvas(const glm::vec2& size, Canvas&& canvas) {
+		auto pos = ImGui::GetCursorScreenPos();
+		auto windowSize = ImGui::GetWindowSize();
+		auto [w, h] = getSize();
+
+		auto& canvasData = imGuiCanvases_.emplace_back(CanvasData{canvas, {pos.x, h - pos.y - size.y}, size});
+		ImGui::Button("HOHO",{size.x, size.y});
+
+		ImGui::GetWindowDrawList()->AddCallback([](const ImDrawList*, const ImDrawCmd* cmd) {
+			auto data = static_cast<CanvasData*>(cmd->UserCallbackData);
+			glViewport(static_cast<int>(data->pos.x), static_cast<int>(data->pos.y), static_cast<int>(data->size.x), static_cast<int>(data->size.y));
+			data->canvas();
+		}, &canvasData);
+
+		ImGui::GetWindowDrawList()->AddCallback(ImDrawCallback_ResetRenderState, nullptr);
+	}
+
 	void ImGuiWindow::update(const std::chrono::nanoseconds& deltaTime) {
 		ImGui_ImplOpenGL3_NewFrame();
 		
@@ -268,6 +290,7 @@ namespace sdl {
 
 		// Update game controllers (if enabled and available)
 		ImGui_ImplSDL2_UpdateGamepads();
+		imGuiCanvases_.clear();
 	}
 
 	void ImGuiWindow::ImGui_ImplSDL2_UpdateMousePosAndButtons() {
@@ -332,6 +355,37 @@ namespace sdl {
 		shader_.setVertexAttribPointer();
 	}
 
+	void ImGuiWindow::ImGui_ImplOpenGL3_SetupRenderState(ImDrawData* drawData, int fbWidth, int fbHeight) {
+		// Setup render state: alpha-blending enabled, no face culling, no depth testing, scissor enabled, polygon fill
+		glEnable(GL_BLEND);
+		glBlendEquation(GL_FUNC_ADD);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		glDisable(GL_CULL_FACE);
+		glDisable(GL_DEPTH_TEST);
+		glEnable(GL_SCISSOR_TEST);
+#ifdef GL_POLYGON_MODE
+		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+#endif
+		// Setup viewport, orthographic projection matrix
+		// Our visible imgui space lies from drawData->DisplayPos (top left) to drawData->DisplayPos+data_data->DisplaySize (bottom right). DisplayMin is typically (0,0) for single viewport apps.
+		glViewport(0, 0, static_cast<GLsizei>(fbWidth), static_cast<GLsizei>(fbHeight));
+
+		const auto projMatrix = glm::ortho(drawData->DisplayPos.x, drawData->DisplayPos.x + drawData->DisplaySize.x,
+			drawData->DisplayPos.y + drawData->DisplaySize.y, drawData->DisplayPos.y);
+
+		shader_.useProgram();
+		shader_.setMatrix(projMatrix);
+		shader_.setTextureId(0);
+
+#ifdef GL_SAMPLER_BINDING
+		glBindSampler(0, 0); // We use combined texture/sampler state. Applications using GL 3.3 may set that otherwise.
+#endif
+
+		vao_.bind();
+		imGuiVbo_.bind(GL_ARRAY_BUFFER);
+		imGuiElementsVbo_.bind(GL_ELEMENT_ARRAY_BUFFER);
+	}
+
 	// OpenGL3 Render function.
 	// (this used to be set in io.RenderDrawListsFn and called by ImGui::Render(), but you can now call this directly from your main loop)
 	// Note that this implementation is little overcomplicated because we are saving/setting up/restoring every OpenGL state explicitly, in order to be able to run within any OpenGL engine that doesn't do so.
@@ -344,36 +398,7 @@ namespace sdl {
 		}
 
 		backupGlState();
-
-		// Setup render state: alpha-blending enabled, no face culling, no depth testing, scissor enabled, polygon fill
-		glEnable(GL_BLEND);
-		glBlendEquation(GL_FUNC_ADD);
-		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-		glDisable(GL_CULL_FACE);
-		glDisable(GL_DEPTH_TEST);
-		glEnable(GL_SCISSOR_TEST);
-#ifdef GL_POLYGON_MODE
-		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-#endif
-
-		// Setup viewport, orthographic projection matrix
-		// Our visible imgui space lies from drawData->DisplayPos (top left) to drawData->DisplayPos+data_data->DisplaySize (bottom right). DisplayMin is typically (0,0) for single viewport apps.
-		glViewport(0, 0, static_cast<GLsizei>(fbWidth), static_cast<GLsizei>(fbHeight));
-
-		const auto projMatrix = glm::ortho(drawData->DisplayPos.x, drawData->DisplayPos.x + drawData->DisplaySize.x,
-			drawData->DisplayPos.y + drawData->DisplaySize.y, drawData->DisplayPos.y);
-
-        shader_.useProgram();
-        shader_.setMatrix(projMatrix);
-        shader_.setTextureId(0);
-
-#ifdef GL_SAMPLER_BINDING
-		glBindSampler(0, 0); // We use combined texture/sampler state. Applications using GL 3.3 may set that otherwise.
-#endif
-
-		vao_.bind();
-		imGuiVbo_.bind(GL_ARRAY_BUFFER);
-		imGuiElementsVbo_.bind(GL_ELEMENT_ARRAY_BUFFER);
+		ImGui_ImplOpenGL3_SetupRenderState(drawData, fbWidth, fbHeight);
 
 		// Will project scissor/clipping rectangles into framebuffer space
 		ImVec2 clipOff = drawData->DisplayPos;         // (0,0) unless using multi-viewports
@@ -389,16 +414,22 @@ namespace sdl {
 
 			for (int cmd_i = 0; cmd_i < cmd_list->CmdBuffer.Size; cmd_i++) {
 				const ImDrawCmd* pcmd = &cmd_list->CmdBuffer[cmd_i];
-				if (pcmd->UserCallback) {
-					// User callback (registered via ImDrawList::AddCallback)
-					pcmd->UserCallback(cmd_list, pcmd);
+				if (pcmd->UserCallback != nullptr) {
+					// User callback, registered via ImDrawList::AddCallback()
+					// (ImDrawCallback_ResetRenderState is a special callback value used by the user to request the renderer to reset render state.)
+					if (pcmd->UserCallback == ImDrawCallback_ResetRenderState) {
+						ImGui_ImplOpenGL3_SetupRenderState(drawData, fbWidth, fbHeight);
+					} else {
+						pcmd->UserCallback(cmd_list, pcmd);
+					}
 				} else {
 					// Project scissor/clipping rectangles into framebuffer space
-					ImVec4 clipRect;
-					clipRect.x = (pcmd->ClipRect.x - clipOff.x) * clipScale.x;
-					clipRect.y = (pcmd->ClipRect.y - clipOff.y) * clipScale.y;
-					clipRect.z = (pcmd->ClipRect.z - clipOff.x) * clipScale.x;
-					clipRect.w = (pcmd->ClipRect.w - clipOff.y) * clipScale.y;
+					ImVec4 clipRect{
+						(pcmd->ClipRect.x - clipOff.x) * clipScale.x,
+						(pcmd->ClipRect.y - clipOff.y) * clipScale.y,
+						(pcmd->ClipRect.z - clipOff.x) * clipScale.x,
+						(pcmd->ClipRect.w - clipOff.y) * clipScale.y
+					};
 
 					if (clipRect.x < fbWidth && clipRect.y < fbHeight && clipRect.z >= 0.0f && clipRect.w >= 0.0f) {
 						// Apply scissor/clipping rectangle

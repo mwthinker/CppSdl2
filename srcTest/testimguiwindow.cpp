@@ -15,6 +15,8 @@ namespace {
 		batch.draw(batchView);
 	}
 
+	const ImGuiWindowFlags IMGUI_NOWINDOW = ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoMove;
+
 }
 
 TestImGuiWindow::TestImGuiWindow() {
@@ -42,13 +44,27 @@ void TestImGuiWindow::eventUpdate(const SDL_Event& windowEvent) {
 	}
 }
 
-void TestImGuiWindow::imGuiPreUpdate(const std::chrono::nanoseconds& deltaTime) {
-    glEnable(GL_BLEND);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    batch_->draw();
-	batchIndexes_->draw();
+void TestImGuiWindow::imGuiUpdate(const std::chrono::high_resolution_clock::duration& deltaTime) {
+	ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, {0, 0});
+	ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.f);
+	ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.f);
+	ImGui::SetNextWindowPos({0.f,0.f});
+	ImGui::SetNextWindowSize({510, 510});
+	ImGui::Window("Main", nullptr, IMGUI_NOWINDOW, [&]() {
+		ImGui::Button("Hej", {100, 100});
+		
+		ImGui::Button("Hej2", {50, 50});
+		ImGui::SameLine();
+		imGuiCanvas({400, 400}, [&]() {
+			glEnable(GL_BLEND);
+			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+			batch_->draw();
+			batchIndexes_->draw();
 
-    glDisable(GL_BLEND);
+			glDisable(GL_BLEND);
+		});
+	});
+	ImGui::PopStyleVar(3);
 }
 
 void TestImGuiWindow::initOpenGl() {
