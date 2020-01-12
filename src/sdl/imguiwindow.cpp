@@ -363,6 +363,7 @@ namespace sdl {
 		glDisable(GL_CULL_FACE);
 		glDisable(GL_DEPTH_TEST);
 		glEnable(GL_SCISSOR_TEST);
+		glActiveTexture(GL_TEXTURE0);
 #ifdef GL_POLYGON_MODE
 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 #endif
