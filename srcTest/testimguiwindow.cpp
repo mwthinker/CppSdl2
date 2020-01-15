@@ -60,12 +60,10 @@ void TestImGuiWindow::imGuiUpdate(const std::chrono::high_resolution_clock::dura
 			ImGui::Button("BB", {50, 50});
 			ImGui::SameLine();
 			imGuiCanvas({400, 400}, [&](Vec2 size) {
-
 				glEnable(GL_BLEND);
 				glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 				batch_->draw();
 				batchIndexes_->draw();
-				ImGui::GetItemRectSize();
 				glDisable(GL_BLEND);
 			});
 		});
@@ -81,7 +79,6 @@ void TestImGuiWindow::initPreLoop() {
 	
 	initBatchTriangles();
 	initBatchTrianglesIndexes();
-    
 	sdl::assertGlError();
 }
 

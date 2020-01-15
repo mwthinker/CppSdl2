@@ -90,6 +90,8 @@ namespace sdl {
 
 	class ImGuiWindow : public sdl::Window {
 	public:
+		using Canvas = std::function<void(const glm::vec2& size)>;
+		
 		ImGuiWindow() = default;
 
 		ImGuiWindow(int majorVersionGl, int minorVersionGl);
@@ -99,12 +101,11 @@ namespace sdl {
 		bool isShowDemoWindow() const;
 		void setShowDemoWindow(bool show);
 
-	protected:
-		using Canvas = std::function<void(const glm::vec2& size)>;
-
 		void imGuiCanvas(const glm::vec2& size, Canvas&& canvas);
+		
 		void imGuiCanvas(Canvas&& canvas);
 
+	protected:
 		virtual void initPreLoop() override;
 
 		virtual void eventUpdate(const SDL_Event& windowEvent) override;
