@@ -126,7 +126,7 @@ namespace sdl {
 		ImGui::GetWindowDrawList()->AddCallback([](const ImDrawList*, const ImDrawCmd* cmd) {
 			auto data = static_cast<CanvasData*>(cmd->UserCallbackData);
 			glViewport(static_cast<int>(data->pos.x), static_cast<int>(data->pos.y), static_cast<int>(data->size.x), static_cast<int>(data->size.y));
-			data->canvas();
+			data->canvas(data->size);
 		}, &canvasData);
 
 		ImGui::GetWindowDrawList()->AddCallback(ImDrawCallback_ResetRenderState, nullptr);
@@ -172,7 +172,7 @@ namespace sdl {
 	// Generally you may always pass all inputs to dear imgui, and hide them from your application based on those two flags.
 	// If you have multiple SDL events and some of them are not meant to be used by dear imgui, you may need to filter events based on their windowID field.
 	bool ImGuiWindow::ImGui_ImplSDL2_ProcessEvent(const SDL_Event& sdlEvent) {
-		ImGuiIO& io = ImGui::GetIO();
+		auto& io = ImGui::GetIO();
 		switch (sdlEvent.type) {
 			case SDL_MOUSEWHEEL: {
 				if (sdlEvent.wheel.x > 0) io.MouseWheelH += 1;
@@ -410,8 +410,8 @@ namespace sdl {
 			const ImDrawList* cmd_list = drawData->CmdLists[n];
 			size_t idxBufferOffset = 0;
 
-            imGuiVbo_.bufferData((GLsizeiptr)cmd_list->VtxBuffer.Size * sizeof(ImDrawVert), (const GLvoid*)cmd_list->VtxBuffer.Data, GL_STREAM_DRAW);
-            imGuiElementsVbo_.bufferData((GLsizeiptr)cmd_list->IdxBuffer.Size * sizeof(ImDrawIdx), (const GLvoid*)cmd_list->IdxBuffer.Data, GL_STREAM_DRAW);
+			imGuiVbo_.bufferData((GLsizeiptr) cmd_list->VtxBuffer.Size * sizeof(ImDrawVert), (const GLvoid*) cmd_list->VtxBuffer.Data, GL_STREAM_DRAW);
+			imGuiElementsVbo_.bufferData((GLsizeiptr) cmd_list->IdxBuffer.Size * sizeof(ImDrawIdx), (const GLvoid*) cmd_list->IdxBuffer.Data, GL_STREAM_DRAW);
 
 			for (int cmd_i = 0; cmd_i < cmd_list->CmdBuffer.Size; cmd_i++) {
 				const ImDrawCmd* pcmd = &cmd_list->CmdBuffer[cmd_i];

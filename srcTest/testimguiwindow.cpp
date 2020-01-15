@@ -55,20 +55,22 @@ void TestImGuiWindow::imGuiUpdate(const std::chrono::high_resolution_clock::dura
 		
 		ImGui::Button("Hej2", {50, 50});
 		ImGui::SameLine();
-		imGuiCanvas({400, 400}, [&]() {
-			glEnable(GL_BLEND);
-			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-			batch_->draw();
-			batchIndexes_->draw();
 
-			glDisable(GL_BLEND);
+		ImGui::ChildWindow("Child", {300, 300}, [&]() {
+			ImGui::Button("BB", {50, 50});
+			ImGui::SameLine();
+			imGuiCanvas({400, 400}, [&](Vec2 size) {
+
+				glEnable(GL_BLEND);
+				glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+				batch_->draw();
+				batchIndexes_->draw();
+				ImGui::GetItemRectSize();
+				glDisable(GL_BLEND);
+			});
 		});
 	});
 	ImGui::PopStyleVar(3);
-}
-
-void TestImGuiWindow::initOpenGl() {
-	ImGuiWindow::initOpenGl();
 }
 
 void TestImGuiWindow::initPreLoop() {

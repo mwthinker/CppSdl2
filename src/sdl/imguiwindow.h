@@ -44,6 +44,46 @@ namespace ImGui {
 		return success;
 	}
 
+	template <class T>
+	bool ChildWindow(const char* name, const ImVec2& size, bool border, ImGuiWindowFlags flags, T&& t) {
+		bool success = ImGui::BeginChild(name, size, border, flags);
+		if (success) {
+			t();
+		}
+		ImGui::EndChild();
+		return success;
+	}
+
+	template <class T>
+	bool ChildWindow(const char* name, const ImVec2& size, bool border, T&& t) {
+		bool success = ImGui::BeginChild(name, size, border);
+		if (success) {
+			t();
+		}
+		ImGui::EndChild();
+		return success;
+	}
+
+	template <class T>
+	bool ChildWindow(const char* name, const ImVec2& size, T&& t) {
+		bool success = ImGui::BeginChild(name, size);
+		if (success) {
+			t();
+		}
+		ImGui::EndChild();
+		return success;
+	}
+
+	template <class T>
+	bool ChildWindow(const char* name, T&& t) {
+		bool success = ImGui::BeginChild(name);
+		if (success) {
+			t();
+		}
+		ImGui::EndChild();
+		return success;
+	}
+
 }
 
 namespace sdl {
@@ -60,7 +100,7 @@ namespace sdl {
 		void setShowDemoWindow(bool show);
 
 	protected:
-		using Canvas = std::function<void()>;
+		using Canvas = std::function<void(const glm::vec2& size)>;
 
 		void imGuiCanvas(const glm::vec2& size, Canvas&& canvas);
 		void imGuiCanvas(Canvas&& canvas);
