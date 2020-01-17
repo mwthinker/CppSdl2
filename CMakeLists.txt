@@ -94,55 +94,14 @@ target_link_libraries(CppSdl2
 		imgui::imgui
 )
 
-message(STATUS "CppSdl2Test is available to add: -DCppSdl2Test=1")
-option(CppSdl2Test "Add CppSdl2Test project." OFF)
+message(STATUS "CppSdl2_Example is available to add: -DCppSdl2_Example=1")
+option(CppSdl2_Example "Add CppSdl2Test project." OFF)
+if (CppSdl2_Example)
+	add_subdirectory(CppSdl2_Example)
+endif (CppSdl2_Example)
 
-if (CppSdl2Test)
-	add_executable(CppSdl2Test
-		srcTest/batchtriangles.cpp
-		srcTest/batchtriangles.h
-		srcTest/batchtrianglesindexes.cpp
-		srcTest/batchtrianglesindexes.h
-		srcTest/logger.h
-		srcTest/testimguiwindow.cpp
-		srcTest/testimguiwindow.h
-		srcTest/types.h
-		srcTest/main.cpp
-		srcTest/testshader.h
-		srcTest/testshader.cpp
-		srcTest/testwindow2.h
-		srcTest/testwindow.cpp
-		srcTest/testwindow.h
-	)
-	
-	target_link_libraries(CppSdl2Test
-		PRIVATE
-			CppSdl2
-	)
-	
-	file(COPY dataTest/. DESTINATION ${CMAKE_CURRENT_BINARY_DIR}) # Copy data to build folder.
-endif (CppSdl2Test)
-
-find_package(Catch2 CONFIG)
-if (Catch2_FOUND)
-	message(STATUS "CppSdl2CatchTest is available to add: -DCppSdl2CatchTest=1")
-	option(CppSdl2CatchTest "Add CppSdl2CatchTest project." OFF)
-
-	if (CppSdl2CatchTest)
-		add_executable(CppSdl2CatchTest
-			srcCatchTest/main.cpp
-			srcCatchTest/speedtest.cpp
-			srcCatchTest/tests.cpp
-		)
-		
-		add_compile_definitions(CATCH_CONFIG_ENABLE_BENCHMARKING)
-
-		target_link_libraries(CppSdl2CatchTest
-			PRIVATE
-				CppSdl2
-				Catch2::Catch2
-		)
-	endif (CppSdl2CatchTest)
-else (Catch2_FOUND)
-	message(STATUS "Catch2 not found, CppSdl2CatchTest not created")
-endif (Catch2_FOUND)
+message(STATUS "CppSdl2_Test is available to add: -DCppSdl2_Test=1")
+option(CppSdl2_Test "Add CppSdl2_Test to project." OFF)
+if (CppSdl2_Test)
+	add_subdirectory(CppSdl2_Test)
+endif (CppSdl2_Test)
