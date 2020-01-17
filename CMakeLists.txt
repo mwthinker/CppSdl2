@@ -10,7 +10,7 @@ endif()
 
 project(CppSdl2
 	DESCRIPTION
-		"A C++ wrapper of SDL2 and OpenGl"
+		"A C++-Wrapper of SDL2 and OpenGL"
 	LANGUAGES
 		CXX
 )
@@ -21,7 +21,16 @@ if (MSVC)
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /wd4275") # non - DLL-interface class 'class_1' used as base for DLL-interface class 'class_2'
 endif ()
 
-set(SOURCES
+find_package(glad CONFIG REQUIRED)
+find_package(SDL2 CONFIG REQUIRED)
+find_package(SDL2-image CONFIG REQUIRED)
+find_package(SDL2-mixer CONFIG REQUIRED)
+find_package(SDL2-ttf CONFIG REQUIRED)
+find_package(glm CONFIG REQUIRED)
+find_package(spdlog CONFIG REQUIRED)
+find_package(imgui CONFIG REQUIRED)
+
+add_library(CppSdl2 
 	src/sdl/batch.h
 	src/sdl/color.h
 	src/sdl/font.cpp
@@ -68,16 +77,6 @@ set(SOURCES
 	src/sdl/window.h
 )
 
-find_package(glad CONFIG REQUIRED)
-find_package(SDL2 CONFIG REQUIRED)
-find_package(SDL2-image CONFIG REQUIRED)
-find_package(SDL2-mixer CONFIG REQUIRED)
-find_package(SDL2-ttf CONFIG REQUIRED)
-find_package(glm CONFIG REQUIRED)
-find_package(spdlog CONFIG REQUIRED)
-find_package(imgui CONFIG REQUIRED)
-
-add_library(CppSdl2 ${SOURCES})
 target_include_directories(CppSdl2
 	PUBLIC
 		"$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src>"
@@ -99,17 +98,14 @@ message(STATUS "CppSdl2Test is available to add: -DCppSdl2Test=1")
 option(CppSdl2Test "Add CppSdl2Test project." OFF)
 
 if (CppSdl2Test)
-	set(IMGUI_SOURCE_TEST
-		srcTest/testimguiwindow.cpp
-		srcTest/testimguiwindow.h
-	)
-
-	set(SOURCES_TEST
+	add_executable(CppSdl2Test
 		srcTest/batchtriangles.cpp
 		srcTest/batchtriangles.h
 		srcTest/batchtrianglesindexes.cpp
 		srcTest/batchtrianglesindexes.h
 		srcTest/logger.h
+		srcTest/testimguiwindow.cpp
+		srcTest/testimguiwindow.h
 		srcTest/types.h
 		srcTest/main.cpp
 		srcTest/testshader.h
@@ -118,13 +114,6 @@ if (CppSdl2Test)
 		srcTest/testwindow.cpp
 		srcTest/testwindow.h
 	)
-
-	if (CppSdl2ImGui)
-		set(SOURCES_TEST "${SOURCES_TEST};${IMGUI_SOURCE_TEST}")
-		add_compile_definitions(IMGUI_LIB)
-	endif ()
-	
-	add_executable(CppSdl2Test ${SOURCES_TEST})
 	
 	target_link_libraries(CppSdl2Test
 		PRIVATE
@@ -132,7 +121,7 @@ if (CppSdl2Test)
 	)
 	
 	file(COPY dataTest/. DESTINATION ${CMAKE_CURRENT_BINARY_DIR}) # Copy data to build folder.
-endif ()
+endif (CppSdl2Test)
 
 find_package(Catch2 CONFIG)
 if (Catch2_FOUND)
@@ -140,13 +129,12 @@ if (Catch2_FOUND)
 	option(CppSdl2CatchTest "Add CppSdl2CatchTest project." OFF)
 
 	if (CppSdl2CatchTest)
-		set(SOURCES_TEST
+		add_executable(CppSdl2CatchTest
 			srcCatchTest/main.cpp
 			srcCatchTest/speedtest.cpp
 			srcCatchTest/tests.cpp
 		)
-	
-		add_executable(CppSdl2CatchTest ${SOURCES_TEST})
+		
 		add_compile_definitions(CATCH_CONFIG_ENABLE_BENCHMARKING)
 
 		target_link_libraries(CppSdl2CatchTest

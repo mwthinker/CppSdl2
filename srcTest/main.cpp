@@ -1,9 +1,7 @@
 #include "testwindow.h"
 #include "testwindow2.h"
 
-#if IMGUI_LIB
 #include "testimguiwindow.h"
-#endif // IMGUI_LIB
 #include "types.h"
 #include "logger.h"
 
