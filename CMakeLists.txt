@@ -31,7 +31,6 @@ find_package(spdlog CONFIG REQUIRED)
 find_package(imgui CONFIG REQUIRED)
 
 set(IMGUI_USER_CONFIG ${CMAKE_CURRENT_SOURCE_DIR}/src/sdl/imconfig.h)
-set(IMGUI_INCLUDE_IMGUI_USER_H ${CMAKE_CURRENT_SOURCE_DIR}/src/sdl/imgui_user.h)
 
 add_library(CppSdl2 
 	src/sdl/batch.h
@@ -42,8 +41,8 @@ add_library(CppSdl2
 	src/sdl/gamecontroller.h
 	src/sdl/graphic.cpp
 	src/sdl/graphic.h
+	src/sdl/imguiauxiliary.h
 	${IMGUI_USER_CONFIG}
-	${IMGUI_INCLUDE_IMGUI_USER_H}
 	src/sdl/imguiwindow.h
 	src/sdl/imguiwindow.cpp
 	src/sdl/initsdl.cpp
@@ -82,8 +81,10 @@ add_library(CppSdl2
 	src/sdl/window.h
 )
 
-add_compile_definitions(IMGUI_USER_CONFIG=\"${IMGUI_USER_CONFIG}\")
-add_compile_definitions(IMGUI_INCLUDE_IMGUI_USER_H=\"${IMGUI_INCLUDE_IMGUI_USER_H}\")
+target_compile_definitions(CppSdl2
+	PUBLIC
+		IMGUI_USER_CONFIG=\"${IMGUI_USER_CONFIG}\"
+)
 
 target_include_directories(CppSdl2
 	PUBLIC

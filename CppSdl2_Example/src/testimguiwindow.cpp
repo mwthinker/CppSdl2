@@ -1,6 +1,8 @@
 #include "testimguiwindow.h"
 #include "logger.h"
 
+#include <sdl/imguiauxiliary.h>
+
 namespace {
 
 	void test() {
