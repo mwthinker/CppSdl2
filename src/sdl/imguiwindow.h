@@ -27,9 +27,7 @@ namespace sdl {
 		bool isShowDemoWindow() const;
 		void setShowDemoWindow(bool show);
 
-		void imGuiCanvas(const glm::vec2& size, Canvas&& canvas);
-		
-		void imGuiCanvas(Canvas&& canvas);
+		bool imGuiCanvas(const glm::vec2& size, Canvas&& canvas);
 
 	protected:
 		virtual void initPreLoop() override;
@@ -39,6 +37,12 @@ namespace sdl {
 		const Shader& getShader() const;
 
 	private:
+		struct Scissor {
+			glm::ivec2 pos;
+			glm::ivec2 size;
+		};
+		static void scissor(const Scissor& scissor);
+
 		struct GLState {
 			GLenum lastActiveTexture;
 
@@ -106,6 +110,7 @@ namespace sdl {
 			Canvas canvas;
 			glm::vec2 pos;
 			glm::vec2 size;
+			Scissor scissor;
 		};
 		std::vector<CanvasData> imGuiCanvases_;
 

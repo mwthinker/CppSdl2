@@ -40,24 +40,24 @@ namespace sdl {
 			return {"", ""};
 		}
 
-		void ImGui_ImplSDL2_UpdateGamepads()
-		{
-			ImGuiIO& io = ImGui::GetIO();
+		void ImGui_ImplSDL2_UpdateGamepads() {
+			auto& io = ImGui::GetIO();
+
 			memset(io.NavInputs, 0, sizeof(io.NavInputs));
-			if ((io.ConfigFlags & ImGuiConfigFlags_NavEnableGamepad) == 0)
+			if ((io.ConfigFlags & ImGuiConfigFlags_NavEnableGamepad) == 0) {
 				return;
+			}
 
 			// Get gamepad
-			SDL_GameController* game_controller = SDL_GameControllerOpen(0);
-			if (!game_controller)
-			{
+			auto gameController = SDL_GameControllerOpen(0);
+			if (gameController != nullptr){
 				io.BackendFlags &= ~ImGuiBackendFlags_HasGamepad;
 				return;
 			}
 
 			// Update gamepad inputs
-#define MAP_BUTTON(NAV_NO, BUTTON_NO)       { io.NavInputs[NAV_NO] = (SDL_GameControllerGetButton(game_controller, BUTTON_NO) != 0) ? 1.0f : 0.0f; }
-#define MAP_ANALOG(NAV_NO, AXIS_NO, V0, V1) { float vn = (float)(SDL_GameControllerGetAxis(game_controller, AXIS_NO) - V0) / (float)(V1 - V0); if (vn > 1.0f) vn = 1.0f; if (vn > 0.0f && io.NavInputs[NAV_NO] < vn) io.NavInputs[NAV_NO] = vn; }
+#define MAP_BUTTON(NAV_NO, BUTTON_NO)       { io.NavInputs[NAV_NO] = (SDL_GameControllerGetButton(gameController, BUTTON_NO) != 0) ? 1.0f : 0.0f; }
+#define MAP_ANALOG(NAV_NO, AXIS_NO, V0, V1) { float vn = (float)(SDL_GameControllerGetAxis(gameController, AXIS_NO) - V0) / (float)(V1 - V0); if (vn > 1.0f) vn = 1.0f; if (vn > 0.0f && io.NavInputs[NAV_NO] < vn) io.NavInputs[NAV_NO] = vn; }
 			const int thumb_dead_zone = 8000;           // SDL_gamecontroller.h suggests using this value.
 			MAP_BUTTON(ImGuiNavInput_Activate, SDL_CONTROLLER_BUTTON_A);               // Cross / A
 			MAP_BUTTON(ImGuiNavInput_Cancel, SDL_CONTROLLER_BUTTON_B);               // Circle / B
@@ -79,6 +79,14 @@ namespace sdl {
 			io.BackendFlags |= ImGuiBackendFlags_HasGamepad;
 #undef MAP_BUTTON
 #undef MAP_ANALOG
+		}
+
+		ImVec2 floor(const ImVec2& v) {
+			return {(float) (int) v.x, (float) (int) v.y};
+		}
+		
+		ImVec2 max(const ImVec2& lhs, const ImVec2& rhs) {
+			return {std::max(rhs.x, lhs.x), std::max(lhs.y, rhs.y)};
 		}
 		
 	}
@@ -109,27 +117,29 @@ namespace sdl {
 		ImGui_ImplSDL2_Init();
 		ImGui_ImplOpenGL3_Init();
 	}
-
-	void ImGuiWindow::imGuiCanvas(Canvas&& canvas) {
-		auto windowSize = ImGui::GetWindowSize();
-		imGuiCanvas({windowSize.x, windowSize.y}, std::forward<Canvas>(canvas));
-	}
-
-	void ImGuiWindow::imGuiCanvas(const glm::vec2& size, Canvas&& canvas) {
-		auto pos = ImGui::GetCursorScreenPos();
-		auto windowSize = ImGui::GetWindowSize();
+	
+	bool ImGuiWindow::imGuiCanvas(const glm::vec2& size, Canvas&& canvas) {
+		bool result = ImGui::InvisibleButton("", size);
 		auto [w, h] = getSize();
 
-		auto& canvasData = imGuiCanvases_.emplace_back(CanvasData{canvas, {pos.x, h - pos.y - size.y}, size});
-		ImGui::Dummy({size.x, size.y});
+		auto& canvasData = imGuiCanvases_.emplace_back(CanvasData{
+			canvas,
+			{ImGui::GetItemRectMin().x, h - ImGui::GetItemRectMax().y},
+			ImGui::GetItemRectSize(),
+			Scissor{{ImGui::GetWindowPos().x, ImGui::GetWindowPos().y},
+			{ImGui::GetWindowContentRegionWidth(), ImGui::GetWindowHeight()}}
+		});
 
 		ImGui::GetWindowDrawList()->AddCallback([](const ImDrawList*, const ImDrawCmd* cmd) {
+			glEnable(GL_SCISSOR_TEST);
 			auto data = static_cast<CanvasData*>(cmd->UserCallbackData);
 			glViewport(static_cast<int>(data->pos.x), static_cast<int>(data->pos.y), static_cast<int>(data->size.x), static_cast<int>(data->size.y));
+			scissor(data->scissor);
 			data->canvas(data->size);
 		}, &canvasData);
 
 		ImGui::GetWindowDrawList()->AddCallback(ImDrawCallback_ResetRenderState, nullptr);
+		return result;
 	}
 
 	void ImGuiWindow::update(const std::chrono::nanoseconds& deltaTime) {
@@ -280,9 +290,9 @@ namespace sdl {
 		// Setup display size (every frame to accommodate for window resizing)
 		auto [w, h] = getSize();
 		auto [displayW, displayH] = getDrawableSize();		
-		io.DisplaySize = { static_cast<float>(w), static_cast<float>(h) };
+		io.DisplaySize = {static_cast<float>(w), static_cast<float>(h)};
 		if (w > 0 && h > 0) {
-			io.DisplayFramebufferScale = {static_cast<float>(displayW) / w, static_cast<float>(displayH) / h };
+			io.DisplayFramebufferScale = {static_cast<float>(displayW) / w, static_cast<float>(displayH) / h};
 		}
 		io.DeltaTime = std::chrono::duration<float>(deltaTime).count();
 		ImGui_ImplSDL2_UpdateMousePosAndButtons();
@@ -300,7 +310,7 @@ namespace sdl {
 		if (io.WantSetMousePos) {
 			SDL_WarpMouseInWindow(getSdlWindow(), static_cast<int>(io.MousePos.x), static_cast<int>(io.MousePos.y));
 		} else {
-			io.MousePos = ImVec2(-FLT_MAX, -FLT_MAX);
+			io.MousePos = ImVec2{-FLT_MAX, -FLT_MAX};
 		}
 
 		int mx, my;
@@ -385,6 +395,10 @@ namespace sdl {
 		vao_.bind();
 		imGuiVbo_.bind(GL_ARRAY_BUFFER);
 		imGuiElementsVbo_.bind(GL_ELEMENT_ARRAY_BUFFER);
+	}
+
+	void ImGuiWindow::scissor(const ImGuiWindow::Scissor& scissor) {
+		glScissor(scissor.pos.x, scissor.pos.y, scissor.size.x, scissor.size.y);
 	}
 
 	// OpenGL3 Render function.

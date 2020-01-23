@@ -49,17 +49,17 @@ void TestImGuiWindow::eventUpdate(const SDL_Event& windowEvent) {
 void TestImGuiWindow::imGuiUpdate(const std::chrono::high_resolution_clock::duration& deltaTime) {
 	ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, {0, 0});
 	ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.f);
-	ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.f);
+	ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 1.f);
 	ImGui::SetNextWindowPos({0.f,0.f});
-	ImGui::SetNextWindowSize({510, 510});
+	ImGui::SetNextWindowSize({(float) getWidth(), (float) getHeight()});
 	ImGui::Window("Main", nullptr, IMGUI_NOWINDOW, [&]() {
-		ImGui::Button("Hej", {100, 100});
+		ImGui::Button("Hello", {100, 100});
 		
-		ImGui::Button("Hej2", {50, 50});
+		ImGui::Button("Hello2", {50, 50});
 		ImGui::SameLine();
 
 		ImGui::ChildWindow("Child", {300, 300}, [&]() {
-			ImGui::Button("BB", {50, 50});
+			ImGui::Button("Test", {50, 50});
 			ImGui::SameLine();
 			imGuiCanvas({400, 400}, [&](Vec2 size) {
 				glEnable(GL_BLEND);
