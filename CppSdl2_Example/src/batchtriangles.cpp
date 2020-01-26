@@ -25,7 +25,8 @@ namespace {
 }
 
 BatchTriangles::BatchTriangles(const std::shared_ptr<TestShader>& shader, GLenum usage)
-	: shader_{shader}, batch_{usage} {
+	: shader_{shader}
+    , batch_{usage} {
 
 	assert(shader);
 }

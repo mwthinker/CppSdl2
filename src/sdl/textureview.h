@@ -3,6 +3,8 @@
 
 #include "texture.h"
 
+#include <glm/vec2.hpp>
+
 namespace sdl {
 
 	class TextureView {
@@ -15,24 +17,36 @@ namespace sdl {
 
 		TextureView(const TextureView& view, float x, float y, float dx, float dy) noexcept;
 
+		TextureView(const Texture& texture, const glm::vec2& pos, const glm::vec2& size) noexcept;
+
+		TextureView(const TextureView& view, const glm::vec2& pos, const glm::vec2& size) noexcept;
+
 		TextureView(const TextureView& texture) noexcept = default;
 		
 		TextureView& operator=(const TextureView& texture) noexcept = default;
 
 		float getX() const noexcept {
-			return x_;
+			return pos_.x;
 		}
 
 		float getY() const noexcept {
-			return y_;
+			return pos_.y;
+		}
+
+		glm::vec2 getPosition() const noexcept {
+			return pos_;
 		}
 
 		float getWidth() const noexcept {
-			return dx_;
+			return size_.x;
 		}
 
 		float getHeight() const noexcept {
-			return dy_;
+			return size_.y;
+		}
+
+		glm::vec2 getSize() const noexcept {
+			return size_;
 		}
 
 		void bind() const;
@@ -42,10 +56,8 @@ namespace sdl {
 		}
 
 	private:
-		float x_{0};
-		float y_{0};
-		float dx_{1};
-		float dy_{1};
+		glm::vec2 pos_{0.f, 0.f};
+		glm::vec2 size_{1.f, 1.f};
 		GLuint texture_{};
 	};
 

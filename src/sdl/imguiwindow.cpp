@@ -30,6 +30,7 @@ namespace sdl {
 				case 3:
 					return getGlslVersion3(minorVersion);
 			}
+			assert(false);
 			return -1;
 		}
 
@@ -37,6 +38,7 @@ namespace sdl {
 			if (glslVersion == 330) {
 				return {getImGuiVertexShaderGlsl_330(), getImGuiFragmentShaderGlsl_330()};
 			}
+			assert(false);
 			return {"", ""};
 		}
 

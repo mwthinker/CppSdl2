@@ -8,9 +8,17 @@
 
 #include <glm/gtc/constants.hpp>
 
+#include <array>
+
 namespace sdl::graphic {
 
 	constexpr auto PI = glm::pi<float>();
+
+	glm::vec2 getHexagonCorner(int nbr, float startAngle = 0.f);
+
+	glm::vec2 getHexagonCorner(glm::vec2 center, GLfloat size, int nbr, float startAngle = 0.f);
+
+	[[nodiscard]] std::array<glm::vec2, 6> getHexagonCorners(glm::vec2 center, GLfloat radius, float startAngle = 0.f);
 
 } // Namespace sdl.
 

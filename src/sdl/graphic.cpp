@@ -5,28 +5,24 @@
 #include <array>
 
 namespace sdl::graphic {
-
-	namespace {
-
-		glm::vec2 getHexCorner(int nbr, float startAngle) {
-			return glm::rotate(glm::vec2{1, 0.f}, PI / 3 * nbr + startAngle);
-		}
-
-		glm::vec2 getHexCorner(glm::vec2 center, GLfloat size, int nbr, float startAngle) {
-			return center + size * getHexCorner(nbr, startAngle);
-		}
-
-		std::array<glm::vec2, 6> getHexCorners(glm::vec2 center, GLfloat radius, float startAngle) {
-			std::array<glm::vec2, 6> corners;
-			for (int i = 0; i < 6; ++i) {
-				corners[i] = getHexCorner(center, radius, i, startAngle);
-			}
-			return corners;
-		}
-
+	
+	glm::vec2 getHexagonCorner(int nbr, float startAngle) {
+		return glm::rotate(glm::vec2{1, 0.f}, PI / 3 * nbr + startAngle);
 	}
 
-} // Namespace sdl.
+	glm::vec2 getHexagonCorner(glm::vec2 center, GLfloat size, int nbr, float startAngle) {
+		return center + size * getHexagonCorner(nbr, startAngle);
+	}
+
+	std::array<glm::vec2, 6> getHexagonCorners(glm::vec2 center, GLfloat radius, float startAngle) {
+		std::array<glm::vec2, 6> corners;
+		for (int i = 0; i < 6; ++i) {
+			corners[i] = getHexagonCorner(center, radius, i, startAngle);
+		}
+		return corners;
+	}
+
+} // Namespace sdl::graphic.
 
 namespace sdl::graphic::indexed {
 
@@ -53,14 +49,14 @@ namespace sdl::graphic::indexed {
 		batch.startAdding();
 
 		if (sprite) {
-			glm::vec2 texSize = glm::vec2{sprite.getWidth(), sprite.getHeight()} * 0.5f;
-			glm::vec2 texPos = glm::vec2{sprite.getX(), sprite.getY()} + texSize;
+			glm::vec2 texHalfSize = sprite.getSize() * 0.5f;
+			glm::vec2 texMiddlePos = sprite.getPosition() + texHalfSize;
 
-			Vertex centerVertex{center, texPos, WHITE};
+			Vertex centerVertex{center, texMiddlePos, WHITE};
 			batch.pushBack(centerVertex);
 
 			for (int i = 0; i < 6; ++i) {
-				auto v = Vertex{getHexCorner(center, radius, i, startAngle), texPos + texSize * getHexCorner(i, 0), WHITE};
+				auto v = Vertex{getHexagonCorner(center, radius, i, startAngle), texMiddlePos + texHalfSize * getHexagonCorner(i, 0), WHITE};
 				batch.pushBack(v);
 			}
 			for (int i = 1; i <= 6; ++i) {
@@ -77,8 +73,8 @@ namespace sdl::graphic::indexed {
 		batch.startBatchView();
 		batch.startAdding();
 
-		auto innerCorners = getHexCorners(center, innerRadius, startAngle);
-		auto outerCorners = getHexCorners(center, outerRadius, startAngle);
+		auto innerCorners = getHexagonCorners(center, innerRadius, startAngle);
+		auto outerCorners = getHexagonCorners(center, outerRadius, startAngle);
 		
 		for (const auto& corner : innerCorners) {
 			batch.pushBack({corner, {0.f, 0.f}, color});

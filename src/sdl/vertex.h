@@ -8,9 +8,9 @@
 namespace sdl {
 	
 	struct Vertex {
-		glm::vec2 pos{0, 0};
-		glm::vec2 tex{0, 0};
-		Color color{1, 1, 1, 1};
+		glm::vec2 pos;
+		glm::vec2 tex;
+		Color color;
 	};
 
 } // Namespace vin.

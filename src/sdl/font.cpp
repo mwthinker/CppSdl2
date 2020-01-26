@@ -24,8 +24,9 @@ namespace sdl {
 		}
 	}
 
-	Font::Font(Font&& other) noexcept : font_{std::exchange(other.font_, nullptr)},
-		characterSize_{other.characterSize_} {
+	Font::Font(Font&& other) noexcept
+		: font_{std::exchange(other.font_, nullptr)}
+		, characterSize_{other.characterSize_} {
 	}
 
 	Font& Font::operator=(Font&& other) noexcept {

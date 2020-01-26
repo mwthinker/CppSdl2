@@ -31,10 +31,10 @@ private:
 
 	void removeGamepad(SDL_JoystickID instanceId);
 
-	bool focus_ = true;
+	bool focus_{true};
 	sdl::Sprite sprite_;
 	sdl::Text text_;
-	int controllerEvent_ = 0;
+	int controllerEvent_{};
 	
 	std::function<void()> func_;
 

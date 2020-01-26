@@ -41,6 +41,7 @@ add_library(CppSdl2
 	src/sdl/gamecontroller.h
 	src/sdl/graphic.cpp
 	src/sdl/graphic.h
+	src/sdl/imguiauxiliary.cpp
 	src/sdl/imguiauxiliary.h
 	${IMGUI_USER_CONFIG}
 	src/sdl/imguiwindow.h

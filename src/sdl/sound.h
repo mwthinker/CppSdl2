@@ -10,7 +10,7 @@
 namespace sdl {
 
 	class Sound {
-	public:		
+	public:
 		Sound();
 
 		~Sound();

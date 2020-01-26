@@ -22,6 +22,14 @@ namespace sdl {
 			assert(red >= 0 || green >= 0 || blue >= 0 || alpha >= 0);
 		}
 
+		operator ImVec4() const
+		{
+			return {static_cast<float>(value_ & 0x00'00'00'ff) / 255.f,
+				static_cast<float>((value_ & 0x00'00'ff'00) >> 8) / 255.f,
+				static_cast<float>((value_ & 0x00'ff'00'00) >> 16) / 255.f,
+				static_cast<float>((value_ & 0xff'00'00'00) >> 24) / 255.f};
+		}
+
 		operator ImColor() const noexcept {
 			return value_;
 		}
@@ -46,7 +54,7 @@ namespace sdl {
 		}
 		
 	private:
-		uint32_t value_{0xff'ff'ff'ff};
+		uint32_t value_{};
 	};
 
 	const Color WHITE{1, 1, 1};

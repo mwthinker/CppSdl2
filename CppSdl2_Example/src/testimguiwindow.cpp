@@ -69,6 +69,7 @@ void TestImGuiWindow::imGuiUpdate(const std::chrono::high_resolution_clock::dura
 				glDisable(GL_BLEND);
 			});
 		});
+
 	});
 	ImGui::PopStyleVar(3);
 }

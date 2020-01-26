@@ -8,6 +8,7 @@ namespace sdl {
 	namespace {
 
 		GLenum surfaceFormat(SDL_Surface* surface) {
+			assert(surface->format->BytesPerPixel == 4 || surface->format->BytesPerPixel == 3);
 			return surface->format->BytesPerPixel == 4 ? GL_RGBA : GL_RGB;
 		}
 
