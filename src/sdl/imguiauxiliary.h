@@ -91,7 +91,7 @@ namespace ImGui {
 		return success;
 	}
 
-	void Hexagon(const sdl::TextureView& texture, const glm::vec2& size, bool flat = true);
+	void Hexagon(const sdl::TextureView& texture, float size, bool flat = true);
 
 	void Image(const sdl::TextureView& texture, const glm::vec2& size,
 		const sdl::Color& tintCol = sdl::WHITE, const sdl::Color& borderCol = {});
