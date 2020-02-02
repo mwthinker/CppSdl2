@@ -22,6 +22,8 @@ private:
 
 	void imGuiUpdate(const std::chrono::high_resolution_clock::duration& deltaTime) override;
 
+	void imGuiPreUpdate(const std::chrono::high_resolution_clock::duration& deltaTime) override;
+
 	void eventUpdate(const SDL_Event& windowEvent) override;
 
 	void initBatchTriangles();

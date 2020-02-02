@@ -31,6 +31,9 @@ TestImGuiWindow::TestImGuiWindow() {
 void TestImGuiWindow::eventUpdate(const SDL_Event& windowEvent) {
 	sdl::ImGuiWindow::eventUpdate(windowEvent);
 
+	auto& io = ImGui::GetIO();
+	logger()->info("io.WantCaptureMouse: {}", io.WantCaptureMouse);
+
 	switch (windowEvent.type) {
 		case SDL_WINDOWEVENT:
 			switch (windowEvent.window.event) {
@@ -50,28 +53,24 @@ void TestImGuiWindow::imGuiUpdate(const std::chrono::high_resolution_clock::dura
 	ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, {0, 0});
 	ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.f);
 	ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 1.f);
+	ImGui::PushStyleColor(ImGuiCol_WindowBg, {0,0,0,0});
 	ImGui::SetNextWindowPos({0.f,0.f});
-	ImGui::SetNextWindowSize({(float) getWidth(), (float) getHeight()});
+	ImGui::SetNextWindowSize({200, 200});
 	ImGui::Window("Main", nullptr, IMGUI_NOWINDOW, [&]() {
 		ImGui::Button("Hello", {100, 100});
 		
 		ImGui::Button("Hello2", {50, 50});
-		ImGui::SameLine();
-
-		ImGui::ChildWindow("Child", {300, 300}, [&]() {
-			ImGui::Button("Test", {50, 50});
-			ImGui::SameLine();
-			imGuiCanvas({400, 400}, [&](Vec2 size) {
-				glEnable(GL_BLEND);
-				glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-				batch_->draw();
-				batchIndexes_->draw();
-				glDisable(GL_BLEND);
-			});
-		});
-
 	});
+	ImGui::PopStyleColor();
 	ImGui::PopStyleVar(3);
+}
+
+void TestImGuiWindow::imGuiPreUpdate(const std::chrono::high_resolution_clock::duration& deltaTime) {
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	batch_->draw();
+	batchIndexes_->draw();
+	glDisable(GL_BLEND);
 }
 
 void TestImGuiWindow::initPreLoop() {

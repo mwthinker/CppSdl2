@@ -19,7 +19,7 @@ namespace ImGui {
 		void AddImageQuad(const sdl::TextureView& sprite, const glm::vec2& pos, const glm::vec2& size,
 			float angle = 0.f, const sdl::Color& color = sdl::WHITE);
 
-	}  // Namespace Helper.
+	} // Namespace Helper.
 
 	template <class T>
 	bool Window(const char* name, bool* p_open, ImGuiWindowFlags flags, T&& t) {

@@ -27,8 +27,6 @@ namespace sdl {
 		bool isShowDemoWindow() const;
 		void setShowDemoWindow(bool show);
 
-		bool imGuiCanvas(const glm::vec2& size, Canvas&& canvas);
-
 	protected:
 		virtual void initPreLoop() override;
 
@@ -105,14 +103,6 @@ namespace sdl {
 		void restoreGlState();
 
 		void setupVao();
-
-		struct CanvasData {
-			Canvas canvas;
-			glm::vec2 pos;
-			glm::vec2 size;
-			Scissor scissor;
-		};
-		std::vector<CanvasData> imGuiCanvases_;
 
 		GLState glState_{};
 		std::array<bool, 3> mousePressed_{};

@@ -1,8 +1,7 @@
 #include "imguiwindow.h"
 #include "logger.h"
 #include "vertexarrayobject.h"
-
-#include <imgui.h>
+#include "imguiauxiliary.h"
 
 #include <glm/gtc/matrix_transform.hpp>
 #include <SDL_syswm.h>
@@ -30,7 +29,6 @@ namespace sdl {
 				case 3:
 					return getGlslVersion3(minorVersion);
 			}
-			assert(false);
 			return -1;
 		}
 
@@ -38,7 +36,6 @@ namespace sdl {
 			if (glslVersion == 330) {
 				return {getImGuiVertexShaderGlsl_330(), getImGuiFragmentShaderGlsl_330()};
 			}
-			assert(false);
 			return {"", ""};
 		}
 
@@ -118,30 +115,6 @@ namespace sdl {
 
 		ImGui_ImplSDL2_Init();
 		ImGui_ImplOpenGL3_Init();
-	}
-	
-	bool ImGuiWindow::imGuiCanvas(const glm::vec2& size, Canvas&& canvas) {
-		bool result = ImGui::InvisibleButton("", size);
-		auto [w, h] = getSize();
-
-		auto& canvasData = imGuiCanvases_.emplace_back(CanvasData{
-			canvas,
-			{ImGui::GetItemRectMin().x, h - ImGui::GetItemRectMax().y},
-			ImGui::GetItemRectSize(),
-			Scissor{{ImGui::GetWindowPos().x, ImGui::GetWindowPos().y},
-			{ImGui::GetWindowContentRegionWidth(), ImGui::GetWindowHeight()}}
-		});
-
-		ImGui::GetWindowDrawList()->AddCallback([](const ImDrawList*, const ImDrawCmd* cmd) {
-			glEnable(GL_SCISSOR_TEST);
-			auto data = static_cast<CanvasData*>(cmd->UserCallbackData);
-			glViewport(static_cast<int>(data->pos.x), static_cast<int>(data->pos.y), static_cast<int>(data->size.x), static_cast<int>(data->size.y));
-			scissor(data->scissor);
-			data->canvas(data->size);
-		}, &canvasData);
-
-		ImGui::GetWindowDrawList()->AddCallback(ImDrawCallback_ResetRenderState, nullptr);
-		return result;
 	}
 
 	void ImGuiWindow::update(const std::chrono::nanoseconds& deltaTime) {
@@ -302,7 +275,6 @@ namespace sdl {
 
 		// Update game controllers (if enabled and available)
 		ImGui_ImplSDL2_UpdateGamepads();
-		imGuiCanvases_.clear();
 	}
 
 	void ImGuiWindow::ImGui_ImplSDL2_UpdateMousePosAndButtons() {
