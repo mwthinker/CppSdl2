@@ -9,7 +9,7 @@ namespace sdl {
 
 	class TextureView {
 	public:
-		TextureView() noexcept = default;
+		TextureView() = default;
 
 		explicit TextureView(const Texture& texture) noexcept;
 

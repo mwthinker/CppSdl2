@@ -91,6 +91,96 @@ namespace ImGui {
 		return success;
 	}
 
+	template <class T>
+	bool Menu(const char* label, bool enabled, T&& t) {
+		bool success = ImGui::BeginMenu(label, enabled);
+		if (success) {
+			t();
+			ImGui::EndMenu();
+		}
+		return success;
+	}
+
+	template <class T>
+	bool Menu(const char* label, T&& t) {
+		bool success = ImGui::BeginMenu(label);
+		if (success) {
+			t();
+			ImGui::EndMenu();
+		}
+		return success;
+	}
+
+	template <class T>
+	bool MenuBar(T&& t) {
+		bool success = ImGui::BeginMenuBar();
+		if (success) {
+			t();
+			ImGui::EndMenuBar();
+		}
+		return success;
+	}
+
+	template <class T>
+	bool MainMenuBar(T&& t) {
+		bool success = ImGui::BeginMainMenuBar();
+		if (success) {
+			t();
+			ImGui::EndMainMenuBar();
+		}
+		return success;
+	}
+
+	template <class T>
+	bool PopupModal(const char* name, bool* p_open, ImGuiWindowFlags flags, T&& t) {
+		bool success = ImGui::BeginPopupModal(name, p_open, flags);
+		if (success) {
+			t();
+			ImGui::EndPopup();
+		}
+		return success;
+	}
+
+	template <class T>
+	bool PopupModal(const char* name, bool* p_open, T&& t) {
+		bool success = ImGui::BeginPopupModal(name, p_open);
+		if (success) {
+			t();
+			ImGui::EndPopup();
+		}
+		return success;
+	}
+
+	template <class T>
+	bool Popup(const char* str_id, ImGuiWindowFlags flags, T&& t) {
+		bool success = ImGui::BeginPopup(str_id, flags);
+		if (success) {
+			t();
+			ImGui::EndPopup();
+		}
+		return success;
+	}
+
+	template <class T>
+	bool Popup(const char* str_id, T&& t) {
+		bool success = ImGui::BeginPopup(str_id);
+		if (success) {
+			t();
+			ImGui::EndPopup();
+		}
+		return success;
+	}
+
+	template <class T>
+	bool PopupModal(const char* name, T&& t) {
+		bool success = ImGui::BeginPopupModal(name);
+		if (success) {
+			t();
+			ImGui::EndPopup();
+		}
+		return success;
+	}
+
 	void Hexagon(const sdl::TextureView& texture, float size, bool flat = true);
 
 	void Image(const sdl::TextureView& texture, const glm::vec2& size,
