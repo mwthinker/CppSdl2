@@ -16,8 +16,11 @@ namespace ImGui {
 
 		void AddHexagonImage(const sdl::TextureView& sprite, glm::vec2 center, float radius, float startAngle);
 
-		void AddImageQuad(const sdl::TextureView& sprite, const glm::vec2& pos, const glm::vec2& size,
+		void AddCenterImageQuad(const sdl::TextureView& sprite, const glm::vec2& pos, const glm::vec2& size,
 			float angle = 0.f, const sdl::Color& color = sdl::WHITE);
+
+		void AddImageQuad(const sdl::TextureView& texture,
+			const glm::vec2& pos, const glm::vec2& size, const sdl::Color& color = sdl::WHITE);
 
 	} // Namespace Helper.
 

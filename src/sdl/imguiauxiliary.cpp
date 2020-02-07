@@ -32,23 +32,39 @@ namespace ImGui {
 			}
 		}
 
-		void AddImageQuad(const sdl::TextureView& sprite,
-			const glm::vec2& pos, const glm::vec2& size, float angle, const sdl::Color& color) {
+		void AddCenterImageQuad(const sdl::TextureView& texture,
+			const glm::vec2& center, const glm::vec2& size, float angle, const sdl::Color& color) {
 
-			glm::vec2 deltaA{-size.x * 0.5f, -size.y * 0.5f};
-			glm::vec2 deltaB{size.x * 0.5f, -size.y * 0.5f};
-			glm::vec2 deltaC{size.x * 0.5f, size.y * 0.5f};
-			glm::vec2 deltaD{-size.x * 0.5f, size.y * 0.5f};
+			glm::vec2 deltaA{-size.x, -size.y};
+			glm::vec2 deltaB{size.x, -size.y};
+			glm::vec2 deltaC{size.x, size.y};
+			glm::vec2 deltaD{-size.x, size.y};
 
-			ImVec2 a = pos + glm::rotate(deltaA, angle);
-			ImVec2 b = pos + glm::rotate(deltaB, angle);
-			ImVec2 c = pos + glm::rotate(deltaC, angle);
-			ImVec2 d = pos + glm::rotate(deltaD, angle);
+			ImVec2 a = center + glm::rotate(0.5f * deltaA, angle);
+			ImVec2 b = center + glm::rotate(0.5f * deltaB, angle);
+			ImVec2 c = center + glm::rotate(0.5f * deltaC, angle);
+			ImVec2 d = center + glm::rotate(0.5f * deltaD, angle);
 
-			ImVec2 uv_c{sprite.getX(), sprite.getY()};
-			ImVec2 uv_d{sprite.getX() + sprite.getWidth(), sprite.getY()};
-			ImVec2 uv_a{sprite.getX() + sprite.getWidth(), sprite.getY() + sprite.getHeight()};
-			ImVec2 uv_b{sprite.getX(), sprite.getY() + sprite.getHeight()};
+			ImVec2 uv_c{texture.getX(), texture.getY()};
+			ImVec2 uv_d{texture.getX() + texture.getWidth(), texture.getY()};
+			ImVec2 uv_a{texture.getX() + texture.getWidth(), texture.getY() + texture.getHeight()};
+			ImVec2 uv_b{texture.getX(), texture.getY() + texture.getHeight()};
+
+			ImGui::GetWindowDrawList()->PrimQuadUV(a, b, c, d, uv_a, uv_b, uv_c, uv_d, color.toImU32());
+		}
+
+		void AddImageQuad(const sdl::TextureView& texture,
+			const glm::vec2& pos, const glm::vec2& size, const sdl::Color& color) {
+
+			ImVec2 a = pos;
+			ImVec2 b = pos + glm::vec2{size.x, 0.f};
+			ImVec2 c = pos + glm::vec2{size.x, size.y};
+			ImVec2 d = pos + glm::vec2{0.f, size.y};
+
+			ImVec2 uv_c{texture.getX(), texture.getY()};
+			ImVec2 uv_d{texture.getX() + texture.getWidth(), texture.getY()};
+			ImVec2 uv_a{texture.getX() + texture.getWidth(), texture.getY() + texture.getHeight()};
+			ImVec2 uv_b{texture.getX(), texture.getY() + texture.getHeight()};
 
 			ImGui::GetWindowDrawList()->PrimQuadUV(a, b, c, d, uv_a, uv_b, uv_c, uv_d, color.toImU32());
 		}
@@ -60,10 +76,7 @@ namespace ImGui {
 		drawList->PushTextureID((ImTextureID) (intptr_t) texture);
 		drawList->PrimReserve(6 * 3, 7);
 
-		float angle = glm::pi<float>() / 2.f;
-		if (flat) {
-			angle = 0.f;
-		}
+		auto angle = flat? 0.f : glm::pi<float>() / 2.f;
 
 		glm::vec2 pos = ImGui::GetCursorScreenPos();
 		Helper::AddHexagonImage(texture, pos + glm::vec2{size * 0.5f, size * 0.5f}, size * 0.5f, angle);
