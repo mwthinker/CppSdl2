@@ -72,9 +72,8 @@ namespace sdl {
 
 	TextureView Sprite::getTextureView() const {
 		try {
-			return {std::get<Texture>(*image_), getX(), getY(), getWidth(), getHeight()};
-		}
-		catch (std::bad_variant_access&) {
+			return {std::get<Texture>(*image_), getX() / textureWidth_, getY() / textureHeight_, getWidth() / textureWidth_, getHeight() / textureHeight_};
+		} catch (std::bad_variant_access&) {
 			return {};
 		}
 	}
