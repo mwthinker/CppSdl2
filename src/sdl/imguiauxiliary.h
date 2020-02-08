@@ -192,7 +192,7 @@ namespace ImGui {
 	}
 
 	template <class T>
-	bool Combo(const char* label, const char* preview_value, ImGuiComboFlags flags, T&& t) {
+	bool ComboScoped(const char* label, const char* preview_value, ImGuiComboFlags flags, T&& t) {
 		bool success = ImGui::BeginCombo(label, preview_value, flags);
 		if (success) {
 			t();
@@ -202,7 +202,7 @@ namespace ImGui {
 	}
 
 	template <class T>
-	bool Combo(const char* label, const char* preview_value, T&& t) {
+	bool ComboScoped(const char* label, const char* preview_value, T&& t) {
 		bool success = ImGui::BeginCombo(label, preview_value);
 		if (success) {
 			t();
