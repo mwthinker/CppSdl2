@@ -191,6 +191,26 @@ namespace ImGui {
 		ImGui::EndTooltip();
 	}
 
+	template <class T>
+	bool Combo(const char* label, const char* preview_value, ImGuiComboFlags flags, T&& t) {
+		bool success = ImGui::BeginCombo(label, preview_value, flags);
+		if (success) {
+			t();
+			ImGui::EndCombo();
+		}
+		return success;
+	}
+
+	template <class T>
+	bool Combo(const char* label, const char* preview_value, T&& t) {
+		bool success = ImGui::BeginCombo(label, preview_value);
+		if (success) {
+			t();
+			ImGui::EndCombo();
+		}
+		return success;
+	}
+
 	void Hexagon(const sdl::TextureView& texture, float size, bool flat = true);
 
 	void Image(const sdl::TextureView& texture, const glm::vec2& size,

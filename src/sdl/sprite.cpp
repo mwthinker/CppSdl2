@@ -13,6 +13,8 @@ namespace sdl {
 		Surface surface{image};
 		textureWidth_ = surface.getWidth();
 		textureHeight_ = surface.getHeight();
+		rect_.x = textureWidth_;
+		rect_.y = textureHeight_;
 		*image_ = SurfaceData{std::move(surface), filter};
 	}
 
