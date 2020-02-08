@@ -45,10 +45,10 @@ namespace ImGui {
 			ImVec2 c = center + glm::rotate(0.5f * deltaC, angle);
 			ImVec2 d = center + glm::rotate(0.5f * deltaD, angle);
 
-			ImVec2 uv_c{texture.getX(), texture.getY()};
-			ImVec2 uv_d{texture.getX() + texture.getWidth(), texture.getY()};
-			ImVec2 uv_a{texture.getX() + texture.getWidth(), texture.getY() + texture.getHeight()};
-			ImVec2 uv_b{texture.getX(), texture.getY() + texture.getHeight()};
+			ImVec2 uv_c{texture.getX() + texture.getWidth(), texture.getY() + texture.getHeight()};
+			ImVec2 uv_d{texture.getX(), texture.getY() + texture.getHeight()};
+			ImVec2 uv_a{texture.getX(), texture.getY()};
+			ImVec2 uv_b{texture.getX() + texture.getWidth(), texture.getY()};
 
 			ImGui::GetWindowDrawList()->PrimQuadUV(a, b, c, d, uv_a, uv_b, uv_c, uv_d, color.toImU32());
 		}
@@ -61,10 +61,10 @@ namespace ImGui {
 			ImVec2 c = pos + glm::vec2{size.x, size.y};
 			ImVec2 d = pos + glm::vec2{0.f, size.y};
 
-			ImVec2 uv_c{texture.getX(), texture.getY()};
-			ImVec2 uv_d{texture.getX() + texture.getWidth(), texture.getY()};
-			ImVec2 uv_a{texture.getX() + texture.getWidth(), texture.getY() + texture.getHeight()};
-			ImVec2 uv_b{texture.getX(), texture.getY() + texture.getHeight()};
+			ImVec2 uv_c{texture.getX() + texture.getWidth(), texture.getY() + texture.getHeight()};
+			ImVec2 uv_d{texture.getX(), texture.getY() + texture.getHeight()};
+			ImVec2 uv_a{texture.getX(), texture.getY()};
+			ImVec2 uv_b{texture.getX() + texture.getWidth(), texture.getY()};
 
 			ImGui::GetWindowDrawList()->PrimQuadUV(a, b, c, d, uv_a, uv_b, uv_c, uv_d, color.toImU32());
 		}
