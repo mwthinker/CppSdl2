@@ -80,14 +80,6 @@ namespace sdl {
 #undef MAP_ANALOG
 		}
 
-		ImVec2 floor(const ImVec2& v) {
-			return {(float) (int) v.x, (float) (int) v.y};
-		}
-		
-		ImVec2 max(const ImVec2& lhs, const ImVec2& rhs) {
-			return {std::max(rhs.x, lhs.x), std::max(lhs.y, rhs.y)};
-		}
-		
 	}
 
 	ImGuiWindow::ImGuiWindow(int majorVersionGl, int minorVersionGl)
@@ -139,16 +131,6 @@ namespace sdl {
 
 	void ImGuiWindow::eventUpdate(const SDL_Event& windowEvent) {
 		ImGui_ImplSDL2_ProcessEvent(windowEvent);
-
-		switch (windowEvent.type) {
-			case SDL_WINDOWEVENT:
-				switch (windowEvent.window.event) {
-					case SDL_WINDOWEVENT_RESIZED:
-                        glViewport(0, 0, windowEvent.window.data1, windowEvent.window.data2);
-						break;
-				}
-				break;
-		}
 	}
 
 	// You can read the io.WantCaptureMouse, io.WantCaptureKeyboard flags to tell if dear imgui wants to use your inputs.
@@ -177,7 +159,7 @@ namespace sdl {
 				return true;
 			}
 			case SDL_KEYDOWN:
-				// Fall through.
+				[[fallthrough]];
 			case SDL_KEYUP: {
 				int key = sdlEvent.key.keysym.scancode;
 				IM_ASSERT(key >= 0 && key < IM_ARRAYSIZE(io.KeysDown));
@@ -361,18 +343,12 @@ namespace sdl {
 		shader_.useProgram();
 		shader_.setMatrix(projMatrix);
 		shader_.setTextureId(0);
-
 #ifdef GL_SAMPLER_BINDING
 		glBindSampler(0, 0); // We use combined texture/sampler state. Applications using GL 3.3 may set that otherwise.
 #endif
-
 		vao_.bind();
 		imGuiVbo_.bind(GL_ARRAY_BUFFER);
 		imGuiElementsVbo_.bind(GL_ELEMENT_ARRAY_BUFFER);
-	}
-
-	void ImGuiWindow::scissor(const ImGuiWindow::Scissor& scissor) {
-		glScissor(scissor.pos.x, scissor.pos.y, scissor.size.x, scissor.size.y);
 	}
 
 	// OpenGL3 Render function.

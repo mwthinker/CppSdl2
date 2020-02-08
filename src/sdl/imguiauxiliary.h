@@ -184,6 +184,13 @@ namespace ImGui {
 		return success;
 	}
 
+	template <class T>
+	void Tooltip(T&& t) {
+		ImGui::BeginTooltip();
+		t();
+		ImGui::EndTooltip();
+	}
+
 	void Hexagon(const sdl::TextureView& texture, float size, bool flat = true);
 
 	void Image(const sdl::TextureView& texture, const glm::vec2& size,

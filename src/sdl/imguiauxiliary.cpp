@@ -84,8 +84,8 @@ namespace ImGui {
 		ImGui::Dummy({size * 0.5f, size * 0.5f});
 	}
 
-	void Image(const sdl::TextureView& sprite, const glm::vec2& size, const sdl::Color& tintCol, const sdl::Color& borderCol) {
-		ImGui::Image((ImTextureID) (intptr_t) sprite, size, sprite.getPosition(), sprite.getSize(), tintCol, borderCol);
+	void Image(const sdl::TextureView& texture, const glm::vec2& size, const sdl::Color& tintCol, const sdl::Color& borderCol) {
+		ImGui::Image((ImTextureID) (intptr_t) texture, size, texture.getPosition(), texture.getPosition() + texture.getSize(), tintCol, borderCol);
 	}
 
 	[[nodiscard]] bool ImageButton(const sdl::TextureView& texture, const glm::vec2& size) {

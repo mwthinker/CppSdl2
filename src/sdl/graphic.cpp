@@ -10,11 +10,11 @@ namespace sdl::graphic {
 		return glm::rotate(glm::vec2{1, 0.f}, PI / 3 * nbr + startAngle);
 	}
 
-	glm::vec2 getHexagonCorner(glm::vec2 center, GLfloat size, int nbr, float startAngle) {
+	glm::vec2 getHexagonCorner(const glm::vec2& center, float size, int nbr, float startAngle) {
 		return center + size * getHexagonCorner(nbr, startAngle);
 	}
 
-	std::array<glm::vec2, 6> getHexagonCorners(glm::vec2 center, GLfloat radius, float startAngle) {
+	std::array<glm::vec2, 6> getHexagonCorners(const glm::vec2& center, float radius, float startAngle) {
 		std::array<glm::vec2, 6> corners;
 		for (int i = 0; i < 6; ++i) {
 			corners[i] = getHexagonCorner(center, radius, i, startAngle);
@@ -26,14 +26,14 @@ namespace sdl::graphic {
 
 namespace sdl::graphic::indexed {
 
-	sdl::BatchView<Vertex> addRectangle(sdl::Batch<Vertex>& batch, glm::vec2 pos, glm::vec2 size, Color color) {
+	sdl::BatchView<Vertex> addRectangle(sdl::Batch<Vertex>& batch, const glm::vec2& pos, const glm::vec2& size, Color color) {
 		batch.startBatchView();
 		batch.startAdding();
 
-		batch.pushBack(Vertex{pos, {0.f, 0.f}, color});
-		batch.pushBack(Vertex{pos + glm::vec2{size.x, 0.f}, {0.f, 0.f}, color});
-		batch.pushBack(Vertex{pos + size, {0.f, 0.f}, color});
-		batch.pushBack(Vertex{pos + glm::vec2{0.f, size.y}, {0.f, 0.f}, color});
+		batch.pushBack(Vertex{pos, {}, color});
+		batch.pushBack(Vertex{pos + glm::vec2{size.x, 0.f}, {}, color});
+		batch.pushBack(Vertex{pos + size, {}, color});
+		batch.pushBack(Vertex{pos + glm::vec2{0.f, size.y}, {}, color});
 
 		batch.pushBackIndex(0);
 		batch.pushBackIndex(1);
@@ -44,7 +44,27 @@ namespace sdl::graphic::indexed {
 		return batch.getBatchView(GL_TRIANGLES);
 	}
 
-	sdl::BatchView<Vertex> addHexagonImage(sdl::Batch<Vertex>& batch, glm::vec2 center, float radius, const sdl::TextureView& sprite, float startAngle) {
+	sdl::BatchView<Vertex> addRectangleImage(sdl::Batch<Vertex>& batch, const glm::vec2& pos, const glm::vec2& size, const sdl::TextureView& texture) {
+		batch.startBatchView();
+		batch.startAdding();
+
+		if (texture) {
+			batch.pushBack(Vertex{pos, texture.getPosition() + glm::vec2{0.f, texture.getHeight()}, WHITE});
+			batch.pushBack(Vertex{pos + glm::vec2{size.x, 0.f}, texture.getPosition() + glm::vec2{texture.getWidth(), texture.getHeight()}, WHITE});
+			batch.pushBack(Vertex{pos + size, texture.getPosition() + glm::vec2{texture.getWidth(), 0.f}, WHITE});
+			batch.pushBack(Vertex{pos + glm::vec2{0.f, size.y},  texture.getPosition(), WHITE});
+
+			batch.pushBackIndex(0);
+			batch.pushBackIndex(1);
+			batch.pushBackIndex(2);
+			batch.pushBackIndex(0);
+			batch.pushBackIndex(2);
+			batch.pushBackIndex(3);
+		}
+		return batch.getBatchView(GL_TRIANGLES);
+	}
+
+	sdl::BatchView<Vertex> addHexagonImage(sdl::Batch<Vertex>& batch, const glm::vec2& center, float radius, const sdl::TextureView& sprite, float startAngle) {
 		batch.startBatchView();
 		batch.startAdding();
 
@@ -69,7 +89,7 @@ namespace sdl::graphic::indexed {
 		return batch.getBatchView(GL_TRIANGLES);
 	}
 
-	sdl::BatchView<Vertex> addHexagon(sdl::Batch<Vertex>& batch, glm::vec2 center, float innerRadius, float outerRadius, Color color, float startAngle) {
+	sdl::BatchView<Vertex> addHexagon(sdl::Batch<Vertex>& batch, const glm::vec2& center, float innerRadius, float outerRadius, Color color, float startAngle) {
 		batch.startBatchView();
 		batch.startAdding();
 
@@ -94,7 +114,7 @@ namespace sdl::graphic::indexed {
 		return batch.getBatchView(GL_TRIANGLES);
 	}
 
-	sdl::BatchView<Vertex> addCircle(sdl::Batch<Vertex>& batch, glm::vec2 center, float radius, Color color, const int iterations, float startAngle) {
+	sdl::BatchView<Vertex> addCircle(sdl::Batch<Vertex>& batch, const glm::vec2& center, float radius, Color color, const int iterations, float startAngle) {
 		batch.startBatchView();
 		batch.startAdding();
 

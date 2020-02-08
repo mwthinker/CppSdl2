@@ -16,8 +16,6 @@ namespace sdl {
 
 	class ImGuiWindow : public sdl::Window {
 	public:
-		using Canvas = std::function<void(const glm::vec2& size)>;
-		
 		ImGuiWindow() = default;
 
 		ImGuiWindow(int majorVersionGl, int minorVersionGl);
@@ -35,12 +33,6 @@ namespace sdl {
 		const Shader& getShader() const;
 
 	private:
-		struct Scissor {
-			glm::ivec2 pos;
-			glm::ivec2 size;
-		};
-		static void scissor(const Scissor& scissor);
-
 		struct GLState {
 			GLenum lastActiveTexture;
 
