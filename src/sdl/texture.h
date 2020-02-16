@@ -20,8 +20,8 @@ namespace sdl {
 		Texture() = default;
 		~Texture();
 
-		Texture(const Texture& texture) = default;
-		Texture& operator=(const Texture& texture) = default;
+		Texture(const Texture& texture) = delete;
+		Texture& operator=(const Texture& texture) = delete;
 
 		Texture(Texture&& texture) noexcept;
 		Texture& operator=(Texture&& texture) noexcept;

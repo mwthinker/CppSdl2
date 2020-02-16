@@ -26,9 +26,6 @@ namespace sdl {
 	}
 
 	Texture& Texture::operator=(Texture&& texture) noexcept {
-		if (texture_ != 0) {
-			glDeleteTextures(1, &texture_);
-		}
 		texture_ = std::exchange(texture.texture_, 0);
 		return *this;
 	}
