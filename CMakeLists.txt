@@ -35,6 +35,8 @@ set(IMGUI_USER_CONFIG ${CMAKE_CURRENT_SOURCE_DIR}/src/sdl/imconfig.h)
 add_library(CppSdl2 
 	src/sdl/batch.h
 	src/sdl/color.h
+	src/sdl/framebuffer.cpp
+	src/sdl/framebuffer.h
 	src/sdl/font.cpp
 	src/sdl/font.h
 	src/sdl/gamecontroller.cpp
@@ -104,14 +106,14 @@ target_link_libraries(CppSdl2
 		imgui::imgui
 )
 
-message(STATUS "CppSdl2_Example is available to add: -DCppSdl2_Example=1")
-option(CppSdl2_Example "Add CppSdl2Test project." OFF)
-if (CppSdl2_Example)
+#message(STATUS "CppSdl2_Example is available to add: -DCppSdl2_Example=1")
+#option(CppSdl2_Example "Add CppSdl2Test project." OFF)
+#if (CppSdl2_Example)
 	add_subdirectory(CppSdl2_Example)
-endif (CppSdl2_Example)
+#endif (CppSdl2_Example)
 
-message(STATUS "CppSdl2_Test is available to add: -DCppSdl2_Test=1")
-option(CppSdl2_Test "Add CppSdl2_Test to project." OFF)
-if (CppSdl2_Test)
+#message(STATUS "CppSdl2_Test is available to add: -DCppSdl2_Test=1")
+#option(CppSdl2_Test "Add CppSdl2_Test to project." OFF)
+#if (CppSdl2_Test)
 	add_subdirectory(CppSdl2_Test)
-endif (CppSdl2_Test)
+#endif (CppSdl2_Test)
