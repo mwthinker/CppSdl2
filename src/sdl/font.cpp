@@ -34,6 +34,7 @@ namespace sdl {
 			TTF_CloseFont(font_);
 		}
 		font_ = std::exchange(other.font_, nullptr);
+		characterSize_ = other.characterSize_;
 		return *this;
 	}
 
