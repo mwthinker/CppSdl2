@@ -14,6 +14,9 @@ namespace sdl {
 	}
 
 	GameController& GameController::operator=(GameController&& other) noexcept {
+		if (gameController_ != nullptr) {
+			SDL_GameControllerClose(gameController_);
+		}
 		gameController_ = std::exchange(other.gameController_,  nullptr);
 		return *this;
 	}
