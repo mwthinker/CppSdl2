@@ -67,8 +67,6 @@ add_library(CppSdl2
 	src/sdl/sprite.h
 	src/sdl/surface.cpp
 	src/sdl/surface.h
-	src/sdl/text.cpp
-	src/sdl/text.h
 	src/sdl/textureatlas.cpp
 	src/sdl/textureatlas.h
 	src/sdl/texture.cpp

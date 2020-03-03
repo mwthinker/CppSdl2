@@ -7,7 +7,6 @@
 
 #include <sdl/imguiwindow.h>
 #include <sdl/sprite.h>
-#include <sdl/text.h>
 #include <sdl/gamecontroller.h>
 
 #include <functional>

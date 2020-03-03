@@ -5,7 +5,6 @@
 
 #include <sdl/batch.h>
 #include <sdl/sprite.h>
-#include <sdl/text.h>
 #include <sdl/vertexarrayobject.h>
 
 class BatchTriangles {

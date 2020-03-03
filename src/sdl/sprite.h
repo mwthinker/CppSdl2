@@ -5,10 +5,13 @@
 #include "surface.h"
 #include "textureview.h"
 #include "rect.h"
+#include "font.h"
 
 #include <string>
 #include <functional>
 #include <variant>
+
+#include <glm/vec2.hpp>
 
 namespace sdl {
 
@@ -21,6 +24,13 @@ namespace sdl {
 		explicit Sprite(const std::string& image, std::function<void()>&& filter = []() {
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		});
+
+		Sprite(const std::string& image, const Font& font, std::function<void()>&& filter = []() {
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 		});
 
 		Sprite(Surface&& surface, std::function<void()>&& filter = []() {
@@ -53,13 +63,13 @@ namespace sdl {
 		// Return the lower left y position of the image drawn.
 		float getY() const noexcept;
 
-		std::pair<float, float> getPosition() const noexcept;
+		glm::vec2 getPosition() const noexcept;
 
 		float getWidth() const noexcept;
 
 		float getHeight() const noexcept;
 
-		std::pair<float, float> getSize() const noexcept;
+		glm::vec2 getSize() const noexcept;
 
 		int getTextureWidth() const noexcept;
 

@@ -5,7 +5,6 @@
 
 #include <sdl/window.h>
 #include <sdl/sprite.h>
-#include <sdl/text.h>
 #include <sdl/gamecontroller.h>
 
 #include <functional>
@@ -33,7 +32,7 @@ private:
 
 	bool focus_{true};
 	sdl::Sprite sprite_;
-	sdl::Text text_;
+	sdl::Sprite text_;
 	int controllerEvent_{};
 	
 	std::function<void()> func_;

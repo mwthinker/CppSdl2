@@ -1,6 +1,7 @@
 #include "sprite.h"
 #include "surface.h"
 #include "opengl.h"
+#include "logger.h"
 
 #include <string>
 #include <functional>
@@ -15,6 +16,24 @@ namespace sdl {
 		textureHeight_ = surface.getHeight();
 		rect_.w = textureWidth_;
 		rect_.h = textureHeight_;
+		*image_ = SurfaceData{std::move(surface), filter};
+	}
+
+	Sprite::Sprite(const std::string& text, const Font& font, std::function<void()>&& filter) {
+		if (text.empty()) {
+			return;
+		}
+
+		if (!font.isLoaded()) {
+			logger()->warn("[Sprite] font not loaded");
+		}
+
+		Surface surface{text, font, WHITE};
+		textureWidth_ = surface.getWidth();
+		textureHeight_ = surface.getHeight();
+		rect_.w = textureWidth_;
+		rect_.h = textureHeight_;
+		image_ = std::make_shared<ImageVariant>();
 		*image_ = SurfaceData{std::move(surface), filter};
 	}
 
@@ -88,7 +107,7 @@ namespace sdl {
 		return static_cast<float>(rect_.y);
 	}
 
-	std::pair<float, float> Sprite::getPosition() const noexcept {
+	glm::vec2 Sprite::getPosition() const noexcept {
 		return {getX(), getY()};
 	}
 
@@ -100,7 +119,7 @@ namespace sdl {
 		return static_cast<float>(rect_.h);
 	}
 
-	std::pair<float, float> Sprite::getSize() const noexcept {
+	glm::vec2 Sprite::getSize() const noexcept {
 		return {getWidth(), getHeight()};
 	}
 

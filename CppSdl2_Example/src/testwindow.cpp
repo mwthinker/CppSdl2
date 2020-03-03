@@ -1,7 +1,6 @@
 #include "testwindow.h"
 
 #include <sdl/sprite.h>
-#include <sdl/text.h>
 #include <sdl/window.h>
 #include <sdl/opengl.h>
 #include <sdl/sprite.h>
@@ -234,9 +233,9 @@ void TestWindow::initPreLoop() {
 	batch_->uploadToGraphicCard();
 	
 	batch2_ = std::make_shared<BatchTriangles>(shader_, GL_DYNAMIC_DRAW);
-	text_ = {"Testing", font};
+	text_ = sdl::Sprite{"Testing", font};
 	batch2_->init();
-	batch2_->addRectangle(0, 0, 1, 1, text_.getSprite());
+	batch2_->addRectangle(0, 0, 1, 1, text_);
 	batch2_->uploadToGraphicCard();
 
 	sdl::GameController::loadGameControllerMappings("gamecontrollerdb.txt");
