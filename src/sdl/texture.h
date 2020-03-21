@@ -15,7 +15,6 @@ namespace sdl {
 	class Texture {
 	public:
 		friend class TextureAtlas;
-		friend class Text;
 
 		Texture() = default;
 		~Texture();

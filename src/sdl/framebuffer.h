@@ -7,9 +7,6 @@ namespace sdl {
 
 	class FrameBuffer {
 	public:
-		friend class TextureAtlas;
-		friend class Text;
-
 		FrameBuffer() = default;
 		~FrameBuffer();
 
