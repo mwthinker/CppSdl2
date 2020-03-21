@@ -8,8 +8,15 @@ namespace sdl {
 	namespace {
 
 		GLenum surfaceFormat(SDL_Surface* surface) {
-			assert(surface->format->BytesPerPixel == 4 || surface->format->BytesPerPixel == 3);
-			return surface->format->BytesPerPixel == 4 ? GL_RGBA : GL_RGB;
+			switch (surface->format->BytesPerPixel) {
+				case 1:
+					return GL_RED;
+				case 3:
+					return GL_RGB;
+				case 4:
+					return GL_RGBA;
+			}
+			return 0;
 		}
 
 	}
@@ -19,7 +26,7 @@ namespace sdl {
 			glDeleteTextures(1, &texture_);
 		}
 	}
-	
+
 	Texture::Texture(Texture&& texture) noexcept
 		: texture_{std::exchange(texture.texture_, 0)} {
 
@@ -52,14 +59,20 @@ namespace sdl {
 			logger()->debug("[Texture] Failed to bind, must be generated first");
 			return;
 		}
-		
+
+		auto format = surfaceFormat(surface.surface_);
+		if (format == 0) {
+			logger()->debug("[Texture] Failed BytesPerPixel, must be 1, 3 or 4. Is: {}", surface.surface_->format->BytesPerPixel);
+			return;
+		}
+
 		glBindTexture(GL_TEXTURE_2D, texture_);
 		assertGlError();
 		filter();
-		glTexImage2D(GL_TEXTURE_2D, 0, surfaceFormat(surface.surface_),
+		glTexImage2D(GL_TEXTURE_2D, 0, format,
 			surface.surface_->w, surface.surface_->h,
 			0,
-			surfaceFormat(surface.surface_),
+			format,
 			GL_UNSIGNED_BYTE,
 			surface.surface_->pixels
 		);
