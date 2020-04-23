@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.1...3.14)
+cmake_minimum_required(VERSION 3.14)
 
 set(VCPKG_ROOT $ENV{VCPKG_ROOT})
 if(DEFINED ENV{VCPKG_ROOT} AND NOT DEFINED CMAKE_TOOLCHAIN_FILE)
@@ -15,8 +15,6 @@ project(CppSdl2
 		CXX
 )
 
-set(CMAKE_CXX_STANDARD 17)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
 if (MSVC)
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /wd4275") # non - DLL-interface class 'class_1' used as base for DLL-interface class 'class_2'
 endif ()
@@ -102,6 +100,20 @@ target_link_libraries(CppSdl2
 		spdlog::spdlog spdlog::spdlog_header_only
 		glm
 		imgui::imgui
+)
+
+if (MSVC)
+	target_compile_options(CppSdl2
+		PRIVATE
+			"/permissive-"
+	)
+endif (MSVC)
+
+set_target_properties(CppSdl2
+	PROPERTIES
+		CXX_STANDARD 17
+		CXX_STANDARD_REQUIRED YES
+		CXX_EXTENSIONS NO
 )
 
 message(STATUS "CppSdl2_Example is available to add: -DCppSdl2_Example=1")
