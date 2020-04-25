@@ -9,7 +9,7 @@
 
 class BatchTrianglesIndexes {
 public:
-	BatchTrianglesIndexes(const std::shared_ptr<TestShader>& shader, GLenum usage);
+	BatchTrianglesIndexes(std::shared_ptr<TestShader> shader, GLenum usage);
 
 	~BatchTrianglesIndexes() = default;
 

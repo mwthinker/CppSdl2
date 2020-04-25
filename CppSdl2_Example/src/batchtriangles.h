@@ -9,7 +9,7 @@
 
 class BatchTriangles {
 public:
-	BatchTriangles(const std::shared_ptr<TestShader>& shader, GLenum usage);
+	BatchTriangles(std::shared_ptr<TestShader> shader, GLenum usage);
 
 	virtual ~BatchTriangles() = default;
 

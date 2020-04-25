@@ -28,8 +28,9 @@ namespace {
 
 }
 
-BatchTrianglesIndexes::BatchTrianglesIndexes(const std::shared_ptr<TestShader>& shader, GLenum usage)
-	: shader_{shader}, batch_{usage} {
+BatchTrianglesIndexes::BatchTrianglesIndexes(std::shared_ptr<TestShader> shader, GLenum usage)
+	: shader_{std::move(shader)}
+	, batch_{usage} {
 
 	assert(shader);
 }
