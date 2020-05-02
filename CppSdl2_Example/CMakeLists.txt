@@ -15,7 +15,6 @@ add_executable(CppSdl2_Example
 	src/batchtriangles.h
 	src/batchtrianglesindexes.cpp
 	src/batchtrianglesindexes.h
-	src/logger.h
 	src/testimguiwindow.cpp
 	src/testimguiwindow.h
 	src/types.h

@@ -1,6 +1,7 @@
 #include "surface.h"
-#include "logger.h"
 #include "font.h"
+
+#include <spdlog/spdlog.h>
 
 #include <cassert>
 
@@ -87,7 +88,7 @@ namespace sdl {
 	Surface::Surface(const std::string& filename) {
 		surface_ = IMG_Load(filename.c_str());
 		if (surface_ == nullptr) {
-			logger()->warn("[Surface] Image {} failed to be loaded: {}", filename, IMG_GetError());
+			spdlog::warn("[sdl::Surface] Image {} failed to be loaded: {}", filename, IMG_GetError());
 		}
 	}
 
@@ -144,12 +145,12 @@ namespace sdl {
 	void Surface::blitSurface(const Surface& src, const Rect& rect) {
 		auto newSurface = SDL_ConvertSurface(src.surface_, surface_->format, 0);
 		if (newSurface == nullptr) {
-			logger()->warn("[Surface] Failed to blit surface, during convert: {}", SDL_GetError());
+			spdlog::warn("[sdl::Surface] Failed to blit surface, during convert: {}", SDL_GetError());
 			return;
 		}
 		SDL_Rect sdlRect = rect;
 		if (SDL_BlitSurface(newSurface, 0, surface_, &sdlRect) != 0) {
-			logger()->warn("[Surface] Failed to blit surface: {}", SDL_GetError());
+			spdlog::warn("[sdl::Surface] Failed to blit surface: {}", SDL_GetError());
 		}
 	}
 	

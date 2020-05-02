@@ -3,13 +3,15 @@
 
 #include "testimguiwindow.h"
 #include "types.h"
-#include "logger.h"
 
 #include <sdl/sprite.h>
 #include <sdl/sound.h>
-#include <sdl/logger.h>
 #include <sdl/textureatlas.h>
 #include <sdl/initsdl.h>
+
+#include <spdlog/spdlog.h>
+#include "spdlog/sinks/stdout_color_sinks.h"
+#include "spdlog/sinks/basic_file_sink.h"
 
 #include <iostream>
 #include <cassert>
@@ -34,7 +36,7 @@ void testLoadTextureAtlas() {
 	TestWindow w{atlas.get()};
 	w.startLoop();
 
-	logger()->info("[testLoadTextureAtlas] Successfully!");
+	spdlog::info("[testLoadTextureAtlas] Successfully!");
 }
 
 // Test to load directly to graphic memory. And draw the total texture and the newly added sprite.
@@ -76,25 +78,25 @@ void testLoadTextureAtlas2() {
 			}
 		}
 		if (!sprite.isValid()) {
-			logger()->warn("[testLoadTextureAtlas2] Number {} failed to be inserted!", nbr);
+			spdlog::info("[testLoadTextureAtlas2] Number {} failed to be inserted!", nbr);
 		}
 	};
 
 	w.setSpaceFunction(func);
 	w.startLoop();
 
-	logger()->info("[testLoadTextureAtlas2] Successfully!");
+	spdlog::info("[testLoadTextureAtlas2] Successfully!");
 }
 
 void testBatchWindow() {
 	try {
 		TestWindow2 w{3, 3};
 		std::string glVersion{"OpenGl Version 3.3"};
-		logger()->info("[testBatchWindow] {}", glVersion);
+		spdlog::info("[testBatchWindow] {}", glVersion);
 		w.setTitle(glVersion);
 		w.startLoop();
 	} catch (std::runtime_error& runtimeError) {
-		logger()->error("[testBatchWindow] Runtime exception: {}", runtimeError.what());
+		spdlog::error("[testBatchWindow] Runtime exception: {}", runtimeError.what());
 	}
 }
 
@@ -125,7 +127,34 @@ void runAll() {
 	testImGuiWindow();
 }
 
+void initLogger() {
+	try {
+		auto console_sink = std::make_shared<spdlog::sinks::stdout_color_sink_mt>();
+		console_sink->set_level(spdlog::level::warn);
+		console_sink->set_pattern("[multi_sink_example] [%^%l%$] %v");
+
+		auto file_sink = std::make_shared<spdlog::sinks::basic_file_sink_mt>("logs/multisink.txt", true);
+		file_sink->set_level(spdlog::level::trace);
+
+		spdlog::sinks_init_list sink_list = {file_sink, console_sink};
+		//spdlog::flush_every(std::chrono::seconds{5});
+
+		spdlog::logger logger{"multi_sink_example", sink_list.begin(), sink_list.end()};
+		logger.set_level(spdlog::level::debug);
+		logger.warn("this should appear in both console and file");
+		logger.info("this message should not appear in the console, only in the file");
+		logger.error("error text");
+
+		// or you can even set multi_sink logger as default logger
+		spdlog::set_default_logger(std::make_shared<spdlog::logger>("multi_sink", spdlog::sinks_init_list({console_sink, file_sink})));
+	} catch (const spdlog::spdlog_ex& ex) {
+		std::cout << "Log initialization failed: " << ex.what() << std::endl;
+	}
+}
+
 int main(int argc, char** argv) {
+	initLogger();
+
 	sdl::InitSdl sdl{SDL_INIT_VIDEO | SDL_INIT_AUDIO | SDL_INIT_GAMECONTROLLER};
 
 	if (argc >= 2) {

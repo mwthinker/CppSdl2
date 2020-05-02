@@ -1,6 +1,6 @@
 #include "gamecontroller.h"
-#include "logger.h"
 
+#include <spdlog/spdlog.h>
 #include <SDL.h>
 
 namespace sdl {	
@@ -37,7 +37,7 @@ namespace sdl {
 
 	void GameController::loadGameControllerMappings(const std::string& file) {
 		if (SDL_GameControllerAddMappingsFromFile(file.c_str()) < 0) {
-			logger()->error("[GameController] Failed to load game controller mappings from file, {}. Error: {}", file, SDL_GetError());
+			spdlog::error("[sdl::GameController] Failed to load game controller mappings from file, {}. Error: {}", file, SDL_GetError());
 		}
 	}
 
@@ -49,10 +49,10 @@ namespace sdl {
 				
 				return GameController{controller};
 			} else {
-				logger()->error("[GameController] Could not open gamecontroller: {}", SDL_GetError());
+				spdlog::error("[sdl::GameController] Could not open gamecontroller: {}", SDL_GetError());
 			}
 		} else {
-			logger()->error("[GameController] Game Controller mapping is not avvailable.");
+			spdlog::error("[sdl::GameController] Game Controller mapping is not avvailable.");
 		}
 		return GameController{};
 	}

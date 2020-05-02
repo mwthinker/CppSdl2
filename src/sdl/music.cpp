@@ -1,5 +1,6 @@
 #include "music.h"
-#include "logger.h"
+
+#include <spdlog/spdlog.h>
 
 #include <memory>
 
@@ -49,7 +50,7 @@ namespace sdl {
 		mixMusic = Mix_LoadMUS(filename.c_str());
 		if (mixMusic == nullptr) {
 			valid = false;
-			logger()->warn("[Music] {} failed to load!", filename);
+			spdlog::warn("[sdl::Music] {} failed to load!", filename);
 		}
 	}
 

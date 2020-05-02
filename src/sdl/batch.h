@@ -2,7 +2,8 @@
 #define CPPSDL2_SDL_BATCH_H
 
 #include "vertexbufferobject.h"
-#include "logger.h"
+
+#include <spdlog/spdlog.h>
 
 #include <algorithm>
 #include <vector>
@@ -247,7 +248,7 @@ namespace sdl {
 	template <class Vertex>
 	void Batch<Vertex>::clear() {
 		if (usage_ == GL_STATIC_DRAW) {
-			logger()->warn("[Batch] Batch static, vbo failed to cleare");
+			spdlog::warn("[sdl::Batch] Batch static, vbo failed to cleare");
 			return;
 		}
 
@@ -291,7 +292,7 @@ namespace sdl {
 	void Batch<Vertex>::uploadToGraphicCard() {
 		if (usage_ == GL_STATIC_DRAW) {
 			if (vbo_.getSize() > 0) {
-				logger()->debug("[Batch] Vbo is static but is replaced anyway");
+				spdlog::debug("[sdl::Batch] Vbo is static but is replaced anyway");
 			}
 			bindAndBufferData();
 		} else {
@@ -325,7 +326,7 @@ namespace sdl {
 	void Batch<Vertex>::draw(const BatchView<Vertex>& batchView) const {
 		if (vbo_.getSize() > 0) {
 			if (!isValidBatchView(batchView)) {
-				logger()->warn("[Batch] BatchView not valid. start = {}, size = {}", batchView.index_, batchView.size_);
+				spdlog::warn("[sdl::Batch] BatchView not valid. start = {}, size = {}", batchView.index_, batchView.size_);
 				return;
 			}
 
@@ -337,7 +338,7 @@ namespace sdl {
 			}
 			assertGlError();
 		} else if (!vbo_.isGenerated()) {
-			logger()->error("[Batch] Vertex data failed to draw, no vbo binded, i.e. Batch::uploadToGraphicCard never called");
+			spdlog::error("[sdl::Batch] Vertex data failed to draw, no vbo binded, i.e. Batch::uploadToGraphicCard never called");
 		}
 	}
 
@@ -361,7 +362,7 @@ namespace sdl {
 			if (vbo_.getSize() == 0) {
 				fullBatch_.insert(begin, end);
 			} else {
-				logger()->error("[] VertexData is static, data can't be modified");
+				spdlog::error("[sdl::Batch] VertexData is static, data can't be modified");
 			}
 		}
 	}
@@ -400,7 +401,7 @@ namespace sdl {
 		IS_INDEX_TYPE<typename std::decay<decltype(*begin)>::type>();
 		
 		if (vbo_.getSize() != 0 && usage_ == GL_STATIC_DRAW) {
-			logger()->error("[Batch] Vertex data is static, data index can't be modified");
+			spdlog::error("[sdl::Batch] Vertex data is static, data index can't be modified");
 			return;
 		}
 		for (auto it = begin; it != end; ++it) {

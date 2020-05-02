@@ -48,8 +48,6 @@ add_library(CppSdl2
 	src/sdl/imguiwindow.cpp
 	src/sdl/initsdl.cpp
 	src/sdl/initsdl.h
-	src/sdl/logger.cpp
-	src/sdl/logger.h
 	src/sdl/music.cpp
 	src/sdl/music.h
 	src/sdl/opengl.cpp

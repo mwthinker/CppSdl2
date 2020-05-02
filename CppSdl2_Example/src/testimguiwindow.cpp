@@ -1,7 +1,8 @@
 #include "testimguiwindow.h"
-#include "logger.h"
 
 #include <sdl/imguiauxiliary.h>
+
+#include <spdlog/spdlog.h>
 
 namespace {
 
@@ -32,7 +33,7 @@ void TestImGuiWindow::eventUpdate(const SDL_Event& windowEvent) {
 	sdl::ImGuiWindow::eventUpdate(windowEvent);
 
 	auto& io = ImGui::GetIO();
-	logger()->info("io.WantCaptureMouse: {}", io.WantCaptureMouse);
+	spdlog::info("io.WantCaptureMouse: {}", io.WantCaptureMouse);
 
 	switch (windowEvent.type) {
 		case SDL_WINDOWEVENT:
@@ -94,7 +95,7 @@ void TestImGuiWindow::initBatchTriangles() {
 	
 	batch_->init();
 	batch_->uploadToGraphicCard();
-	logger()->info("Batch using glDrawArrays, size: {} MB", batch_->getVboSizeInMiB());
+	spdlog::info("Batch using glDrawArrays, size: {} MB", batch_->getVboSizeInMiB());
 }
 
 void TestImGuiWindow::initBatchTrianglesIndexes() {
@@ -106,5 +107,5 @@ void TestImGuiWindow::initBatchTrianglesIndexes() {
 	batchIndexes_->addCircle(-0.7f, -0.7f, 0.1f, 20);
 	batchIndexes_->init();
 	batchIndexes_->uploadToGraphicCard();
-	logger()->info("Batch using glDrawElements, size: {} MiB", batchIndexes_->getVboSizeInMiB());
+	spdlog::info("Batch using glDrawElements, size: {} MiB", batchIndexes_->getVboSizeInMiB());
 }

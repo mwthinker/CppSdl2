@@ -1,7 +1,7 @@
 #include "shader.h"
-#include "logger.h"
 #include "vertex.h"
 
+#include <spdlog/spdlog.h>
 #include <imgui.h>
 #include <glm/gtc/type_ptr.hpp>
 
@@ -45,7 +45,7 @@ namespace sdl {
 			uTexture_ = shader_.getUniformLocation(U_TEXTURE);
 			uUseTexture_ = shader_.getUniformLocation(U_USE_TEXTURE);
 		} else {
-			logger()->warn("[Shader] failed to create VinShader, shader not linked");
+			spdlog::warn("[sdl::Shader] failed to create VinShader, shader not linked");
 		}
 	}
 
@@ -67,7 +67,7 @@ namespace sdl {
 			glVertexAttribPointer(aColor_, 4, GL_UNSIGNED_BYTE, GL_TRUE, sizeof(Vertex), (GLvoid*) offsetof(Vertex, color));
 			sdl::assertGlError();
 		} else {
-			logger()->warn("[Shader] setVertexAttribPointer failed, shader not linked");
+			spdlog::warn("[sdl::Shader] setVertexAttribPointer failed, shader not linked");
 		}
 	}
 

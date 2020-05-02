@@ -2,14 +2,15 @@
 #include "vertexbufferobject.h"
 
 #include "window.h"
-#include "logger.h"
+
+#include <spdlog/spdlog.h>
 
 namespace sdl {
 
 	VertexArrayObject::~VertexArrayObject() {
 		if (vao_ != 0) {
 			glDeleteVertexArrays(1, &vao_);
-			logger()->debug("[VertexArrayObject] Deleted vao: {}", vao_);
+			spdlog::debug("[sdl::VertexArrayObject] Deleted vao: {}", vao_);
 			assertGlError();
 		}
 	}
@@ -21,7 +22,7 @@ namespace sdl {
 	VertexArrayObject& VertexArrayObject::operator=(VertexArrayObject&& other) noexcept {
 		if (vao_ != 0) {
 			glDeleteVertexArrays(1, &vao_);
-			logger()->debug("[VertexArrayObject] Deleted vao: {}", vao_);
+			spdlog::debug("[sdl::VertexArrayObject] Deleted vao: {}", vao_);
 			assertGlError();
 		}
 		vao_ = std::exchange(other.vao_, 0);
@@ -33,7 +34,7 @@ namespace sdl {
 			glGenVertexArrays(1, &vao_);
 			assertGlError();
 		} else {
-			logger()->warn("[VertexArrayObject] tried to create, but vao already exists");
+			spdlog::warn("[sdl::VertexArrayObject] tried to create, but vao already exists");
 		}
 	}
 
@@ -42,13 +43,13 @@ namespace sdl {
 			glBindVertexArray(vao_);
 			assertGlError();
 		} else {
-			logger()->debug("[VertexArrayObject] Must be generated first");
+			spdlog::debug("[sdl::VertexArrayObject] Must be generated first");
 		}
 	}
 
 	void VertexArrayObject::unbind() {
 		glBindVertexArray(0);
-		logger()->debug("[VertexArrayObject] Unbind vao");
+		spdlog::debug("[sdl::VertexArrayObject] Unbind vao");
 	}
 
 } // Namespace mw.

@@ -1,5 +1,6 @@
 #include "vertexbufferobject.h"
-#include "logger.h"
+
+#include <spdlog/spdlog.h>
 
 namespace sdl {
 
@@ -60,7 +61,7 @@ namespace sdl {
 			}
 			assertGlError();
 		} else {
-		    logger()->warn("[VertexBufferObject] Calling bindSubData failed, must call bindData first");
+			spdlog::warn("[sdl::VertexBufferObject] Calling bindSubData failed, must call bindData first");
 		}
 	}
 
@@ -73,7 +74,7 @@ namespace sdl {
             glGenBuffers(1, &vboId_);
 			assertGlError();
 		} else {
-			logger()->warn("[VertexBufferObject] Calling generate failed, generate has already been called");
+			spdlog::warn("[sdl::VertexBufferObject] Calling generate failed, generate has already been called");
 		}
 	}
 
@@ -85,7 +86,7 @@ namespace sdl {
 			glBindBuffer(target_, vboId_);
 			assertGlError();
 		} else {
-			logger()->warn("[VertexBufferObject] bind failed, generate must be called first");
+			spdlog::warn("[sdl::VertexBufferObject] bind failed, generate must be called first");
 		}
 	}
 

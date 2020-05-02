@@ -1,5 +1,6 @@
 #include "opengl.h"
-#include "logger.h"
+
+#include <spdlog/spdlog.h>
 
 namespace sdl {
 
@@ -28,7 +29,7 @@ namespace sdl {
 
 	void _assertGlError(const char* file, int line) {
 		while (GLenum error = glGetError()) {
-			logger()->warn("[OpenGl] OpenGl error: {}={} - {}: {}", error, errorString(error), file, line);
+			spdlog::warn("[sdl::OpenGl] OpenGl error: {}={} - {}: {}", error, errorString(error), file, line);
 		}
 	}
 

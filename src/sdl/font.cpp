@@ -1,8 +1,8 @@
 #include "font.h"
-#include "logger.h"
 
 #include <string>
 
+#include <spdlog/spdlog.h>
 #include <SDL_ttf.h>
 
 namespace sdl {
@@ -20,7 +20,7 @@ namespace sdl {
 			characterSize_ = characterSize;
 			TTF_SetFontHinting(font_, TTF_HINTING_LIGHT);
 		} else {
-			logger()->error("[Font] Error font: {}", TTF_GetError());
+			spdlog::error("[sdl::Font] Error font: {}", TTF_GetError());
 		}
 	}
 

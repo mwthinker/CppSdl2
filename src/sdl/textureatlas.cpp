@@ -1,5 +1,6 @@
 #include "textureatlas.h"
-#include "logger.h"
+
+#include <spdlog/spdlog.h>
 
 namespace sdl {
 
@@ -80,7 +81,7 @@ namespace sdl {
 			if (surface.isLoaded()) {
 				return add(std::move(surface), border, key);
 			} else {
-				logger()->warn("[TextureAtlas] Image {} failed to load: {}", filename, IMG_GetError());
+				spdlog::warn("[sdl::TextureAtlas] Image {} failed to load: {}", filename, IMG_GetError());
 				return images_[""];
 			}
 		}
@@ -109,7 +110,7 @@ namespace sdl {
 					sprite_.blit(surface, rect);
 					return images_[key] = Sprite{sprite_, rect};
 				} else {
-					logger()->warn("[TextureAtlas] Not enough image space to insert image");
+					spdlog::warn("[sdl::TextureAtlas] Not enough image space to insert image");
 					return images_[""];
 				}
 			} else {

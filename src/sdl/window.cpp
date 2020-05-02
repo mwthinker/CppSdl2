@@ -1,7 +1,8 @@
 #include "window.h"
 #include "exception.h"
 #include "sprite.h"
-#include "logger.h"
+
+#include <spdlog/spdlog.h>
 
 #include <SDL_image.h>
 
@@ -16,9 +17,9 @@ namespace sdl {
 		
 		void initGlad() {
 			if (gladLoadGLLoader((GLADloadproc) SDL_GL_GetProcAddress)) {
-				logger()->info("[Window] gladLoadGLLoader succeeded");
+				spdlog::info("[sdl::Window] gladLoadGLLoader succeeded");
 			} else {
-				logger()->error("[Window] gladLoadGLLoader failed, something is seriously wrong");
+				spdlog::error("[sdl::Window] gladLoadGLLoader failed, something is seriously wrong");
 				throw std::exception{};
 			}
 		}
@@ -37,28 +38,28 @@ namespace sdl {
 		, minorVersionGl_{minorVersionGl} {
 		
 		assert(majorVersionGl > 0 && minorVersionGl > 0);
-		logger()->info("[Window] Creating Window");
+		spdlog::info("[sdl::Window] Creating Window");
 	}
 
 	void Window::setupOpenGlContext() {
 		glContext_ = SDL_GL_CreateContext(window_);
 		if (glContext_ == 0) {
-			logger()->error("[Window] SDL_GL_CreateContext failed: ", SDL_GetError());
+			spdlog::error("[sdl::Window] SDL_GL_CreateContext failed: ", SDL_GetError());
 			throw std::exception{};
 		}
 
 		if (SDL_GL_SetSwapInterval(1) < 0) {
-			logger()->warn("[Window] Warning: Unable to set VSync! SDL Error: ", SDL_GetError());
+			spdlog::warn("[sdl::Window] Warning: Unable to set VSync! SDL Error: ", SDL_GetError());
 		}
 		
 		initGlad();
 
-        logger()->info("[Window] Setup OpenGl version: {}.{}", majorVersionGl_, minorVersionGl_);
+        spdlog::info("[sdl::Window] Setup OpenGl version: {}.{}", majorVersionGl_, minorVersionGl_);
 		if (char* version = (char*) glGetString(GL_VERSION)) {
-			logger()->info("[Window] GL_VERSION: {}", version);
-			logger()->info("[Window] GL_SHADING_LANGUAGE_VERSION: {}", (char*) glGetString(GL_SHADING_LANGUAGE_VERSION));
+			spdlog::info("[sdl::Window] GL_VERSION: {}", version);
+			spdlog::info("[sdl::Window] GL_SHADING_LANGUAGE_VERSION: {}", (char*) glGetString(GL_SHADING_LANGUAGE_VERSION));
 		} else {
-			logger()->error("[Window] Error: unknown OpenGL version loadad!");
+			spdlog::error("[sdl::Window] Error: unknown OpenGL version loadad!");
 			throw std::exception{};
 		}
 	}
@@ -81,7 +82,7 @@ namespace sdl {
 			return;
 		}
 
-		logger()->info("[Window] Init loop");
+		spdlog::info("[sdl::Window] Init loop");
 		Uint32 flags = SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL;
 		if (resizable_) {
 			flags |= SDL_WINDOW_RESIZABLE;
@@ -101,8 +102,8 @@ namespace sdl {
 		initOpenGl();
 
 		if (SDL_GL_LoadLibrary(nullptr) != 0) {
-			logger()->error("[Window] SDL_GL_LoadLibrary failed {}", SDL_GetError());
-			logger()->error("[Window] Failed to load OpenGL version {}.{}", majorVersionGl_, minorVersionGl_);
+			spdlog::error("[sdl::Window] SDL_GL_LoadLibrary failed {}", SDL_GetError());
+			spdlog::error("[sdl::Window] Failed to load OpenGL version {}.{}", majorVersionGl_, minorVersionGl_);
 			throw std::exception{};
 		}
 
@@ -114,14 +115,14 @@ namespace sdl {
 		);
 
 		if (window_ == nullptr) {
-			logger()->error("[Window] SDL_CreateWindow failed: {}", SDL_GetError());
+			spdlog::error("[sdl::Window] SDL_CreateWindow failed: {}", SDL_GetError());
 			throw std::exception();
 		} else {
-			logger()->info("[Window] Windows {} created: \n\t(x, y) = ({}, {}) \n\t(w, h) = ({}, {}) \n\tflags = {}", title_, x_ == SDL_WINDOWPOS_UNDEFINED? -1 : x_, y_ == SDL_WINDOWPOS_UNDEFINED ? -1 : y_, width_, height_, flags);
+			spdlog::info("[sdl::Window] Windows {} created: \n\t(x, y) = ({}, {}) \n\t(w, h) = ({}, {}) \n\tflags = {}", title_, x_ == SDL_WINDOWPOS_UNDEFINED? -1 : x_, y_ == SDL_WINDOWPOS_UNDEFINED ? -1 : y_, width_, height_, flags);
 		}
 
 		if (icon_) {
-			logger()->debug("[Window] Windows icon updated");
+			spdlog::debug("[sdl::Window] Windows icon updated");
 			SDL_SetWindowIcon(window_, icon_);
 			SDL_FreeSurface(icon_);
 			icon_ = nullptr;
@@ -131,11 +132,11 @@ namespace sdl {
 		setupOpenGlContext();
 		initPreLoop();
 		runLoop();
-		logger()->info("[Window] Loop ended");
+		spdlog::info("[sdl::Window] Loop ended");
 	}
 
 	void Window::runLoop() {
-		logger()->info("[Window] Loop starting");
+		spdlog::info("[sdl::Window] Loop starting");
 		auto time = std::chrono::high_resolution_clock::now();
 		while (!quit_) {
 			glClear(glBitfield_);
@@ -160,7 +161,7 @@ namespace sdl {
 	void Window::setBordered(bool bordered) {
 		if (window_) {
 			SDL_SetWindowBordered(window_, bordered ? SDL_TRUE : SDL_FALSE);
-			logger()->info("[Window] Window border: {}", bordered);
+			spdlog::info("[sdl::Window] Window border: {}", bordered);
 		} else {
 			bordered_ = bordered;
 		}
@@ -175,7 +176,7 @@ namespace sdl {
 				y_ = SDL_WINDOWPOS_UNDEFINED;
 			}
 			SDL_SetWindowPosition(window_, x, y);
-			logger()->info("[Window] Reposition window: (x, y) = ({}, {})", x_ == SDL_WINDOWPOS_UNDEFINED ? -1 : x_, y_ == SDL_WINDOWPOS_UNDEFINED ? -1 : y_);
+			spdlog::info("[sdl::Window] Reposition window: (x, y) = ({}, {})", x_ == SDL_WINDOWPOS_UNDEFINED ? -1 : x_, y_ == SDL_WINDOWPOS_UNDEFINED ? -1 : y_);
 		} else {
 			x_ = x;
 			y_ = y;
@@ -185,7 +186,7 @@ namespace sdl {
 	void Window::setResizeable(bool resizable) {
 		if (window_) {
 			SDL_SetWindowResizable(window_, resizable ? SDL_TRUE : SDL_FALSE);
-			logger()->info("[Window] Window resizeable: {}", resizable);
+			spdlog::info("[sdl::Window] Window resizeable: {}", resizable);
 		} else {
 			resizable_ = resizable;
 		}
@@ -208,7 +209,7 @@ namespace sdl {
 
 	void Window::setTitle(const std::string& title) {
 		if (window_) {
-			logger()->info("[Window] tile named to {}", title);
+			spdlog::info("[sdl::Window] tile named to {}", title);
 			SDL_SetWindowTitle(window_, title.c_str());
 		} else {
 			title_ = title;
@@ -253,7 +254,7 @@ namespace sdl {
 
 	void Window::setWindowSize(int width, int height) {
 		if (window_) {
-			logger()->info("[Window] Resizing: (w, h) = ({}, {})", width, height);
+			spdlog::info("[sdl::Window] Resizing: (w, h) = ({}, {})", width, height);
 			SDL_SetWindowSize(window_, width, height);
 		} else {
 			width_ = width;
@@ -278,15 +279,15 @@ namespace sdl {
 			return;
 		}
 		if (isFullScreen()) {
-			logger()->info("[Window] Fullscreen inactivated.");
+			spdlog::info("[sdl::Window] Fullscreen inactivated.");
 			SDL_SetWindowFullscreen(window_, 0);
 			SDL_SetWindowSize(window_, width_, height_);
 			if (!bordered_) {
-				logger()->info("[Window] Border inactivated.");
+				spdlog::info("[sdl::Window] Border inactivated.");
 				SDL_SetWindowBordered(window_, SDL_bool::SDL_FALSE);
 			}
 		} else {
-			logger()->info("[Window] Fullscreen activated.");
+			spdlog::info("[sdl::Window] Fullscreen activated.");
 			SDL_GetWindowSize(window_, &width_, &height_);
 			SDL_SetWindowFullscreen(window_, SDL_WINDOW_FULLSCREEN_DESKTOP);
 		}

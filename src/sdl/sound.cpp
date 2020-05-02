@@ -1,5 +1,6 @@
 #include "sound.h"
-#include "logger.h"
+
+#include <spdlog/spdlog.h>
 
 #include <algorithm>
 
@@ -45,11 +46,11 @@ namespace sdl {
 					setVolume(volume_);
 				} else {
 					// All channels is being used.
-					logger()->warn("[Sound] Failed to play sound, id {}, all channels is being used! {}", id_);
-					logger()->warn("[Sound] Mix_GetError(): {}", Mix_GetError());
+					spdlog::warn("[sdl::Sound] Failed to play sound, id {}, all channels is being used! {}", id_);
+					spdlog::warn("[sdl::Sound] Mix_GetError(): {}", Mix_GetError());
 				}
 			} else {
-				logger()->warn("[Sound] Failed to play sound, id {}, already playing.", id_);
+				spdlog::warn("[sdl::Sound] Failed to play sound, id {}, already playing.", id_);
 			}
 		}
 	}
@@ -117,7 +118,7 @@ namespace sdl {
 		mixChunk = Mix_LoadWAV(filename.c_str());
 		if (mixChunk == nullptr) {
 			valid = false;
-			logger()->warn("[Sound] Mix_LoadWAV {}: {} failed to load. ", filename, Mix_GetError());
+			spdlog::warn("[sdl::Sound] Mix_LoadWAV {}: {} failed to load. ", filename, Mix_GetError());
 		}
 	}
 

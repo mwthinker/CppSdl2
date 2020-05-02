@@ -3,7 +3,6 @@
 
 TEST_CASE("benchmarked", "[!benchmark]") {
 
-
 	const int ITERATIONS = 1000;
 
 	BENCHMARK("test with no precalculation") {

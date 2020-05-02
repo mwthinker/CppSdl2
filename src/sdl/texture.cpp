@@ -1,7 +1,8 @@
 #include "texture.h"
 #include "surface.h"
 #include "opengl.h"
-#include "logger.h"
+
+#include <spdlog/spdlog.h>
 
 namespace sdl {
 
@@ -45,24 +46,24 @@ namespace sdl {
 			glBindTexture(GL_TEXTURE_2D, texture_);
 			assertGlError();
 		} else {
-			logger()->debug("[Texture] Must be generated first");
+			spdlog::debug("[sdl::Texture] Must be generated first");
 		}
 	}
 
 	void Texture::texImage(const Surface& surface, std::function<void()>&& filter) {
 		if (!surface.isLoaded()) {
-			logger()->debug("[Texture] Failed to bind, must be loaded first");
+			spdlog::debug("[sdl::Texture] Failed to bind, must be loaded first");
 			return;
 		}
 
 		if (!isValid()) {
-			logger()->debug("[Texture] Failed to bind, must be generated first");
+			spdlog::debug("[sdl::Texture] Failed to bind, must be generated first");
 			return;
 		}
 
 		auto format = surfaceFormat(surface.surface_);
 		if (format == 0) {
-			logger()->debug("[Texture] Failed BytesPerPixel, must be 1, 3 or 4. Is: {}", surface.surface_->format->BytesPerPixel);
+			spdlog::debug("[sdl::Texture] Failed BytesPerPixel, must be 1, 3 or 4. Is: {}", surface.surface_->format->BytesPerPixel);
 			return;
 		}
 
@@ -90,7 +91,7 @@ namespace sdl {
 				surface.surface_->pixels);
 			assertGlError();
 		} else {
-			logger()->warn("[Texture] texSubImage failed");
+			spdlog::warn("[sdl::Texture] texSubImage failed");
 		}
 	}
 
@@ -99,7 +100,7 @@ namespace sdl {
 			glGenTextures(1, &texture_);
 			assertGlError();
 		} else {
-			logger()->warn("[Texture] tried to create, but texture already exists");
+			spdlog::warn("[sdl::Texture] tried to create, but texture already exists");
 		}
 	}
 

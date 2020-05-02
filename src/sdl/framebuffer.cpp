@@ -1,5 +1,6 @@
 #include "framebuffer.h"
-#include "logger.h"
+
+#include <spdlog/spdlog.h>
 
 namespace sdl {
 
@@ -27,7 +28,7 @@ namespace sdl {
 			glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer_);
 			assertGlError();
 		} else {
-			logger()->debug("[FrameBuffer] Must be generated first");
+			spdlog::debug("[sdl::FrameBuffer] Must be generated first");
 		}
 	}
 
@@ -45,7 +46,7 @@ namespace sdl {
 			glGenFramebuffers(1, &frameBuffer_);
 			assertGlError();
 		} else {
-			logger()->warn("[FrameBuffer] tried to create, but texture already exists");
+			spdlog::warn("[sdl::FrameBuffer] tried to create, but texture already exists");
 		}
 	}
 

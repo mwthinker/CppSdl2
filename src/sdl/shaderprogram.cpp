@@ -1,5 +1,6 @@
 #include "shaderprogram.h"
-#include "logger.h"
+
+#include <spdlog/spdlog.h>
 
 #include <fstream>
 #include <sstream>
@@ -8,49 +9,49 @@ namespace sdl {
 
 	namespace {
 
-        enum class LogError {
-            PROGRAM_ERROR,
-            SHADER_ERROR
-	    };
+		enum class LogError {
+			PROGRAM_ERROR,
+			SHADER_ERROR
+		};
 
-        template <LogError TYPE>
-        void logError(GLuint objectId, const char* shaderString, const char* errorHeader) {
-            GLint infoLen = 0;
-            if constexpr(TYPE == LogError::PROGRAM_ERROR) {
-                glGetProgramiv(objectId, GL_INFO_LOG_LENGTH, &infoLen);
-            } else {
-                glGetShaderiv(objectId, GL_INFO_LOG_LENGTH, &infoLen);
-            }
-            if (infoLen > 1) {
-                char message[256]; // A arbitrary value big enough to contain message.
-                GLsizei size;
-                if constexpr(TYPE == LogError::PROGRAM_ERROR) {
-                    glGetProgramInfoLog(objectId, sizeof(message), &size, message);
-                } else {
-                    glGetShaderInfoLog(objectId, sizeof(message), &size, message);
-                }
-                std::string str;
-                str.append(message, message + size);
-                logger()->error("[ShaderProgram] {}, {}: {}", shaderString, errorHeader, str);
-            }
-        }
+		template <LogError TYPE>
+		void logError(GLuint objectId, const char* shaderString, const char* errorHeader) {
+			GLint infoLen = 0;
+			if constexpr (TYPE == LogError::PROGRAM_ERROR) {
+				glGetProgramiv(objectId, GL_INFO_LOG_LENGTH, &infoLen);
+			} else {
+				glGetShaderiv(objectId, GL_INFO_LOG_LENGTH, &infoLen);
+			}
+			if (infoLen > 1) {
+				char message[256]; // A arbitrary value big enough to contain message.
+				GLsizei size;
+				if constexpr (TYPE == LogError::PROGRAM_ERROR) {
+					glGetProgramInfoLog(objectId, sizeof(message), &size, message);
+				} else {
+					glGetShaderInfoLog(objectId, sizeof(message), &size, message);
+				}
+				std::string str;
+				str.append(message, message + size);
+				spdlog::error("[sdl::ShaderProgram] {}, {}: {}", shaderString, errorHeader, str);
+			}
+		}
 
 		GLuint loadShader(GLuint program, GLenum type, const GLchar* shaderSrc) {
 			auto shader= glCreateShader(type);
 			if (shader == 0) {
-                logger()->error("[ShaderProgram] Failed to create shader: ", shaderSrc);
-                return 0;
+				spdlog::error("[sdl::ShaderProgram] Failed to create shader: ", shaderSrc);
+				return 0;
 			}
 			glShaderSource(shader, 1, &shaderSrc, 0);
 			assertGlError();
 			glCompileShader(shader);
 
 			GLint compileStatus;
-            glGetShaderiv(shader, GL_COMPILE_STATUS, &compileStatus);
-            if (compileStatus == GL_FALSE) {
-                logError<LogError::SHADER_ERROR>(shader, shaderSrc, "Failed to compile shader: ");
-                return 0;
-            }
+			glGetShaderiv(shader, GL_COMPILE_STATUS, &compileStatus);
+			if (compileStatus == GL_FALSE) {
+				logError<LogError::SHADER_ERROR>(shader, shaderSrc, "Failed to compile shader: ");
+				return 0;
+			}
 			assertGlError();
 			glAttachShader(program, shader);
 			assertGlError();
@@ -98,7 +99,7 @@ namespace sdl {
 		if (programObjectId_ == 0) {
 			attributes_[attribute] = 0;
 		} else {
-			logger()->warn("[ShaderProgram] Failed to bind attribute, program is already compiled");
+			spdlog::warn("[sdl::ShaderProgram] Failed to bind attribute, program is already compiled");
 		}
 	}
 
@@ -107,7 +108,7 @@ namespace sdl {
 		if (it != attributes_.end()) {
 			return it->second;
 		}
-		logger()->warn("[ShaderProgram] shader attribute {} failed to be extracted", attribute);
+		spdlog::warn("[sdl::ShaderProgram] shader attribute {} failed to be extracted", attribute);
 		return -1;
 	}
 
@@ -126,7 +127,7 @@ namespace sdl {
 				return loc;
 			}
 		}
-		logger()->warn("[ShaderProgram] shader uniform {} failed to be extracted", uniform);
+		spdlog::warn("[sdl::ShaderProgram] shader uniform {} failed to be extracted", uniform);
 		return -1;
 	}
 
@@ -144,7 +145,7 @@ namespace sdl {
 			assertGlError();
 			
 			if (programObjectId_ == 0) {
-                logger()->error("[ShaderProgram] Failed to create program");
+				spdlog::error("[sdl::ShaderProgram] Failed to create program");
 				return false;
 			}
 
@@ -167,7 +168,7 @@ namespace sdl {
 			useProgram();
 			return true;
 		}
-		logger()->warn("[ShaderProgram] Failed to load and link, opengl program already generated");
+		spdlog::warn("[sdl::ShaderProgram] Failed to load and link, opengl program already generated");
 		return false;
 	}
 
@@ -180,7 +181,7 @@ namespace sdl {
 			glUseProgram(programObjectId_);
 			assertGlError();
 		} else {
-			logger()->warn("[ShaderProgram] Failed to use program, program is not compiled");
+			spdlog::warn("[sdl::ShaderProgram] Failed to use program, program is not compiled");
 		}
 	}
 	

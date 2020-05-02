@@ -1,7 +1,8 @@
 #include "sprite.h"
 #include "surface.h"
 #include "opengl.h"
-#include "logger.h"
+
+#include <spdlog/spdlog.h>
 
 #include <string>
 #include <functional>
@@ -25,7 +26,7 @@ namespace sdl {
 		}
 
 		if (!font.isLoaded()) {
-			logger()->warn("[Sprite] font not loaded");
+			spdlog::warn("[sdl::Sprite] font not loaded");
 		}
 
 		Surface surface{text, font, WHITE};

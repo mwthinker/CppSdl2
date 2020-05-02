@@ -1,6 +1,6 @@
 #include "initsdl.h"
-#include "logger.h"
 
+#include <spdlog/spdlog.h>
 #include <SDL.h>
 #include <SDL_ttf.h>
 #include <SDL_mixer.h>
@@ -37,10 +37,10 @@ namespace sdl {
 
 	void InitSdl::initSdl() {
 		if (SDL_Init(flags_)) {
-			logger()->error("[InitSdl] Unable to init SDL: {}", SDL_GetError());
+			spdlog::error("[sdl::InitSdl] Unable to init SDL: {}", SDL_GetError());
 		} else {
 			if (!TTF_WasInit() && TTF_Init() == -1) {
-				logger()->error("[InitTtf] InitTtf failed");
+				spdlog::error("[sdl::InitTtf] InitTtf failed");
 			}
 		}
 	}
@@ -49,7 +49,7 @@ namespace sdl {
 		int success = Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 4096);
 		Mix_AllocateChannels(16);
 		if (success == -1) {
-			logger()->error("[InitMixer] Sound failed to initiate!");
+			spdlog::error("[sdl::InitMixer] Sound failed to initiate!");
 		}
 	}
 
