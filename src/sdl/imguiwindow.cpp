@@ -1,8 +1,8 @@
 #include "imguiwindow.h"
-#include "logger.h"
 #include "vertexarrayobject.h"
 #include "imguiauxiliary.h"
 
+#include <spdlog/spdlog.h>
 #include <glm/gtc/matrix_transform.hpp>
 #include <SDL_syswm.h>
 
