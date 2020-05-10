@@ -42,6 +42,10 @@ namespace sdl {
 
 		std::pair<int, int> getSize() const;
 
+		std::pair<int, int> getMinSize() const;
+
+		std::pair<int, int> getMaxSize() const;
+
 		std::pair<int, int> getDrawableSize() const;
 
 		std::pair<int, int> getWindowPosition() const;
@@ -72,7 +76,11 @@ namespace sdl {
 
 		void setTitle(const std::string& title);
 
-		void setWindowSize(int width, int height);
+		void setSize(int width, int height);
+
+		void setMinSize(int width, int height);
+
+		void setMaxSize(int width, int height);
 
 		int getOpenGlMajorVersion() const noexcept;
 
@@ -120,6 +128,10 @@ namespace sdl {
 		int height_ = DEFAULT_HEIGHT;
 		int x_ = SDL_WINDOWPOS_UNDEFINED;
 		int y_ = SDL_WINDOWPOS_UNDEFINED;
+		int minWidth_ = -1;
+		int minHeight_ = -1;
+		int maxWidth_ = -1;
+		int maxHeight_ = -1;
 		
 		std::chrono::nanoseconds sleepingTime_{};
 		const int majorVersionGl_;

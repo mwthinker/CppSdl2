@@ -113,6 +113,8 @@ namespace sdl {
 			width_,	height_,
 			flags
 		);
+		SDL_SetWindowMinimumSize(window_, minWidth_, minHeight_);
+		SDL_SetWindowMaximumSize(window_, maxWidth_, maxHeight_);
 
 		if (window_ == nullptr) {
 			spdlog::error("[sdl::Window] SDL_CreateWindow failed: {}", SDL_GetError());
@@ -234,6 +236,24 @@ namespace sdl {
 		return {width_, height_};;
 	}
 
+	std::pair<int, int> Window::getMinSize() const {
+		if (window_) {
+			std::pair<int, int> pair;
+			SDL_GetWindowMinimumSize(window_, &pair.first, &pair.second);
+			return pair;
+		}
+		return {minWidth_, minHeight_};;
+	}
+
+	std::pair<int, int> Window::getMaxSize() const {
+		if (window_) {
+			std::pair<int, int> pair;
+			SDL_GetWindowMaximumSize(window_, &pair.first, &pair.second);
+			return pair;
+		}
+		return {maxWidth_, maxHeight_};;
+	}
+
 	std::pair<int, int> Window::getDrawableSize() const {
 		if (window_) {
 			std::pair<int, int> pair;
@@ -252,13 +272,33 @@ namespace sdl {
 		return {x_, y_};
 	}
 
-	void Window::setWindowSize(int width, int height) {
+	void Window::setSize(int width, int height) {
 		if (window_) {
 			spdlog::info("[sdl::Window] Resizing: (w, h) = ({}, {})", width, height);
 			SDL_SetWindowSize(window_, width, height);
 		} else {
 			width_ = width;
 			height_ = height;
+		}
+	}
+
+	void Window::setMinSize(int width, int height) {
+		if (window_) {
+			spdlog::info("[sdl::Window] Setting min size: (w, h) = ({}, {})", width, height);
+			SDL_SetWindowMinimumSize(window_, width, height);
+		} else {
+			minWidth_ = width;
+			minHeight_ = height;
+		}
+	}
+
+	void Window::setMaxSize(int width, int height) {
+		if (window_) {
+			spdlog::info("[sdl::Window] Setting max size: (w, h) = ({}, {})", width, height);
+			SDL_SetWindowMaximumSize(window_, width, height);
+		} else {
+			maxWidth_ = width;
+			maxHeight_ = height;
 		}
 	}
 

@@ -67,7 +67,7 @@ namespace {
 }
 
 TestWindow::TestWindow(const sdl::Sprite& sprite) : Window{2, 1}, sprite_{sprite} {
-	sdl::Window::setWindowSize(512, 512);
+	sdl::Window::setSize(512, 512);
 	sdl::Window::setTitle("Test");
 	sdl::Window::setIcon("tetris.bmp");
 }
