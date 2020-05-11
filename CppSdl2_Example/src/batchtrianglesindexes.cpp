@@ -32,7 +32,7 @@ BatchTrianglesIndexes::BatchTrianglesIndexes(std::shared_ptr<TestShader> shader,
 	: shader_{std::move(shader)}
 	, batch_{usage} {
 
-	assert(shader);
+	assert(shader_);
 }
 
 float BatchTrianglesIndexes::getVboSizeInMiB() const noexcept {
