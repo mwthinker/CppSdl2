@@ -20,7 +20,7 @@ namespace sdl::graphic {
 
 	[[nodiscard]] std::array<glm::vec2, 6> getHexagonCorners(const glm::vec2& center, float radius, float startAngle = 0.f);
 
-} // Namespace sdl.
+}
 
 namespace sdl::graphic::indexed {
 
@@ -34,6 +34,6 @@ namespace sdl::graphic::indexed {
 
 	sdl::BatchView<Vertex> addCircle(sdl::Batch<Vertex>& batch, const glm::vec2& center, float radius, Color color, const int iterations, float startAngle);
 
-} // Namespace sdl.
+}
 
-#endif // CPPSDL2_SDL_GRAPHIC_H
+#endif

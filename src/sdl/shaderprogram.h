@@ -70,6 +70,6 @@ namespace sdl {
 		GLuint programObjectId_{};
 	};
 
-} // Namespace sdl.
+}
 
-#endif // CPPSDL2_SDL_SHADERPROGRAM_H
+#endif

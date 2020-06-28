@@ -33,4 +33,4 @@ private:
 	std::shared_ptr<BatchTrianglesIndexes> batchIndexes_;
 };
 
-#endif // TESTIMGUIWINDOW_H
+#endif

@@ -44,4 +44,4 @@ private:
 	std::vector<sdl::GameController> gameControllers_;
 };
 
-#endif // TESTWINDOW_H
+#endif

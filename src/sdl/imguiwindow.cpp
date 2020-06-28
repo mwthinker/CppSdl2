@@ -167,7 +167,11 @@ namespace sdl {
 				io.KeyShift = ((SDL_GetModState() & KMOD_SHIFT) != 0);
 				io.KeyCtrl = ((SDL_GetModState() & KMOD_CTRL) != 0);
 				io.KeyAlt = ((SDL_GetModState() & KMOD_ALT) != 0);
+#ifdef _WIN32
+				io.KeySuper = false;
+#else
 				io.KeySuper = ((SDL_GetModState() & KMOD_GUI) != 0);
+#endif
 				return true;
 			}
 		}
@@ -198,6 +202,7 @@ namespace sdl {
 		io.KeyMap[ImGuiKey_Space] = SDL_SCANCODE_SPACE;
 		io.KeyMap[ImGuiKey_Enter] = SDL_SCANCODE_RETURN;
 		io.KeyMap[ImGuiKey_Escape] = SDL_SCANCODE_ESCAPE;
+		io.KeyMap[ImGuiKey_KeyPadEnter] = SDL_SCANCODE_KP_ENTER;
 		io.KeyMap[ImGuiKey_A] = SDL_SCANCODE_A;
 		io.KeyMap[ImGuiKey_C] = SDL_SCANCODE_C;
 		io.KeyMap[ImGuiKey_V] = SDL_SCANCODE_V;

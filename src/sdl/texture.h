@@ -50,6 +50,6 @@ namespace sdl {
 		GLuint texture_{};
 	};
 
-} // Namespace sdl.
+}
 
-#endif // CPPSDL2_SDL_TEXTURE_H
+#endif

@@ -75,6 +75,6 @@ namespace sdl {
 		std::unique_ptr<Node> root_;
 	};
 
-} // Namespace sdl.
+}
 
-#endif // CPPSDL2_SDL_TEXTUREATLAS_H
+#endif

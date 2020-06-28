@@ -99,6 +99,6 @@ namespace sdl {
 		int textureHeight_{};
 	};
 
-} // Namespace sdl.
+}
 
-#endif // CPPSDL2_SDL_SPRITE_H
+#endif

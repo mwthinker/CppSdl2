@@ -181,6 +181,6 @@ namespace sdl {
 		return sleepingTime_;
 	}
 
-} // Namespace sdl.
+}
 
-#endif // CPPSDL2_SDL_WINDOW_H
+#endif

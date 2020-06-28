@@ -126,6 +126,6 @@ namespace sdl {
 	    return shader_;
 	}
 
-} // Namespace sdl.
+}
 
-#endif // CPPSDL2_IMGUIWINDOW_H
+#endif

@@ -101,6 +101,6 @@ namespace sdl {
 		return !(*this == other);
 	}
 
-} // Namespace sdl.
+}
 
-#endif // CPPSDL2_SDL_SOUND_H
+#endif

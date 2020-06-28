@@ -97,4 +97,4 @@ private:
 	sdl::TextureAtlas textureAtlas_{2048, 2048};
 };
 
-#endif // TESTWINDOW2_H
+#endif

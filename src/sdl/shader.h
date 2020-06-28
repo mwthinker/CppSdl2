@@ -77,6 +77,6 @@ void main() {
 		int uUseTexture_{-1};
 	};
 
-} // Namespace sdl.
+}
 
-#endif // CPPSDL2_SDL_SHADER_H
+#endif

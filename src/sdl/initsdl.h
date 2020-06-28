@@ -25,6 +25,6 @@ namespace sdl {
 		Uint32 flags_{};
 	};
 
-} // Namespace sdl.
+}
 
-#endif // CPPSDL2_SDL_INITSDL_H
+#endif

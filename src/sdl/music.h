@@ -76,7 +76,6 @@ namespace sdl {
 		std::shared_ptr<MusicBuffer> musicBuffer_;
 	};
 
-
 	inline bool Music::operator==(const Music& music) const {
 		return musicBuffer_ != nullptr && musicBuffer_ == music.musicBuffer_;
 	}
@@ -85,6 +84,6 @@ namespace sdl {
 		return !(*this == other);
 	}
 
-} // Namespace sdl.
+}
 
-#endif // CPPSDL2_SDL_MUSIC_H
+#endif

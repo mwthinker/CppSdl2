@@ -43,4 +43,4 @@ private:
 	sdl::VertexArrayObject vao_;
 };
 
-#endif // BATCHTRIANGLES_H
+#endif

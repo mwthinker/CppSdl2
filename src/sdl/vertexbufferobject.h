@@ -57,6 +57,6 @@ namespace sdl {
 		return target_;
 	}
 
-} // Namespace sdl.
+}
 
-#endif // CPPSDL2_SDL_VERTEXBUFFEROBJECT_H
+#endif

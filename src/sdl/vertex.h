@@ -13,6 +13,6 @@ namespace sdl {
 		Color color;
 	};
 
-} // Namespace vin.
+}
 
-#endif // CPPSDL2_SDL_VERTEX_H
+#endif

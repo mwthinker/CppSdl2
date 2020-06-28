@@ -37,4 +37,4 @@ private:
 	sdl::VertexArrayObject vao_;
 };
 
-#endif // BATCHTRIANGLESINEXES_H
+#endif

@@ -52,4 +52,4 @@ private:
 	int uModelIndex_{-1};
 };
 
-#endif // TESTSHADER_H
+#endif

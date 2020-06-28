@@ -93,4 +93,4 @@ operator glm::vec4() const { return glm::vec4{x, y, z, w}; }
 
 //---- Tip: You can add extra functions within the ImGui:: namespace, here or in your own headers files.
 
-#endif // CPPSDL2_IMCONFIG_H
+#endif

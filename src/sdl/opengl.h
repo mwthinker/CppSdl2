@@ -19,13 +19,13 @@ namespace sdl {
 	void _assertGlError(const char* file, int line);
 
 #define assertGlError() _assertGlError(__FILE__,__LINE__)
-#else // _DEBUG
+#else
 
 	inline void _empty() {}
 
 #define assertGlError() _empty()
-#endif // _DEBUG
+#endif
 
-} // Namespace sdl.
+}
 
-#endif // CPPSDL2_SDL_OPENGL_H
+#endif

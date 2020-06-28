@@ -54,6 +54,6 @@ namespace sdl {
 		SDL_Surface* surface_{};
 	};
 
-} // Namespace sdl.
+}
 
-#endif // CPPSDL2_SDL_SURFACE_H
+#endif
