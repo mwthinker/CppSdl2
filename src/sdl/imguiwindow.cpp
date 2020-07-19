@@ -149,9 +149,9 @@ namespace sdl {
 				return true;
 			}
 			case SDL_MOUSEBUTTONDOWN: {
-				if (sdlEvent.button.button == SDL_BUTTON_LEFT) mousePressed_[0] = true;
-				if (sdlEvent.button.button == SDL_BUTTON_RIGHT) mousePressed_[1] = true;
-				if (sdlEvent.button.button == SDL_BUTTON_MIDDLE) mousePressed_[2] = true;
+				if (sdlEvent.button.button == SDL_BUTTON_LEFT) mousePressed_[ImGuiMouseButton_Left] = true;
+				if (sdlEvent.button.button == SDL_BUTTON_RIGHT) mousePressed_[ImGuiMouseButton_Right] = true;
+				if (sdlEvent.button.button == SDL_BUTTON_MIDDLE) mousePressed_[ImGuiMouseButton_Middle] = true;
 				return true;
 			}
 			case SDL_TEXTINPUT: {

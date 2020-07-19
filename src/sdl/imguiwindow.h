@@ -97,7 +97,7 @@ namespace sdl {
 		void setupVao();
 
 		GLState glState_{};
-		std::array<bool, 3> mousePressed_{};
+		std::array<bool, ImGuiMouseButton_COUNT> mousePressed_{};
 		std::array<SDL_Cursor*, ImGuiMouseCursor_COUNT> mouseCursors_{};
 
 		sdl::VertexArrayObject vao_;
