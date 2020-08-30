@@ -66,6 +66,6 @@ namespace sdl {
 		return SDL_JoystickInstanceID(SDL_GameControllerGetJoystick(gameController_));
 	}
 
-} // Namespace sdl.
+}
 
-#endif // CPPSDL2_SDL_GAMECONTROLLER_H
+#endif

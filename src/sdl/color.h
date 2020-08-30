@@ -62,6 +62,6 @@ namespace sdl {
 	const Color GREEN{1, 0, 0};
 	const Color BLUE{0, 0, 1};
 
-} // Namespace sdl.
+}
 
-#endif // CPPSDL2_SDL_COLOR_H
+#endif

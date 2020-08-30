@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.14)
 project(CppSdl2_Example
 	DESCRIPTION
-		"A example of using the CppSdl2 library"
+		"An example of using the CppSdl2 library"
 	LANGUAGES
 		CXX
 )

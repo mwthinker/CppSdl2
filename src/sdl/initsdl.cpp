@@ -57,4 +57,4 @@ namespace sdl {
 		SDL_JoystickEventState(SDL_ENABLE);
 	}
 
-} // Namespace sdl.
+}

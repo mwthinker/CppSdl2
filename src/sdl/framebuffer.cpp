@@ -62,4 +62,4 @@ namespace sdl {
 		return frameBuffer_ != texture.frameBuffer_;
 	}
 
-} // Namespace sdl.
+}

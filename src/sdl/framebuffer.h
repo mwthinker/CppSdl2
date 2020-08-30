@@ -38,6 +38,6 @@ namespace sdl {
 		GLuint frameBuffer_{};
 	};
 
-} // Namespace sdl.
+}
 
-#endif // CPPSDL2_SDL_FRAMEBUFFER_H
+#endif

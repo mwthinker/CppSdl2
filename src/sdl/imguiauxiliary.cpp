@@ -100,4 +100,4 @@ namespace ImGui {
 		drawList->PopTextureID();
 	}
 
-} // Namespace ImGui.
+}

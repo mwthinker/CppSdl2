@@ -220,6 +220,6 @@ namespace ImGui {
 
 	void ImageBackground(const sdl::TextureView& texture);
 
-} // Namespace ImGui.
+}
 
-#endif // CPPSDL2_SDL_IMGUIAUXILIARY_H
+#endif

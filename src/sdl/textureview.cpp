@@ -34,4 +34,4 @@ namespace sdl {
 		glBindTexture(GL_TEXTURE_2D, texture_);
 	}
 
-} // Namespace sdl.
+}

@@ -586,4 +586,4 @@ namespace sdl {
 		}
 	}
 
-} // Namespace sdl.
+}

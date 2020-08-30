@@ -54,4 +54,4 @@ namespace sdl {
 		return font_ != nullptr;
 	}
 
-} // Namespace sdl.
+}

@@ -33,4 +33,4 @@ namespace sdl {
 		}
 	}
 
-} // Namespace sdl.
+}

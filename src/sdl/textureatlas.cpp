@@ -142,4 +142,4 @@ namespace sdl {
 		return {};
 	}
 
-} // Namespace sdl.
+}

@@ -398,7 +398,7 @@ namespace sdl {
 	template<class InputIterator>
 	void Batch<Vertex>::insertIndexes(InputIterator begin, InputIterator end) {
 		IS_RANDOM_ACCESS_ITERATOR<InputIterator>();
-		IS_INDEX_TYPE<typename std::decay<decltype(*begin)>::type>();
+		IS_INDEX_TYPE<std::decay_t<decltype(*begin)>>();
 		
 		if (vbo_.getSize() != 0 && usage_ == GL_STATIC_DRAW) {
 			spdlog::error("[sdl::Batch] Vertex data is static, data index can't be modified");
@@ -459,7 +459,7 @@ namespace sdl {
 	template<class InputIterator>
 	void SubBatch<Vertex>::insertIndexes(InputIterator begin, InputIterator end) {
 		IS_RANDOM_ACCESS_ITERATOR<InputIterator>();
-		IS_INDEX_TYPE<typename std::decay<decltype(*begin)>::type>();
+		IS_INDEX_TYPE<std::decay_t<decltype(*begin)>>();
 		
 		for (auto it = begin; it != end; ++it) {
 			auto index = *it;
@@ -520,6 +520,6 @@ namespace sdl {
 		return indexes_;
 	}
 
-} // Namespace sdl.
+}
 
-#endif // CPPSDL2_SDL_BATCH_H
+#endif

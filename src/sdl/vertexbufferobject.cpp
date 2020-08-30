@@ -95,4 +95,4 @@ namespace sdl {
 		assertGlError();
 	}
 
-} // Namespace sdl.
+}

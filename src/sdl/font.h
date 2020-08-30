@@ -35,6 +35,6 @@ namespace sdl {
 		int characterSize_{};
 	};
 
-} // Namespace sdl.
+}
 
-#endif // CPPSDL2_SDL_FONT_H
+#endif

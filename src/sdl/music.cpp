@@ -60,4 +60,4 @@ namespace sdl {
 		}
 	}
 
-} // Namespace sdl.
+}

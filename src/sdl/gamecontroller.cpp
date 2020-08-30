@@ -61,4 +61,4 @@ namespace sdl {
 		SDL_GameControllerClose(gameController.getSdlGameController());
 	}
 
-} // Namespace sdl.
+}

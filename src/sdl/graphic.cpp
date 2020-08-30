@@ -22,7 +22,7 @@ namespace sdl::graphic {
 		return corners;
 	}
 
-} // Namespace sdl::graphic.
+}
 
 namespace sdl::graphic::indexed {
 
@@ -136,4 +136,4 @@ namespace sdl::graphic::indexed {
 		return batch.getBatchView(GL_TRIANGLES);
 	}
 
-} // sdl.
+}

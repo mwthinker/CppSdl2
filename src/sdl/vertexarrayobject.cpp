@@ -52,4 +52,4 @@ namespace sdl {
 		spdlog::debug("[sdl::VertexArrayObject] Unbind vao");
 	}
 
-} // Namespace mw.
+}
