@@ -81,6 +81,7 @@ add_library(CppSdl2
 target_compile_definitions(CppSdl2
 	PUBLIC
 		IMGUI_USER_CONFIG=\"${IMGUI_USER_CONFIG}\"
+		NOMINMAX
 )
 
 target_include_directories(CppSdl2
