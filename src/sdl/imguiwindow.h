@@ -20,15 +20,15 @@ namespace sdl {
 
 		ImGuiWindow(int majorVersionGl, int minorVersionGl);
 
-		virtual ~ImGuiWindow();
+		~ImGuiWindow() override;
 
 		bool isShowDemoWindow() const;
 		void setShowDemoWindow(bool show);
 
 	protected:
-		virtual void initPreLoop() override;
+		void initPreLoop() override;
 
-		virtual void eventUpdate(const SDL_Event& windowEvent) override;
+		void eventUpdate(const SDL_Event& windowEvent) override;
 
 		const Shader& getShader() const;
 
@@ -64,7 +64,7 @@ namespace sdl {
 #endif
 		};
 
-		virtual void update(const std::chrono::high_resolution_clock::duration& deltaTime) override final;
+		void update(const std::chrono::high_resolution_clock::duration& deltaTime) final;
 
 		virtual void imGuiPreUpdate(const std::chrono::high_resolution_clock::duration& deltaTime) {};
 		virtual void imGuiUpdate(const std::chrono::high_resolution_clock::duration& deltaTime) {};
