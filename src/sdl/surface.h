@@ -26,9 +26,9 @@ namespace sdl {
 
 		Surface(int w, int h);
 
-		Surface(int w, int h, const Color& color);
+		Surface(int w, int h, Color color);
 
-		Surface(const std::string& text, const Font& font, const Color& color);
+		Surface(const std::string& text, const Font& font, Color color);
 
 		Surface(const Surface& surface) = delete;
 		Surface& operator=(const Surface& surface) = delete;

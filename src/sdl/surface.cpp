@@ -56,7 +56,7 @@ namespace sdl {
 			return SDL_CreateRGBSurface(0, w, h, 32, rmask, gmask, bmask, amask);
 		}
 
-		SDL_Surface* createSurface(int w, int h, const Color& color) {
+		SDL_Surface* createSurface(int w, int h, Color color) {
 			auto s = createSurface(w, h);
 			SDL_Color sdlColor = color;
 			SDL_FillRect(s, 0,
@@ -65,7 +65,7 @@ namespace sdl {
 			return s;
 		}
 
-		SDL_Surface* createSurface(const std::string& text, TTF_Font* font, const Color& color) {
+		SDL_Surface* createSurface(const std::string& text, TTF_Font* font, Color color) {
 			if (font != nullptr) {
 				return TTF_RenderUTF8_Blended_Wrapped(font, text.c_str(), color, 500);
 			}
@@ -92,12 +92,12 @@ namespace sdl {
 		}
 	}
 
-	Surface::Surface(int w, int h, const Color& color) {
+	Surface::Surface(int w, int h, Color color) {
 		assert(w > 0 && h > 0);
 		surface_ = createSurface(w, h, color);
 	}
 
-	Surface::Surface(const std::string& text, const Font& font, const Color& color) {
+	Surface::Surface(const std::string& text, const Font& font, Color color) {
 		surface_ = createSurface(text, font.font_, color);
 	}
 

@@ -41,11 +41,11 @@ namespace sdl {
 				static_cast<Uint8>((value_ & 0xff'00'00'00) >> 24)};
 		}
 
-		constexpr bool operator==(const Color& other) const noexcept {
+		constexpr bool operator==(Color other) const noexcept {
 			return value_ == other.value_;
 		}
 
-		constexpr bool operator!=(const Color& other) const noexcept {
+		constexpr bool operator!=(Color other) const noexcept {
 			return value_ != other.value_;
 		}
 

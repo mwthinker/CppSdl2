@@ -35,12 +35,7 @@ namespace sdl::graphic::indexed {
 		batch.pushBack(Vertex{pos + size, {}, color});
 		batch.pushBack(Vertex{pos + glm::vec2{0.f, size.y}, {}, color});
 
-		batch.pushBackIndex(0);
-		batch.pushBackIndex(1);
-		batch.pushBackIndex(2);
-		batch.pushBackIndex(0);
-		batch.pushBackIndex(2);
-		batch.pushBackIndex(3);
+		batch.insertIndexes({0, 1, 2, 0, 2, 3});
 		return batch.getBatchView(GL_TRIANGLES);
 	}
 
@@ -54,12 +49,7 @@ namespace sdl::graphic::indexed {
 			batch.pushBack(Vertex{pos + size, texture.getPosition() + glm::vec2{texture.getWidth(), 0.f}, White});
 			batch.pushBack(Vertex{pos + glm::vec2{0.f, size.y},  texture.getPosition(), White});
 
-			batch.pushBackIndex(0);
-			batch.pushBackIndex(1);
-			batch.pushBackIndex(2);
-			batch.pushBackIndex(0);
-			batch.pushBackIndex(2);
-			batch.pushBackIndex(3);
+			batch.insertIndexes({0, 1, 2, 0, 2, 3});
 		}
 		return batch.getBatchView(GL_TRIANGLES);
 	}
@@ -81,9 +71,7 @@ namespace sdl::graphic::indexed {
 				batch.pushBack(v);
 			}
 			for (int i = 1; i <= 6; ++i) {
-				batch.pushBackIndex(0);
-				batch.pushBackIndex(i);
-				batch.pushBackIndex((i % 6) + 1);
+				batch.insertIndexes({0, i, (i % 6) + 1});
 			}
 		}
 
@@ -128,9 +116,7 @@ namespace sdl::graphic::indexed {
 			batch.pushBack({edge, {0.f, 0.f}, color});
 		}
 		for (int i = 1; i <= iterations; ++i) {
-			batch.pushBackIndex(0);
-			batch.pushBackIndex(i);
-			batch.pushBackIndex((i % iterations) + 1);
+			batch.insertIndexes({0, i, (i % iterations) + 1});
 		}
 
 		return batch.getBatchView(GL_TRIANGLES);
