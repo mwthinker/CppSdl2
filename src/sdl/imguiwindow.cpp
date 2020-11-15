@@ -109,7 +109,7 @@ namespace sdl {
 		ImGui_ImplOpenGL3_Init();
 	}
 
-	void ImGuiWindow::update(const std::chrono::nanoseconds& deltaTime) {
+	void ImGuiWindow::update(const std::chrono::high_resolution_clock::duration& deltaTime) {
 		ImGui_ImplOpenGL3_NewFrame();
 		
 		imGuiPreUpdate(deltaTime);
@@ -251,7 +251,7 @@ namespace sdl {
 
 		// Setup display size (every frame to accommodate for window resizing)
 		auto [w, h] = getSize();
-		auto [displayW, displayH] = getDrawableSize();		
+		auto [displayW, displayH] = getDrawableSize();
 		io.DisplaySize = {static_cast<float>(w), static_cast<float>(h)};
 		if (w > 0 && h > 0) {
 			io.DisplayFramebufferScale = {static_cast<float>(displayW) / w, static_cast<float>(displayH) / h};

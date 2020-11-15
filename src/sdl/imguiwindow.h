@@ -74,7 +74,7 @@ namespace sdl {
 		bool ImGui_ImplSDL2_ProcessEvent(const SDL_Event& sdlEvent);
 		void ImGui_ImplSDL2_Init();
 		void ImGui_ImplSDL2_Shutdown();
-		void ImGui_ImplSDL2_NewFrame(const std::chrono::nanoseconds& deltaTime);
+		void ImGui_ImplSDL2_NewFrame(const std::chrono::high_resolution_clock::duration& deltaTime);
 
 		// ImGui OpenGL3 specific code.
 		void ImGui_ImplOpenGL3_Init();
@@ -122,8 +122,8 @@ namespace sdl {
 		showDemoWindow_ = show;
 	}
 
-    inline const Shader& ImGuiWindow::getShader() const {
-	    return shader_;
+	inline const Shader& ImGuiWindow::getShader() const {
+		return shader_;
 	}
 
 }
