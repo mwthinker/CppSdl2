@@ -49,10 +49,10 @@ namespace sdl::graphic::indexed {
 		batch.startAdding();
 
 		if (texture) {
-			batch.pushBack(Vertex{pos, texture.getPosition() + glm::vec2{0.f, texture.getHeight()}, WHITE});
-			batch.pushBack(Vertex{pos + glm::vec2{size.x, 0.f}, texture.getPosition() + glm::vec2{texture.getWidth(), texture.getHeight()}, WHITE});
-			batch.pushBack(Vertex{pos + size, texture.getPosition() + glm::vec2{texture.getWidth(), 0.f}, WHITE});
-			batch.pushBack(Vertex{pos + glm::vec2{0.f, size.y},  texture.getPosition(), WHITE});
+			batch.pushBack(Vertex{pos, texture.getPosition() + glm::vec2{0.f, texture.getHeight()}, White});
+			batch.pushBack(Vertex{pos + glm::vec2{size.x, 0.f}, texture.getPosition() + glm::vec2{texture.getWidth(), texture.getHeight()}, White});
+			batch.pushBack(Vertex{pos + size, texture.getPosition() + glm::vec2{texture.getWidth(), 0.f}, White});
+			batch.pushBack(Vertex{pos + glm::vec2{0.f, size.y},  texture.getPosition(), White});
 
 			batch.pushBackIndex(0);
 			batch.pushBackIndex(1);
@@ -72,12 +72,12 @@ namespace sdl::graphic::indexed {
 			glm::vec2 texHalfSize = sprite.getSize() * 0.5f;
 			glm::vec2 texMiddlePos = sprite.getPosition() + texHalfSize;
 
-			Vertex centerVertex{center, texMiddlePos, WHITE};
+			Vertex centerVertex{center, texMiddlePos, White};
 			batch.pushBack(centerVertex);
 
 			for (int i = 0; i < 6; ++i) {
 				auto tex = texHalfSize * getHexagonCorner(i, 0); // Textures are flipped in opengl.
-				auto v = Vertex{getHexagonCorner(center, radius, i, startAngle), texMiddlePos + glm::vec2{tex.x, -tex.y}, WHITE};
+				auto v = Vertex{getHexagonCorner(center, radius, i, startAngle), texMiddlePos + glm::vec2{tex.x, -tex.y}, White};
 				batch.pushBack(v);
 			}
 			for (int i = 1; i <= 6; ++i) {

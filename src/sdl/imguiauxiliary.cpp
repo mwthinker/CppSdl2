@@ -23,11 +23,11 @@ namespace ImGui {
 
 			auto texHalfSize = sprite.getSize() * 0.5f;
 			auto texMiddlePos = sprite.getPosition() + texHalfSize;
-			sdl::Vertex centerVertex{center, texMiddlePos, sdl::WHITE};
+			sdl::Vertex centerVertex{center, texMiddlePos, sdl::White};
 			PrimWriteVtx(drawList, centerVertex);
 
 			for (int i = 0; i < 6; ++i) {
-				auto v = sdl::Vertex{sdl::graphic::getHexagonCorner(center, radius, i, 0), texMiddlePos + texHalfSize * sdl::graphic::getHexagonCorner(i, startAngle), sdl::WHITE};
+				auto v = sdl::Vertex{sdl::graphic::getHexagonCorner(center, radius, i, 0), texMiddlePos + texHalfSize * sdl::graphic::getHexagonCorner(i, startAngle), sdl::White};
 				PrimWriteVtx(drawList, v);
 			}
 		}

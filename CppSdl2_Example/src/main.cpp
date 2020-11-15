@@ -19,10 +19,10 @@
 
 // Test to load directly to ram memory.
 void testLoadTextureAtlas() {
-	sdl::Surface red{200, 100, sdl::RED};
-	sdl::Surface green{100, 200, sdl::GREEN};
-	sdl::Surface blue{200, 200, sdl::BLUE};
-	sdl::Surface white{30, 30, sdl::WHITE};
+	sdl::Surface red{200, 100, sdl::Red};
+	sdl::Surface green{100, 200, sdl::Green};
+	sdl::Surface blue{200, 200, sdl::Blue};
+	sdl::Surface white{30, 30, sdl::White};
 
 	sdl::TextureAtlas atlas{512, 512};
 
@@ -41,10 +41,10 @@ void testLoadTextureAtlas() {
 
 // Test to load directly to graphic memory. And draw the total texture and the newly added sprite.
 void testLoadTextureAtlas2() {
-	sdl::Surface red{200, 100, sdl::RED};
-	sdl::Surface green{100, 200, sdl::GREEN};
-	sdl::Surface blue{200, 200, sdl::BLUE};
-	sdl::Surface white{30, 30, sdl::WHITE};
+	sdl::Surface red{200, 100, sdl::Red};
+	sdl::Surface green{100, 200, sdl::Green};
+	sdl::Surface blue{200, 200, sdl::Blue};
+	sdl::Surface white{30, 30, sdl::White};
 
 	sdl::TextureAtlas atlas{512, 512};
 	TestWindow w{atlas.get()};
@@ -72,10 +72,8 @@ void testLoadTextureAtlas2() {
 				sprite = atlas.add(white, 20);
 				break;
 			default:
-			{
 				sprite = atlas.add(white, 1);
 				break;
-			}
 		}
 		if (!sprite.isValid()) {
 			spdlog::info("[testLoadTextureAtlas2] Number {} failed to be inserted!", nbr);

@@ -29,7 +29,7 @@ namespace sdl {
 			spdlog::warn("[sdl::Sprite] font not loaded");
 		}
 
-		Surface surface{text, font, WHITE};
+		Surface surface{text, font, White};
 		textureWidth_ = surface.getWidth();
 		textureHeight_ = surface.getHeight();
 		rect_.w = textureWidth_;

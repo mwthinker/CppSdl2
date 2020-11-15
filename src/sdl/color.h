@@ -12,7 +12,7 @@ namespace sdl {
 	public:
 		constexpr Color() noexcept = default;
 
-		explicit constexpr Color(uint32_t value)
+		explicit constexpr Color(uint32_t value) noexcept
 			: value_{value} {
 		}
 
@@ -22,7 +22,7 @@ namespace sdl {
 			assert(red >= 0 || green >= 0 || blue >= 0 || alpha >= 0);
 		}
 
-		operator ImVec4() const
+		operator ImVec4() const noexcept
 		{
 			return {static_cast<float>(value_ & 0x00'00'00'ff) / 255.f,
 				static_cast<float>((value_ & 0x00'00'ff'00) >> 8) / 255.f,
@@ -30,7 +30,7 @@ namespace sdl {
 				static_cast<float>((value_ & 0xff'00'00'00) >> 24) / 255.f};
 		}
 
-		operator ImColor() const noexcept {
+		explicit operator ImColor() const noexcept {
 			return value_;
 		}
 
@@ -57,10 +57,11 @@ namespace sdl {
 		uint32_t value_{};
 	};
 
-	const Color WHITE{1, 1, 1};
-	const Color RED{1, 0, 0};
-	const Color GREEN{1, 0, 0};
-	const Color BLUE{0, 0, 1};
+	constexpr Color Black{0xff'00'00'00};
+	constexpr Color White{0xff'ff'ff'ff};
+	constexpr Color Red{0xff'ff'00'00};
+	constexpr Color Green{0xff'00'ff'00};
+	constexpr Color Blue{0x00'ff'00'ff};
 
 }
 

@@ -27,7 +27,7 @@ if (Catch2_FOUND)
 			Catch2::Catch2
 	)
 
-	set_target_properties(CppSdl2_Example
+	set_target_properties(CppSdl2_Test
 		PROPERTIES
 			CXX_STANDARD 17
 			CXX_STANDARD_REQUIRED YES
