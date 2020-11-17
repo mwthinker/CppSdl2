@@ -45,7 +45,7 @@ private:
 		sdl::assertGlError();
 	}
 
-	void update(const std::chrono::high_resolution_clock::duration& deltaTime) override {
+	void update(const sdl::Window::DeltaTime& deltaTime) override {
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 		sprite_.bindTexture();

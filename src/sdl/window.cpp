@@ -24,13 +24,10 @@ namespace sdl {
 			}
 		}
 
-		constexpr int DEFAULT_MAJOR_VERSION_GL{3};
-		constexpr int DEFAULT_MINOR_VERSION_GL{3};
-
 	}
 
-	Window::Window()
-		: Window{DEFAULT_MAJOR_VERSION_GL, DEFAULT_MINOR_VERSION_GL} {
+	Window::Window() {
+		spdlog::info("[sdl::Window] Creating Window");
 	}
 
 	Window::Window(int majorVersionGl, int minorVersionGl)
@@ -54,7 +51,7 @@ namespace sdl {
 		
 		initGlad();
 
-        spdlog::info("[sdl::Window] Setup OpenGl version: {}.{}", majorVersionGl_, minorVersionGl_);
+		spdlog::info("[sdl::Window] Setup OpenGl version: {}.{}", majorVersionGl_, minorVersionGl_);
 		if (char* version = (char*) glGetString(GL_VERSION)) {
 			spdlog::info("[sdl::Window] GL_VERSION: {}", version);
 			spdlog::info("[sdl::Window] GL_SHADING_LANGUAGE_VERSION: {}", (char*) glGetString(GL_SHADING_LANGUAGE_VERSION));
@@ -70,7 +67,6 @@ namespace sdl {
 		}
 
 		if (window_ != nullptr) {
-			// Clean up current OpenGL context and the window.
 			SDL_GL_DeleteContext(glContext_);
 			SDL_GL_UnloadLibrary();
 			SDL_DestroyWindow(window_);
@@ -139,7 +135,7 @@ namespace sdl {
 
 	void Window::runLoop() {
 		spdlog::info("[sdl::Window] Loop starting");
-		auto time = std::chrono::high_resolution_clock::now();
+		auto time = Clock::now();
 		while (!quit_) {
 			glClear(glBitfield_);
 				
@@ -148,7 +144,7 @@ namespace sdl {
 				eventUpdate(eventSDL);
 			}
 
-			auto currentTime = std::chrono::high_resolution_clock::now();
+			auto currentTime = Clock::now();
 			auto delta = currentTime - time;
 			time = currentTime;
 			update(delta);
@@ -218,7 +214,6 @@ namespace sdl {
 		}
 	}
 
-	// Return true if the program is in full screen mode.
 	bool Window::isFullScreen() const {
 		if (window_) {
 			return (SDL_GetWindowFlags(window_) & SDL_WINDOW_FULLSCREEN_DESKTOP) > 0;
@@ -331,6 +326,10 @@ namespace sdl {
 			SDL_GetWindowSize(window_, &width_, &height_);
 			SDL_SetWindowFullscreen(window_, SDL_WINDOW_FULLSCREEN_DESKTOP);
 		}
+	}
+
+	SDL_GLContext Window::getGlContext() {
+		return glContext_;
 	}
 
 }

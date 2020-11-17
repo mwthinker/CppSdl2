@@ -6,4 +6,6 @@ glad
 spdlog
 glm
 imgui
+imgui[opengl3-glad-binding]
+imgui[sdl2-binding]
 catch2

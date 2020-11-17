@@ -24,6 +24,43 @@ namespace sdl {
 			static_assert(sizeof(ImDrawVert) == sizeof(Vertex));
 		}
 
+		constexpr const GLchar* VertexShaderGlsl_330 = R"(#version 330 core
+
+uniform mat4 uMat;
+
+in vec2 aPos;
+in vec2 aTex;
+in vec4 aColor;
+
+out vec2 fragTex;
+out vec4 fragColor;
+
+void main() {
+    fragTex = aTex;
+    fragColor = aColor;
+    gl_Position = uMat * vec4(aPos.xy, 0, 1);
+}
+)";
+
+		constexpr const GLchar* FragmentShaderGlsl_330 = R"(#version 330 core
+
+uniform sampler2D uTexture;
+uniform float uUseTexture;
+
+in vec2 fragTex;
+in vec4 fragColor;
+
+out vec4 Out_Color;
+
+void main() {
+    Out_Color = fragColor * (texture(uTexture, fragTex.st) * uUseTexture + (1 - uUseTexture));
+}
+)";
+
+	}
+
+	Shader Shader::CreateShaderGlsl_330() {
+		return Shader{VertexShaderGlsl_330, FragmentShaderGlsl_330};
 	}
 
 	Shader::Shader(const GLchar* vShade, const GLchar* fShader) {

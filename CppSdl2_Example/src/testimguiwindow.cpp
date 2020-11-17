@@ -50,7 +50,7 @@ void TestImGuiWindow::eventUpdate(const SDL_Event& windowEvent) {
 	}
 }
 
-void TestImGuiWindow::imGuiUpdate(const std::chrono::high_resolution_clock::duration& deltaTime) {
+void TestImGuiWindow::imGuiUpdate(const sdl::Window::DeltaTime& deltaTime) {
 	ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, {0, 0});
 	ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.f);
 	ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 1.f);
@@ -66,7 +66,7 @@ void TestImGuiWindow::imGuiUpdate(const std::chrono::high_resolution_clock::dura
 	ImGui::PopStyleVar(3);
 }
 
-void TestImGuiWindow::imGuiPreUpdate(const std::chrono::high_resolution_clock::duration& deltaTime) {
+void TestImGuiWindow::imGuiPreUpdate(const sdl::Window::DeltaTime& deltaTime) {
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	batch_->draw();

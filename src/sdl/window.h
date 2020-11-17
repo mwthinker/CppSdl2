@@ -12,10 +12,11 @@
 namespace sdl {
 
 	// Create a window which handle all user input. The graphic is rendered using OpenGL.
-	// The OpenGL view port is the whole window size and the model view is the same size as
-	// the window and origo is on the left down side.
 	class Window {
 	public:
+		using Clock = std::chrono::high_resolution_clock;
+		using DeltaTime = std::chrono::high_resolution_clock::duration;
+
 		Window();
 
 		Window(int majorVersionGl, int minorVersionGl);
@@ -29,15 +30,12 @@ namespace sdl {
 		Window& operator=(Window&&) = delete;
 
 		// Start the loop which handle all inputs and graphics in the windows. It will not
-		// return until the loop is ended. Is closed when the windows is closed, i.e. a
+		// return until the loop is ended. Is closed when the window is closed, i.e. a
 		// call to the function quit().
 		void startLoop();
 
-		// Set the program to full screen mode or desktop mode.
-		// If mode is not changed from the current mode nothing happen.
 		void setFullScreen(bool fullScreen);
 
-		// Return true if the program is in full screen mode.
 		bool isFullScreen() const;
 
 		std::pair<int, int> getSize() const;
@@ -101,18 +99,22 @@ namespace sdl {
 		virtual void initPreLoop() {
 		}
 
-	private:
-		static constexpr int DEFAULT_WIDTH = 800;
-		static constexpr int DEFAULT_HEIGHT = 800;
-
 		// Is called by the loop. The frequency in which this function is called is fixed
 		// by the vertical frequency of the monitor (VSYNC) or the sleeping time of the loop.
-		virtual void update(const std::chrono::high_resolution_clock::duration& deltaTime) {
+		virtual void update(const DeltaTime& deltaTime) {
 		}
 
 		// Is called by the loop. Is called when ever a SDL_EVENT occurs.
 		virtual void eventUpdate(const SDL_Event& windowEvent) {
 		}
+
+		SDL_GLContext getGlContext();
+
+	private:
+		static constexpr int DefaultWidth{800};
+		static constexpr int DefaultHeight{800};
+		static constexpr int DefaultMajorVersionGl{3};
+		static constexpr int DefaultMinorVersionGl{3};
 
 		void runLoop();
 
@@ -124,20 +126,20 @@ namespace sdl {
 		SDL_GLContext glContext_{};
 		SDL_Surface* icon_{};
 		
-		int width_ = DEFAULT_WIDTH;
-		int height_ = DEFAULT_HEIGHT;
-		int x_ = SDL_WINDOWPOS_UNDEFINED;
-		int y_ = SDL_WINDOWPOS_UNDEFINED;
-		int minWidth_ = -1;
-		int minHeight_ = -1;
-		int maxWidth_ = -1;
-		int maxHeight_ = -1;
+		int width_{DefaultWidth};
+		int height_{DefaultHeight};
+		int x_{SDL_WINDOWPOS_UNDEFINED};
+		int y_{SDL_WINDOWPOS_UNDEFINED};
+		int minWidth_{-1};
+		int minHeight_{-1};
+		int maxWidth_{-1};
+		int maxHeight_{-1};
 		
 		std::chrono::nanoseconds sleepingTime_{};
-		const int majorVersionGl_;
-		const int minorVersionGl_;
+		int majorVersionGl_{DefaultMajorVersionGl};
+		int minorVersionGl_{DefaultMinorVersionGl};
 		
-		GLbitfield glBitfield_ = GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT;
+		GLbitfield glBitfield_{GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT};
 		
 		bool quit_{};
 		bool fullScreen_{};
