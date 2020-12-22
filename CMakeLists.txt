@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.14)
+cmake_minimum_required(VERSION 3.16)
 
 set(VCPKG_ROOT $ENV{VCPKG_ROOT})
 if(DEFINED ENV{VCPKG_ROOT} AND NOT DEFINED CMAKE_TOOLCHAIN_FILE)
@@ -26,7 +26,6 @@ find_package(SDL2-mixer CONFIG REQUIRED)
 find_package(SDL2-ttf CONFIG REQUIRED)
 find_package(glm CONFIG REQUIRED)
 find_package(spdlog CONFIG REQUIRED)
-find_package(imgui CONFIG REQUIRED)
 
 set(IMGUI_USER_CONFIG ${CMAKE_CURRENT_SOURCE_DIR}/src/sdl/imconfig.h)
 
@@ -78,6 +77,8 @@ add_library(CppSdl2
 	src/sdl/window.h
 )
 
+add_subdirectory(ImGui)
+
 target_compile_definitions(CppSdl2
 	PUBLIC
 		IMGUI_USER_CONFIG=\"${IMGUI_USER_CONFIG}\"
@@ -98,7 +99,7 @@ target_link_libraries(CppSdl2
 		glad::glad
 		spdlog::spdlog spdlog::spdlog_header_only
 		glm
-		imgui::imgui
+		ImGui
 )
 
 if (MSVC)

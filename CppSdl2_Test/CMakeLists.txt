@@ -1,4 +1,3 @@
-cmake_minimum_required(VERSION 3.14)
 project(CppSdl2_Test
 	DESCRIPTION
 		"Test the project CppSdl2 using Catch2"
