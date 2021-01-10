@@ -22,7 +22,6 @@ find_package(SDL2 CONFIG REQUIRED)
 find_package(glad CONFIG REQUIRED)
 
 add_library(ImGui
-	${RemoteImGui_SOURCE_DIR}/imconfig.h
 	${RemoteImGui_SOURCE_DIR}/imgui.cpp
 	${RemoteImGui_SOURCE_DIR}/imgui.h
 	${RemoteImGui_SOURCE_DIR}/imgui_demo.cpp

@@ -42,7 +42,7 @@ namespace sdl {
 				spdlog::error("[sdl::ShaderProgram] Failed to create shader: ", shaderSrc);
 				return 0;
 			}
-			glShaderSource(shader, 1, &shaderSrc, 0);
+			glShaderSource(shader, 1, &shaderSrc, nullptr);
 			assertGlError();
 			glCompileShader(shader);
 
@@ -153,7 +153,7 @@ namespace sdl {
 			    return false;
 			}
 			if (!gShader.empty() && 0 == loadShader(programObjectId_, GL_GEOMETRY_SHADER, gShader.c_str())) {
-                return false;
+				return false;
 			}
 			if (0 == loadShader(programObjectId_, GL_FRAGMENT_SHADER, fShader.c_str())) {
                 return false;
