@@ -38,8 +38,8 @@ if (Catch2_FOUND)
 			PRIVATE
 				"/permissive-"
 		)
-	endif (MSVC)
+	endif ()
 
-else (Catch2_FOUND)
+else ()
 	message(WARNING "Catch2 not found, CppSdl2_Test not created")
-endif (Catch2_FOUND)
+endif ()

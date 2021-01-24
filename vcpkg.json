@@ -1,0 +1,19 @@
+{
+	"name": "cppsdl2",
+	"version-string": "0.1.0",
+	"port-version": 1,
+	"homepage": "https://github.com/mwthinker/CppSdl2",
+	"description": "A C++ wrapper around SDL2 (Simple Direct Media Layer) and OpenGl.",
+	"license": "MIT",
+	"dependencies": [
+		"sdl2-image",
+		"sdl2-mixer",
+		"sdl2-ttf",
+		"sdl2",
+		"glad",
+		"spdlog",
+		"glm",
+		"catch2",
+		"fmt"
+	]
+}

@@ -43,6 +43,6 @@ if (MSVC)
 		PRIVATE
 			"/permissive-"
 	)
-endif (MSVC)
+endif ()
 	
 file(COPY data/. DESTINATION ${CMAKE_CURRENT_BINARY_DIR}) # Copy data to build folder.

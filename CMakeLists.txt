@@ -107,7 +107,7 @@ if (MSVC)
 		PRIVATE
 			"/permissive-"
 	)
-endif (MSVC)
+endif ()
 
 set_target_properties(CppSdl2
 	PROPERTIES
@@ -120,10 +120,10 @@ message(STATUS "CppSdl2_Example is available to add: -DCppSdl2_Example=1")
 option(CppSdl2_Example "Add CppSdl2_Example project." OFF)
 if (CppSdl2_Example)
 	add_subdirectory(CppSdl2_Example)
-endif (CppSdl2_Example)
+endif ()
 
 message(STATUS "CppSdl2_Test is available to add: -DCppSdl2_Test=1")
 option(CppSdl2_Test "Add CppSdl2_Test to project." OFF)
 if (CppSdl2_Test)
 	add_subdirectory(CppSdl2_Test)
-endif (CppSdl2_Test)
+endif ()

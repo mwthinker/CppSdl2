@@ -12,6 +12,8 @@
 /build*
 /.idea/
 /cmake-build-debug/
+/vcpkg_installed/
+.vscode
 
 #################
 ## Eclipse
