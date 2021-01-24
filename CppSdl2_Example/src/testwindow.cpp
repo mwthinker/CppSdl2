@@ -72,7 +72,7 @@ TestWindow::TestWindow(const sdl::Sprite& sprite) : Window{2, 1}, sprite_{sprite
 	sdl::Window::setIcon("tetris.bmp");
 }
 
-void TestWindow::update(const sdl::Window::DeltaTime& deltaTime) {
+void TestWindow::update(const sdl::DeltaTime& deltaTime) {
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 

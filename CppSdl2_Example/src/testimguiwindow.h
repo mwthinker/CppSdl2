@@ -19,9 +19,9 @@ public:
 private:
 	void initPreLoop() override;
 
-	void imGuiUpdate(const sdl::Window::DeltaTime& deltaTime) override;
+	void imGuiUpdate(const sdl::DeltaTime& deltaTime) override;
 
-	void imGuiPreUpdate(const sdl::Window::DeltaTime& deltaTime) override;
+	void imGuiPreUpdate(const sdl::DeltaTime& deltaTime) override;
 
 	void eventUpdate(const SDL_Event& windowEvent) override;
 

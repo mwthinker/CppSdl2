@@ -22,7 +22,7 @@ public:
 private:
 	void initPreLoop() override;
 
-    void update(const sdl::Window::DeltaTime& deltaTime) override;
+    void update(const sdl::DeltaTime& deltaTime) override;
 
 	void eventUpdate(const SDL_Event& windowEvent) override;
 

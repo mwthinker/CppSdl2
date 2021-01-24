@@ -1,7 +1,6 @@
 #ifndef CPPSDL2_SDL_OPENGL_H
 #define CPPSDL2_SDL_OPENGL_H
 
-
 #ifdef _WIN32
 #include <windows.h>
 #endif

@@ -55,6 +55,34 @@ namespace ImGui {
 	}
 
 	template <class T>
+	bool MainWindow(const char* name, T&& t) {
+		const auto& viewPort = *ImGui::GetMainViewport();
+		ImGui::SetNextWindowPos(viewPort.Pos);
+		
+		float w = std::min(ImGui::GetWindowWidth(), viewPort.Size.x);
+		float h = std::min(ImGui::GetWindowHeight(), viewPort.Size.y);
+
+		ImGui::SetNextWindowSize({w, h});
+
+		constexpr ImGuiWindowFlags ImguiNoWindow
+			= ImGuiWindowFlags_NoTitleBar
+			| ImGuiWindowFlags_NoResize
+			| ImGuiWindowFlags_NoBringToFrontOnFocus
+			| ImGuiWindowFlags_NoMove
+			| ImGuiWindowFlags_NoDocking;
+
+		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, {0, 0});
+		ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.f);
+		ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.f);
+		ImGui::PushStyleColor(ImGuiCol_WindowBg, {0,0,0,0});
+
+		bool result = ImGui::Window("Main", nullptr, ImguiNoWindow, t);
+		ImGui::PopStyleColor();
+		ImGui::PopStyleVar(3);
+		return result;
+	}
+
+	template <class T>
 	bool ChildWindow(const char* name, const ImVec2& size, bool border, ImGuiWindowFlags flags, T&& t) {
 		bool success = ImGui::BeginChild(name, size, border, flags);
 		if (success) {

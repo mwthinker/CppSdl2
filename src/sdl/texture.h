@@ -30,12 +30,7 @@ namespace sdl {
 		
 		void bind() const;
 		
-		void texImage(const Surface& surface) {
-			texImage(surface, []() {
-				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-			});
-		}
+		void texImage(const Surface& surface);
 
 		template <class FilterFunc>
 		void texImage(const Surface& surface, FilterFunc&& filter);
@@ -59,6 +54,13 @@ namespace sdl {
 
 		GLuint texture_{};
 	};
+
+	inline void Texture::texImage(const Surface& surface) {
+		texImage(surface, []() {
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		});
+	}
 
 	template <class FilterFunc>
 	void Texture::texImage(const Surface& surface, FilterFunc&& filter) {

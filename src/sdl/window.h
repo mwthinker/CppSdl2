@@ -11,12 +11,12 @@
 
 namespace sdl {
 
+	using Clock = std::chrono::high_resolution_clock;
+	using DeltaTime = std::chrono::high_resolution_clock::duration;
+
 	// Create a window which handle all user input. The graphic is rendered using OpenGL.
 	class Window {
 	public:
-		using Clock = std::chrono::high_resolution_clock;
-		using DeltaTime = std::chrono::high_resolution_clock::duration;
-
 		Window();
 
 		Window(int majorVersionGl, int minorVersionGl);
@@ -93,20 +93,16 @@ namespace sdl {
 		std::chrono::nanoseconds getLoopSleepingTime() const noexcept;
 
 	protected:
-		virtual void initOpenGl() {
-		}
+		virtual void initOpenGl() {}
 
-		virtual void initPreLoop() {
-		}
+		virtual void initPreLoop() {}
 
 		// Is called by the loop. The frequency in which this function is called is fixed
 		// by the vertical frequency of the monitor (VSYNC) or the sleeping time of the loop.
-		virtual void update(const DeltaTime& deltaTime) {
-		}
+		virtual void update(const DeltaTime& deltaTime) {}
 
 		// Is called by the loop. Is called when ever a SDL_EVENT occurs.
-		virtual void eventUpdate(const SDL_Event& windowEvent) {
-		}
+		virtual void eventUpdate(const SDL_Event& windowEvent) {}
 
 		SDL_GLContext getGlContext();
 

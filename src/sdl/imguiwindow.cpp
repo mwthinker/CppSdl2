@@ -19,7 +19,11 @@ namespace sdl {
 	void ImGuiWindow::initPreLoop() {
 		IMGUI_CHECKVERSION();
 		ImGui::CreateContext();
-		ImGui::GetIO();
+		auto& io = ImGui::GetIO();
+		io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
+		io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;
+		io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
+		io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
 
 		ImGui_ImplSDL2_InitForOpenGL(getSdlWindow(), getGlContext());
 		ImGui_ImplOpenGL3_Init();
@@ -44,6 +48,14 @@ namespace sdl {
 		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
 		imGuiPostUpdate(deltaTime);
+		
+		if (ImGui::GetIO().ConfigFlags & ImGuiConfigFlags_ViewportsEnable) {
+			auto backupCurrentWindow = SDL_GL_GetCurrentWindow();
+			auto backupCurrentContext = SDL_GL_GetCurrentContext();
+			ImGui::UpdatePlatformWindows();
+			ImGui::RenderPlatformWindowsDefault();
+			SDL_GL_MakeCurrent(backupCurrentWindow, backupCurrentContext);
+		}
 	}
 
 	void ImGuiWindow::eventUpdate(const SDL_Event& windowEvent) {

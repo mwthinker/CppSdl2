@@ -10,15 +10,13 @@ namespace {
 		
 		sdl::BatchView<TestShader::Vertex> batchData;
 
-		sdl::Batch<TestShader::Vertex> batch(GL_DYNAMIC_DRAW);
+		sdl::Batch<TestShader::Vertex> batch{GL_DYNAMIC_DRAW};
 		
 		batch.startBatchView();
 
 		auto batchView = batch.getBatchView(GL_TRIANGLES);
 		batch.draw(batchView);
 	}
-
-	const ImGuiWindowFlags IMGUI_NOWINDOW = ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoMove;
 
 }
 
@@ -33,8 +31,6 @@ void TestImGuiWindow::eventUpdate(const SDL_Event& windowEvent) {
 	sdl::ImGuiWindow::eventUpdate(windowEvent);
 
 	auto& io = ImGui::GetIO();
-	spdlog::info("io.WantCaptureMouse: {}", io.WantCaptureMouse);
-
 	switch (windowEvent.type) {
 		case SDL_WINDOWEVENT:
 			switch (windowEvent.window.event) {
@@ -50,23 +46,14 @@ void TestImGuiWindow::eventUpdate(const SDL_Event& windowEvent) {
 	}
 }
 
-void TestImGuiWindow::imGuiUpdate(const sdl::Window::DeltaTime& deltaTime) {
-	ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, {0, 0});
-	ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.f);
-	ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 1.f);
-	ImGui::PushStyleColor(ImGuiCol_WindowBg, {0,0,0,0});
-	ImGui::SetNextWindowPos({0.f,0.f});
-	ImGui::SetNextWindowSize({200, 200});
-	ImGui::Window("Main", nullptr, IMGUI_NOWINDOW, [&]() {
+void TestImGuiWindow::imGuiUpdate(const sdl::DeltaTime& deltaTime) {
+	ImGui::MainWindow("Main", [&]() {
 		ImGui::Button("Hello", {100, 100});
-		
 		ImGui::Button("Hello2", {50, 50});
 	});
-	ImGui::PopStyleColor();
-	ImGui::PopStyleVar(3);
 }
 
-void TestImGuiWindow::imGuiPreUpdate(const sdl::Window::DeltaTime& deltaTime) {
+void TestImGuiWindow::imGuiPreUpdate(const sdl::DeltaTime& deltaTime) {
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	batch_->draw();

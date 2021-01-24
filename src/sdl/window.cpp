@@ -71,15 +71,17 @@ namespace sdl {
 			SDL_GL_UnloadLibrary();
 			SDL_DestroyWindow(window_);
 		}
+		spdlog::debug("[sdl::Window] Destructed.");
 	}
 
 	void Window::startLoop() {
 		if (window_) {
+			spdlog::warn("[sdl::Window] Loop already running");
 			return;
 		}
 
 		spdlog::info("[sdl::Window] Init loop");
-		Uint32 flags = SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL;
+		auto flags = SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL;
 		if (resizable_) {
 			flags |= SDL_WINDOW_RESIZABLE;
 		}
@@ -94,7 +96,7 @@ namespace sdl {
 		SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
 #if _DEBUG
 		SDL_GL_SetAttribute(SDL_GL_CONTEXT_FLAGS, SDL_GL_CONTEXT_DEBUG_FLAG);
-#endif // _DEBUG
+#endif
 		initOpenGl();
 
 		if (SDL_GL_LoadLibrary(nullptr) != 0) {
@@ -196,12 +198,10 @@ namespace sdl {
 			icon_ = nullptr;
 		}
 		icon_ = IMG_Load(icon.c_str());
-		if (window_) {
-			if (icon_) {
-				SDL_SetWindowIcon(window_, icon_);
-				SDL_FreeSurface(icon_);
-				icon_ = nullptr;
-			}
+		if (window_ && icon_) {
+			SDL_SetWindowIcon(window_, icon_);
+			SDL_FreeSurface(icon_);
+			icon_ = nullptr;
 		}
 	}
 
