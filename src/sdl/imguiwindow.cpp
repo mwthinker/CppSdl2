@@ -20,18 +20,16 @@ namespace sdl {
 		IMGUI_CHECKVERSION();
 		ImGui::CreateContext();
 		auto& io = ImGui::GetIO();
-		io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
-		io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;
-		io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
-		io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
+		io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard
+			| ImGuiConfigFlags_NavEnableGamepad
+			| ImGuiConfigFlags_DockingEnable
+			| ImGuiConfigFlags_ViewportsEnable;
 
 		ImGui_ImplSDL2_InitForOpenGL(getSdlWindow(), getGlContext());
 		ImGui_ImplOpenGL3_Init();
 	}
 
 	void ImGuiWindow::update(const DeltaTime& deltaTime) {
-		ImGui_ImplOpenGL3_NewFrame();
-		
 		imGuiPreUpdate(deltaTime);
 		
 		ImGui_ImplOpenGL3_NewFrame();
@@ -45,17 +43,19 @@ namespace sdl {
 		imGuiUpdate(deltaTime);
 
 		ImGui::Render();
+		const auto& io = ImGui::GetIO();
+		glViewport(0, 0, static_cast<int>(io.DisplaySize.x), static_cast<int>(io.DisplaySize.y));
 		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
-		imGuiPostUpdate(deltaTime);
-		
-		if (ImGui::GetIO().ConfigFlags & ImGuiConfigFlags_ViewportsEnable) {
+		if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable) {
 			auto backupCurrentWindow = SDL_GL_GetCurrentWindow();
 			auto backupCurrentContext = SDL_GL_GetCurrentContext();
 			ImGui::UpdatePlatformWindows();
 			ImGui::RenderPlatformWindowsDefault();
 			SDL_GL_MakeCurrent(backupCurrentWindow, backupCurrentContext);
 		}
+
+		imGuiPostUpdate(deltaTime);
 	}
 
 	void ImGuiWindow::eventUpdate(const SDL_Event& windowEvent) {

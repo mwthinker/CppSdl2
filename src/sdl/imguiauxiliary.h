@@ -58,18 +58,17 @@ namespace ImGui {
 	bool MainWindow(const char* name, T&& t) {
 		const auto& viewPort = *ImGui::GetMainViewport();
 		ImGui::SetNextWindowPos(viewPort.Pos);
-		
-		float w = std::min(ImGui::GetWindowWidth(), viewPort.Size.x);
-		float h = std::min(ImGui::GetWindowHeight(), viewPort.Size.y);
-
-		ImGui::SetNextWindowSize({w, h});
+		ImGui::SetNextWindowSize(viewPort.Size);
 
 		constexpr ImGuiWindowFlags ImguiNoWindow
 			= ImGuiWindowFlags_NoTitleBar
 			| ImGuiWindowFlags_NoResize
 			| ImGuiWindowFlags_NoBringToFrontOnFocus
 			| ImGuiWindowFlags_NoMove
-			| ImGuiWindowFlags_NoDocking;
+			| ImGuiWindowFlags_NoDocking
+			| ImGuiWindowFlags_NoScrollbar
+			| ImGuiWindowFlags_NoBackground
+			| ImGuiWindowFlags_NoScrollWithMouse;
 
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, {0, 0});
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.f);

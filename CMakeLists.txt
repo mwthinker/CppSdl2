@@ -92,14 +92,12 @@ target_include_directories(CppSdl2
 
 target_link_libraries(CppSdl2
 	PUBLIC
-		SDL2::SDL2 SDL2::SDL2main SDL2::SDL2-static
+		ImGui
 		SDL2::SDL2_image
 		SDL2::SDL2_ttf
 		SDL2::SDL2_mixer
-		glad::glad
 		spdlog::spdlog spdlog::spdlog_header_only
 		glm
-		ImGui
 )
 
 if (MSVC)

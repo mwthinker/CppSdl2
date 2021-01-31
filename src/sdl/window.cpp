@@ -139,6 +139,7 @@ namespace sdl {
 		spdlog::info("[sdl::Window] Loop starting");
 		auto time = Clock::now();
 		while (!quit_) {
+			glClearColor(clearColor_.red(), clearColor_.green(), clearColor_.blue(), clearColor_.alpha());
 			glClear(glBitfield_);
 				
 			SDL_Event eventSDL;

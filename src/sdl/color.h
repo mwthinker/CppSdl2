@@ -22,12 +22,25 @@ namespace sdl {
 			assert(red >= 0 || green >= 0 || blue >= 0 || alpha >= 0);
 		}
 
+		constexpr float red() const noexcept {
+			return static_cast<float>(value_ & 0x00'00'00'ff) / 255.f;
+		}
+
+		constexpr float green() const noexcept {
+			return static_cast<float>((value_ & 0x00'00'ff'00) >> 8) / 255.f;
+		}
+
+		constexpr float blue() const noexcept {
+			return static_cast<float>((value_ & 0x00'ff'00'00) >> 16) / 255.f;
+		}
+
+		constexpr float alpha() const noexcept {
+			return static_cast<float>((value_ & 0xff'00'00'00) >> 24) / 255.f;;
+		}
+
 		operator ImVec4() const noexcept
 		{
-			return {static_cast<float>(value_ & 0x00'00'00'ff) / 255.f,
-				static_cast<float>((value_ & 0x00'00'ff'00) >> 8) / 255.f,
-				static_cast<float>((value_ & 0x00'ff'00'00) >> 16) / 255.f,
-				static_cast<float>((value_ & 0xff'00'00'00) >> 24) / 255.f};
+			return {red(), green(), blue(), alpha()};
 		}
 
 		explicit operator ImColor() const noexcept {

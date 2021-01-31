@@ -2,6 +2,7 @@
 #define CPPSDL2_SDL_WINDOW_H
 
 #include "opengl.h"
+#include "color.h"
 
 #include <SDL.h>
 
@@ -84,6 +85,8 @@ namespace sdl {
 
 		int getOpenGlMinorVersion() const noexcept;
 
+		void setGlClearColor(Color color) noexcept;
+
 		void setGlClear(GLbitfield glBitfield) noexcept;
 
 		GLbitfield getGlClear() const noexcept;
@@ -136,6 +139,7 @@ namespace sdl {
 		int minorVersionGl_{DefaultMinorVersionGl};
 		
 		GLbitfield glBitfield_{GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT};
+		Color clearColor_;
 		
 		bool quit_{};
 		bool fullScreen_{};
@@ -161,6 +165,10 @@ namespace sdl {
 
 	inline int Window::getOpenGlMinorVersion() const noexcept {
 		return minorVersionGl_;
+	}
+
+	inline void Window::setGlClearColor(Color color) noexcept {
+		clearColor_ = color;
 	}
 
 	inline void Window::setGlClear(GLbitfield glBitfield) noexcept {
