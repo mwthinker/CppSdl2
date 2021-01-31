@@ -35,12 +35,12 @@ namespace sdl {
 		ImGui_ImplOpenGL3_NewFrame();
 		ImGui_ImplSDL2_NewFrame(getSdlWindow());
 		ImGui::NewFrame();
-	
+
+		imGuiUpdate(deltaTime);
+
 		if (showDemoWindow_) {
 			ImGui::ShowDemoWindow(&showDemoWindow_);
 		}
-
-		imGuiUpdate(deltaTime);
 
 		ImGui::Render();
 		const auto& io = ImGui::GetIO();
