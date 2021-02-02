@@ -20,10 +20,7 @@ namespace sdl {
 		IMGUI_CHECKVERSION();
 		ImGui::CreateContext();
 		auto& io = ImGui::GetIO();
-		io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard
-			| ImGuiConfigFlags_NavEnableGamepad
-			| ImGuiConfigFlags_DockingEnable
-			| ImGuiConfigFlags_ViewportsEnable;
+		io.ConfigFlags |= ImGuiConfigFlags_DockingEnable | ImGuiConfigFlags_ViewportsEnable;
 
 		ImGui_ImplSDL2_InitForOpenGL(getSdlWindow(), getGlContext());
 		ImGui_ImplOpenGL3_Init();
@@ -60,6 +57,34 @@ namespace sdl {
 
 	void ImGuiWindow::eventUpdate(const SDL_Event& windowEvent) {
 		ImGui_ImplSDL2_ProcessEvent(&windowEvent);
+		
+		auto& io = ImGui::GetIO();
+		bool ioWantCapture = false;
+		switch (windowEvent.type) {
+			case SDL_MOUSEBUTTONUP:
+				[[fallthrough]];
+			case SDL_MOUSEBUTTONDOWN:
+				[[fallthrough]];
+			case SDL_MOUSEMOTION:
+				[[fallthrough]];
+			case SDL_MOUSEWHEEL:
+				ioWantCapture = io.WantCaptureMouse;
+				break;
+			case SDL_KEYUP:
+				[[fallthrough]];
+			case SDL_KEYDOWN:
+				ioWantCapture = io.WantCaptureKeyboard;
+				break;
+			case SDL_TEXTEDITING:
+				[[fallthrough]];
+			case SDL_TEXTINPUT:
+				ioWantCapture = io.WantTextInput;
+				break;
+		}
+
+		if (!ioWantCapture) {
+			imguiEventUpdate(windowEvent);
+		}
 	}
 
 }

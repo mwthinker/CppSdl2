@@ -23,7 +23,7 @@ private:
 
 	void imGuiPreUpdate(const sdl::DeltaTime& deltaTime) override;
 
-	void eventUpdate(const SDL_Event& windowEvent) override;
+	void imguiEventUpdate(const SDL_Event& windowEvent) override;
 
 	void initBatchTriangles();
 	void initBatchTrianglesIndexes();
