@@ -25,7 +25,7 @@ TestImGuiWindow::TestImGuiWindow() {
 	sdl::ImGuiWindow::setShowDemoWindow(true);
 }
 
-void TestImGuiWindow::imguiEventUpdate(const SDL_Event& windowEvent) {
+void TestImGuiWindow::imGuiEventUpdate(const SDL_Event& windowEvent) {
 	auto& io = ImGui::GetIO();
 	switch (windowEvent.type) {
 		case SDL_WINDOWEVENT:

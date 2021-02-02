@@ -83,7 +83,7 @@ namespace sdl {
 		}
 
 		if (!ioWantCapture) {
-			imguiEventUpdate(windowEvent);
+			imGuiEventUpdate(windowEvent);
 		}
 	}
 

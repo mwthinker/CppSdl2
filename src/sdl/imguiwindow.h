@@ -26,7 +26,7 @@ namespace sdl {
 	private:
 		void update(const DeltaTime& deltaTime) final;
 		
-		virtual void imguiEventUpdate(const SDL_Event& windowEvent) {};
+		virtual void imGuiEventUpdate(const SDL_Event& windowEvent) {};
 		virtual void imGuiPreUpdate(const DeltaTime& deltaTime) {};
 		virtual void imGuiUpdate(const DeltaTime& deltaTime) {};
 		virtual void imGuiPostUpdate(const DeltaTime& deltaTime) {};

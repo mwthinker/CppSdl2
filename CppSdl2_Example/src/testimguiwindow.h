@@ -23,13 +23,13 @@ private:
 
 	void imGuiPreUpdate(const sdl::DeltaTime& deltaTime) override;
 
-	void imguiEventUpdate(const SDL_Event& windowEvent) override;
+	void imGuiEventUpdate(const SDL_Event& windowEvent) override;
 
 	void initBatchTriangles();
 	void initBatchTrianglesIndexes();
 
-    std::shared_ptr<TestShader> shader_;
-    std::shared_ptr<BatchTriangles> batch_;
+	std::shared_ptr<TestShader> shader_;
+	std::shared_ptr<BatchTriangles> batch_;
 	std::shared_ptr<BatchTrianglesIndexes> batchIndexes_;
 };
 
