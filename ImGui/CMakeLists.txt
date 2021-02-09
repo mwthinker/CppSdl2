@@ -10,7 +10,7 @@ FetchContent_Declare(RemoteImGui
 	GIT_REPOSITORY
 		https://github.com/ocornut/imgui.git
 	GIT_TAG
-		577e7cb493cecf1e3dfbdc040c798fe4a978f229 # Docking branch > v1.80
+		6f5f80a544f1542e20995359a3646416961264bd # Docking branch > v1.80
 )
 FetchContent_MakeAvailable(RemoteImGui)
 FetchContent_GetProperties(RemoteImGui
