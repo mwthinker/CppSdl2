@@ -70,11 +70,11 @@ namespace sdl {
 		uint32_t value_{};
 	};
 
-	constexpr Color Black{0xff'00'00'00};
+	constexpr Color Black{0x00'00'00'ff};
 	constexpr Color White{0xff'ff'ff'ff};
-	constexpr Color Red{0xff'ff'00'00};
-	constexpr Color Green{0xff'00'ff'00};
-	constexpr Color Blue{0x00'ff'00'ff};
+	constexpr Color Red{0xff'00'00'ff};
+	constexpr Color Green{0x00'ff'00'ff};
+	constexpr Color Blue{0x00'00'ff'ff};
 
 }
 

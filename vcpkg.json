@@ -14,6 +14,7 @@
 		"spdlog",
 		"glm",
 		"catch2",
-		"fmt"
+		"fmt",
+		"freetype"
 	]
 }
