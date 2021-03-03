@@ -17,17 +17,16 @@ namespace ImGui {
 		void AddHexagonImage(const sdl::TextureView& sprite, glm::vec2 center, float radius, float startAngle);
 
 		void AddCenterImageQuad(const sdl::TextureView& sprite, const glm::vec2& pos, const glm::vec2& size,
-			float angle = 0.f, const sdl::Color& color = sdl::White);
+			float angle = 0.f, sdl::Color color = sdl::color::White);
 
 		void AddImageQuad(const sdl::TextureView& texture,
-			const glm::vec2& pos, const glm::vec2& size, const sdl::Color& color = sdl::White);
+			const glm::vec2& pos, const glm::vec2& size, sdl::Color color = sdl::color::White);
 
 	}
 
 	void Hexagon(const sdl::TextureView& texture, float size, bool flat = true);
 
-	void Image(const sdl::TextureView& texture, const glm::vec2& size,
-		const sdl::Color& tintCol = sdl::White, const sdl::Color& borderCol = {});
+	void Image(const sdl::TextureView& texture, const glm::vec2& size, sdl::Color tintCol = sdl::color::White, sdl::Color borderCol = {});
 
 	[[nodiscard]] bool ImageButton(const sdl::TextureView& texture, const glm::vec2& size);
 

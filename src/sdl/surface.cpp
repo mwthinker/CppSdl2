@@ -58,9 +58,8 @@ namespace sdl {
 
 		SDL_Surface* createSurface(int w, int h, Color color) {
 			auto s = createSurface(w, h);
-			SDL_Color sdlColor = color;
 			SDL_FillRect(s, 0,
-				SDL_MapRGBA(s->format, sdlColor.r, sdlColor.g, sdlColor.b, sdlColor.a)
+				SDL_MapRGBA(s->format, color.redByte(), color.greenByte(), color.blueByte(), color.alphaByte())
 			);
 			return s;
 		}

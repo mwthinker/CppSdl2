@@ -24,7 +24,7 @@ namespace {
 		return  corner;
 	}
 
-	const sdl::Color COLOR = {0.5f, 1.f, 0, 1.f};
+	const sdl::Color COLOR{0.5f, 1.f, 0, 1.f};
 
 }
 

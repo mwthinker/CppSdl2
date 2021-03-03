@@ -23,17 +23,17 @@ namespace ImGui {
 
 			auto texHalfSize = sprite.getSize() * 0.5f;
 			auto texMiddlePos = sprite.getPosition() + texHalfSize;
-			sdl::Vertex centerVertex{center, texMiddlePos, sdl::White};
+			sdl::Vertex centerVertex{center, texMiddlePos, sdl::color::White};
 			PrimWriteVtx(drawList, centerVertex);
 
 			for (int i = 0; i < 6; ++i) {
-				auto v = sdl::Vertex{sdl::graphic::getHexagonCorner(center, radius, i, 0), texMiddlePos + texHalfSize * sdl::graphic::getHexagonCorner(i, startAngle), sdl::White};
+				auto v = sdl::Vertex{sdl::graphic::getHexagonCorner(center, radius, i, 0), texMiddlePos + texHalfSize * sdl::graphic::getHexagonCorner(i, startAngle), sdl::color::White};
 				PrimWriteVtx(drawList, v);
 			}
 		}
 
 		void AddCenterImageQuad(const sdl::TextureView& texture,
-			const glm::vec2& center, const glm::vec2& size, float angle, const sdl::Color& color) {
+			const glm::vec2& center, const glm::vec2& size, float angle, sdl::Color color) {
 
 			glm::vec2 deltaA{-size.x, -size.y};
 			glm::vec2 deltaB{size.x, -size.y};
@@ -54,7 +54,7 @@ namespace ImGui {
 		}
 
 		void AddImageQuad(const sdl::TextureView& texture,
-			const glm::vec2& pos, const glm::vec2& size, const sdl::Color& color) {
+			const glm::vec2& pos, const glm::vec2& size, sdl::Color color) {
 
 			ImVec2 a = pos;
 			ImVec2 b = pos + glm::vec2{size.x, 0.f};
@@ -69,7 +69,7 @@ namespace ImGui {
 			ImGui::GetWindowDrawList()->PrimQuadUV(a, b, c, d, uv_a, uv_b, uv_c, uv_d, color.toImU32());
 		}
 
-	}  // Namespace Helper.
+	}
 
 	void Hexagon(const sdl::TextureView& texture, float size, bool flat) {
 		auto drawList = ImGui::GetWindowDrawList();
@@ -84,7 +84,7 @@ namespace ImGui {
 		ImGui::Dummy({size * 0.5f, size * 0.5f});
 	}
 
-	void Image(const sdl::TextureView& texture, const glm::vec2& size, const sdl::Color& tintCol, const sdl::Color& borderCol) {
+	void Image(const sdl::TextureView& texture, const glm::vec2& size, sdl::Color tintCol, sdl::Color borderCol) {
 		ImGui::Image((ImTextureID) (intptr_t) texture, size, texture.getPosition(), texture.getPosition() + texture.getSize(), tintCol, borderCol);
 	}
 

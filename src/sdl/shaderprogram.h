@@ -38,17 +38,17 @@ namespace sdl {
 		// first successful is "used. Load and link the vertex shader and the 
 		// fragment shader in the created program. Return true if the creation
 		// is successful else false.
-		bool loadAndLinkFromFile(const std::string& vShaderFile, const std::string& fShaderFile);
+		[[nodiscard]] bool loadAndLinkFromFile(const std::string& vShaderFile, const std::string& fShaderFile);
 
-		bool loadAndLinkFromFile(const std::string& vShaderFile, const std::string& gShaderFile, const std::string& fShaderFile);
+		[[nodiscard]] bool loadAndLinkFromFile(const std::string& vShaderFile, const std::string& gShaderFile, const std::string& fShaderFile);
 
 		// Load shaders string parameters "vShader" and "fShader". Is safe to 
 		// call multiple times but only the first successful is "used. Load and
 		// link the vertex shader and the fragment shader in the created program.
 		// Return true if the creation is successful else false.
-		bool loadAndLink(const std::string& vShader, const std::string& fShader);
+		[[nodiscard]] bool loadAndLink(const std::string& vShader, const std::string& fShader);
 
-		bool loadAndLink(const std::string& vShader, const std::string& gShader, const std::string& fShader);
+		[[nodiscard]] bool loadAndLink(const std::string& vShader, const std::string& gShader, const std::string& fShader);
 
 		// Uses the current gl program. I.e. a call to glUseProgram.
 		// Does nothing if the program is not loaded.

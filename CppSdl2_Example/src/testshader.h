@@ -36,7 +36,7 @@ public:
 
 		Vec2 pos_{};
 		Vec2 tex_{};
-		sdl::Color color_{sdl::White};
+		sdl::Color color_{sdl::color::White};
 		GLfloat texture_{};
 	};
 

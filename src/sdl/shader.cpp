@@ -67,11 +67,8 @@ void main() {
 		shader_.bindAttribute(A_POS);
 		shader_.bindAttribute(A_TEX);
 		shader_.bindAttribute(A_COL);
-		shader_.loadAndLink(vShade, fShader);
 
-		shader_.useProgram();
-
-		if (shader_.isLinked()) {
+		if (shader_.loadAndLink(vShade, fShader)) {
 			// Collect the vertex buffer attributes indexes.
 			aPos_ = shader_.getAttributeLocation(A_POS);
 			aTex_ = shader_.getAttributeLocation(A_TEX);

@@ -24,3 +24,11 @@ TEST_CASE("Testing math expressions", "[expressions]") {
 	}	
 
 }
+
+SCENARIO("Colors constants", "[Color]") {
+
+	GIVEN("Red color constant") {
+
+	}
+
+}

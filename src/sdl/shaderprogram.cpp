@@ -10,29 +10,27 @@ namespace sdl {
 	namespace {
 
 		enum class LogError {
-			PROGRAM_ERROR,
-			SHADER_ERROR
+			ProgramError,
+			ShaderError
 		};
 
-		template <LogError TYPE>
+		template <LogError Type>
 		void logError(GLuint objectId, const char* shaderString, const char* errorHeader) {
 			GLint infoLen = 0;
-			if constexpr (TYPE == LogError::PROGRAM_ERROR) {
+			if constexpr (Type == LogError::ProgramError) {
 				glGetProgramiv(objectId, GL_INFO_LOG_LENGTH, &infoLen);
 			} else {
 				glGetShaderiv(objectId, GL_INFO_LOG_LENGTH, &infoLen);
 			}
 			if (infoLen > 1) {
 				char message[256]; // A arbitrary value big enough to contain message.
-				GLsizei size;
-				if constexpr (TYPE == LogError::PROGRAM_ERROR) {
+				GLsizei size = 0;
+				if constexpr (Type == LogError::ProgramError) {
 					glGetProgramInfoLog(objectId, sizeof(message), &size, message);
 				} else {
 					glGetShaderInfoLog(objectId, sizeof(message), &size, message);
 				}
-				std::string str;
-				str.append(message, message + size);
-				spdlog::error("[sdl::ShaderProgram] {}, {}: {}", shaderString, errorHeader, str);
+				spdlog::error("[sdl::ShaderProgram] {}, {}: {}", shaderString, errorHeader, std::string_view(message, size));
 			}
 		}
 
@@ -49,7 +47,7 @@ namespace sdl {
 			GLint compileStatus;
 			glGetShaderiv(shader, GL_COMPILE_STATUS, &compileStatus);
 			if (compileStatus == GL_FALSE) {
-				logError<LogError::SHADER_ERROR>(shader, shaderSrc, "Failed to compile shader: ");
+				logError<LogError::ShaderError>(shader, shaderSrc, "Failed to compile shader: ");
 				return 0;
 			}
 			assertGlError();
@@ -113,22 +111,23 @@ namespace sdl {
 	}
 
 	int ShaderProgram::getUniformLocation(const std::string& uniform) const {
-		if (programObjectId_ != 0) {
-			auto it = uniforms_.find(uniform);
-
-			if (it != uniforms_.end()) {
-				return it->second;
-			} else {
-				auto loc = glGetUniformLocation(programObjectId_, uniform.c_str());
-				assertGlError();
-				if (loc != -1) {
-					uniforms_[uniform] = loc;
-				}
-				return loc;
-			}
+		if (programObjectId_ == 0) {
+			spdlog::warn("[sdl::ShaderProgram] shader uniform {} failed to be extracted", uniform);
+			return -1;
 		}
-		spdlog::warn("[sdl::ShaderProgram] shader uniform {} failed to be extracted", uniform);
-		return -1;
+
+		if (auto it = uniforms_.find(uniform); 
+			it != uniforms_.end()) {
+			
+			return it->second;
+		}
+
+		auto loc = glGetUniformLocation(programObjectId_, uniform.c_str());
+		assertGlError();
+		if (loc != -1) {
+			uniforms_[uniform] = loc;
+		}
+		return loc;
 	}
 
 	bool ShaderProgram::loadAndLinkFromFile(const std::string& vShaderFile, const std::string& gShaderFile, const std::string& fShaderFile) {
@@ -190,13 +189,12 @@ namespace sdl {
 		GLint linked;
 		glGetProgramiv(programObjectId_, GL_LINK_STATUS, &linked);
 		if (linked == GL_FALSE) {
-			logError<LogError::PROGRAM_ERROR>(programObjectId_, "", "Error linking program");
+			logError<LogError::ProgramError>(programObjectId_, "", "Error linking program");
 			glDeleteProgram(programObjectId_);
 			return false;
 		}
 		return true;
-	}
-	
+	}	
 
 	void ShaderProgram::bindAllAttributes() {
 		int index = 0;

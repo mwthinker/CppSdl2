@@ -8,19 +8,16 @@ TestShader::TestShader(const std::string& vShader, const std::string& fShader) {
 	shader_.bindAttribute("aTex");
 	shader_.bindAttribute("aColor");
 	shader_.bindAttribute("aTexture");
-	shader_.loadAndLinkFromFile(vShader, fShader);
 
-	shader_.useProgram();
-
-	// Collect the vertex buffer attributes indexes.
-	aPosIndex_ = shader_.getAttributeLocation("aPos");
-	aTexIndex_ = shader_.getAttributeLocation("aTex");
-	aColorIndex_ = shader_.getAttributeLocation("aColor");
-	aTextureIndex_ = shader_.getAttributeLocation("aTexture");
-
-	// Collect the vertex buffer uniforms indexes.
-	uProjIndex_ = shader_.getUniformLocation("uProj");
-	uModelIndex_ = shader_.getUniformLocation("uModel");
+	if (shader_.loadAndLinkFromFile(vShader, fShader)) {
+		aPosIndex_ = shader_.getAttributeLocation("aPos");
+		aTexIndex_ = shader_.getAttributeLocation("aTex");
+		aColorIndex_ = shader_.getAttributeLocation("aColor");
+		aTextureIndex_ = shader_.getAttributeLocation("aTexture");
+		
+		uProjIndex_ = shader_.getUniformLocation("uProj");
+		uModelIndex_ = shader_.getUniformLocation("uModel");
+	}
 }
 
 void TestShader::useProgram() const {

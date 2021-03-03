@@ -27,10 +27,9 @@ find_package(SDL2-ttf CONFIG REQUIRED)
 find_package(glm CONFIG REQUIRED)
 find_package(spdlog CONFIG REQUIRED)
 
-set(IMGUI_USER_CONFIG ${CMAKE_CURRENT_SOURCE_DIR}/src/sdl/imconfig.h)
-
 add_library(CppSdl2 
 	src/sdl/batch.h
+	src/sdl/color.cpp
 	src/sdl/color.h
 	src/sdl/framebuffer.cpp
 	src/sdl/framebuffer.h
@@ -42,7 +41,6 @@ add_library(CppSdl2
 	src/sdl/graphic.h
 	src/sdl/imguiauxiliary.cpp
 	src/sdl/imguiauxiliary.h
-	${IMGUI_USER_CONFIG}
 	src/sdl/imguiwindow.h
 	src/sdl/imguiwindow.cpp
 	src/sdl/initsdl.cpp
@@ -81,7 +79,6 @@ add_subdirectory(ImGui)
 
 target_compile_definitions(CppSdl2
 	PUBLIC
-		IMGUI_USER_CONFIG=\"${IMGUI_USER_CONFIG}\"
 		NOMINMAX
 )
 
