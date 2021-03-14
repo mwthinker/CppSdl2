@@ -16,6 +16,8 @@ namespace sdl {
 	// The packing algorithm is from http://www.blackpawn.com/texts/lightmaps/default.html.
 	class TextureAtlas {
 	public:
+		TextureAtlas() = default;
+
 		TextureAtlas(int width, int height, std::function<void()>&& filter = []() {
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
