@@ -6,10 +6,6 @@ project(CppSdl2_Example
 		CXX
 )
 
-if (MSVC)
-	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /wd4275") # non - DLL-interface class 'class_1' used as base for DLL-interface class 'class_2'
-endif ()
-
 add_executable(CppSdl2_Example
 	src/batchtriangles.cpp
 	src/batchtriangles.h
@@ -37,12 +33,5 @@ set_target_properties(CppSdl2_Example
 		CXX_STANDARD_REQUIRED YES
 		CXX_EXTENSIONS NO
 )
-
-if (MSVC)
-	target_compile_options(CppSdl2
-		PRIVATE
-			"/permissive-"
-	)
-endif ()
 	
-file(COPY data/. DESTINATION ${CMAKE_CURRENT_BINARY_DIR}) # Copy data to build folder.
+file(COPY data/. DESTINATION ${CMAKE_CURRENT_BINARY_DIR})

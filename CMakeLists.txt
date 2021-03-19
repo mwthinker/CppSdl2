@@ -1,12 +1,12 @@
 cmake_minimum_required(VERSION 3.16)
 
 set(VCPKG_ROOT $ENV{VCPKG_ROOT})
-if(DEFINED ENV{VCPKG_ROOT} AND NOT DEFINED CMAKE_TOOLCHAIN_FILE)
+if (DEFINED ENV{VCPKG_ROOT} AND NOT DEFINED CMAKE_TOOLCHAIN_FILE)
 	set(CMAKE_TOOLCHAIN_FILE "${VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake"
 		CACHE STRING ""
 	)
 	message(STATUS "Use VCPKG CMAKE_TOOLCHAIN_FILE: ${CMAKE_TOOLCHAIN_FILE}")
-endif()
+endif ()
 
 project(CppSdl2
 	DESCRIPTION
@@ -15,16 +15,11 @@ project(CppSdl2
 		CXX
 )
 
-if (MSVC)
-	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /wd4275") # non - DLL-interface class 'class_1' used as base for DLL-interface class 'class_2'
-endif ()
-
 find_package(glad CONFIG REQUIRED)
 find_package(SDL2 CONFIG REQUIRED)
 find_package(SDL2-image CONFIG REQUIRED)
 find_package(SDL2-mixer CONFIG REQUIRED)
 find_package(SDL2-ttf CONFIG REQUIRED)
-find_package(glm CONFIG REQUIRED)
 find_package(spdlog CONFIG REQUIRED)
 
 add_library(CppSdl2 
@@ -94,15 +89,7 @@ target_link_libraries(CppSdl2
 		SDL2::SDL2_ttf
 		SDL2::SDL2_mixer
 		spdlog::spdlog spdlog::spdlog_header_only
-		glm
 )
-
-if (MSVC)
-	target_compile_options(CppSdl2
-		PRIVATE
-			"/permissive-"
-	)
-endif ()
 
 set_target_properties(CppSdl2
 	PROPERTIES

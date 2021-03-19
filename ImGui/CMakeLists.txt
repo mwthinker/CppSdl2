@@ -58,7 +58,7 @@ target_link_libraries(ImGui
 		SDL2::SDL2 SDL2::SDL2main SDL2::SDL2-static
 		glad::glad
 		freetype
-		glm
+		glm::glm
 )
 
 target_compile_definitions(ImGui
