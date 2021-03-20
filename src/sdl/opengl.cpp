@@ -23,7 +23,7 @@ namespace sdl {
 				case GL_CONTEXT_LOST:
 					return "GL_CONTEXT_LOST";
 			}
-			return "";
+			return "Unknown GL error code";
 		}
 	}
 

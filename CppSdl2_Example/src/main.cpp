@@ -188,6 +188,9 @@ void testLoadTextureAtlas() {
 	s = atlas.add(white, 1);
 
 	TestWindow w{atlas.get()};
+	w.setBordered(false);
+	w.setAlwaysOnTop(true);
+	w.setOpacity(0.5f);
 	w.startLoop();
 
 	spdlog::info("[testLoadTextureAtlas] Successfully!");

@@ -66,7 +66,10 @@ namespace {
 
 }
 
-TestWindow::TestWindow(const sdl::Sprite& sprite) : Window{2, 1}, sprite_{sprite} {
+TestWindow::TestWindow(const sdl::Sprite& sprite)
+	: Window{2, 1}
+	, sprite_{sprite} {
+	
 	sdl::Window::setSize(512, 512);
 	sdl::Window::setTitle("Test");
 	sdl::Window::setIcon("tetris.bmp");
@@ -96,8 +99,13 @@ void TestWindow::eventUpdate(const SDL_Event& windowEvent) {
 			quit();
 			break;
 		case SDL_MOUSEWHEEL:
-			std::cout << windowEvent.wheel.which;
+		{
+			float add = windowEvent.wheel.y * 5;
+			auto [w, h] = getSize();
+			std::cout << windowEvent.wheel.which << " add = " << add << "\n";
+			setSize(add + w, add + h);
 			break;
+		}
 		case SDL_WINDOWEVENT:
 			switch (windowEvent.window.event) {
 				case SDL_WINDOWEVENT_CLOSE:
@@ -142,6 +150,8 @@ void TestWindow::eventUpdate(const SDL_Event& windowEvent) {
 					}
 					break;
 			}
+			break;
+		case SDL_MOUSEMOTION:
 			break;
 		case SDL_MOUSEBUTTONDOWN:
 			if (windowEvent.button.button == SDL_BUTTON_LEFT) {
@@ -219,6 +229,10 @@ void TestWindow::removeGamepad(SDL_JoystickID instanceId) {
 	}
 }
 
+ SDL_HitTestResult hitTestCallback(SDL_Window* win, const SDL_Point* area, void* data) {
+	return SDL_HITTEST_DRAGGABLE;
+}
+
 void TestWindow::initPreLoop() {
 	setLoopSleepingTime(std::chrono::milliseconds{10});
 	sdl::Font font{"Ubuntu-B.ttf", 60};
@@ -239,4 +253,8 @@ void TestWindow::initPreLoop() {
 	batch2_->uploadToGraphicCard();
 
 	sdl::GameController::loadGameControllerMappings("gamecontrollerdb.txt");
+
+	SDL_SetWindowHitTest(getSdlWindow(), hitTestCallback, nullptr);
+
+
 }

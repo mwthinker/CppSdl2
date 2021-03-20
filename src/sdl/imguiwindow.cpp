@@ -22,6 +22,13 @@ namespace sdl {
 		auto& io = ImGui::GetIO();
 		io.ConfigFlags |= ImGuiConfigFlags_DockingEnable | ImGuiConfigFlags_ViewportsEnable;
 
+		if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
+		{
+			auto& style = ImGui::GetStyle();
+			style.WindowRounding = 0.0f;
+			style.Colors[ImGuiCol_WindowBg].w = 1.0f;
+		}
+
 		ImGui_ImplSDL2_InitForOpenGL(getSdlWindow(), getGlContext());
 		ImGui_ImplOpenGL3_Init();
 	}

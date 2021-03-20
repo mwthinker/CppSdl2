@@ -65,6 +65,12 @@ namespace sdl {
 		// Return the window pointer. Use with care.
 		SDL_Window* getSdlWindow() const noexcept;
 
+		void setAlwaysOnTop(bool always);
+		bool isAlwaysOnTop() const;
+
+		void setOpacity(float value);
+		float getOpacity() const;
+
 		void setPosition(int x, int y);
 
 		void setBordered(bool bordered);
@@ -141,6 +147,8 @@ namespace sdl {
 		GLbitfield glBitfield_{GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT};
 		Color clearColor_;
 		
+		bool alwaysOnTop_{false};
+		float opacity_{1.f};
 		bool quit_{};
 		bool fullScreen_{};
 		bool bordered_{true};

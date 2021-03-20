@@ -85,7 +85,9 @@ namespace sdl {
 		if (resizable_) {
 			flags |= SDL_WINDOW_RESIZABLE;
 		}
-
+		if (alwaysOnTop_) {
+			flags |= SDL_WINDOW_ALWAYS_ON_TOP;
+		}
 		if (!bordered_) {
 			flags |= SDL_WINDOW_BORDERLESS;
 		}
@@ -113,6 +115,7 @@ namespace sdl {
 		);
 		SDL_SetWindowMinimumSize(window_, minWidth_, minHeight_);
 		SDL_SetWindowMaximumSize(window_, maxWidth_, maxHeight_);
+		setOpacity(opacity_);
 
 		if (window_ == nullptr) {
 			spdlog::error("[sdl::Window] SDL_CreateWindow failed: {}", SDL_GetError());
@@ -159,6 +162,22 @@ namespace sdl {
 		}
 	}
 
+	void Window::setOpacity(float opacity) {
+		if (window_) {
+			SDL_SetWindowOpacity(window_, opacity);
+		} else {
+			opacity_ = opacity;
+		}
+	}
+
+	float Window::getOpacity() const {
+		float opacity = opacity_;
+		if (window_) {
+			SDL_GetWindowOpacity(window_, &opacity);
+		}
+		return opacity_;
+	}
+
 	void Window::setBordered(bool bordered) {
 		if (window_) {
 			SDL_SetWindowBordered(window_, bordered ? SDL_TRUE : SDL_FALSE);
@@ -170,18 +189,30 @@ namespace sdl {
 
 	void Window::setPosition(int x, int y) {
 		if (window_) {
-			if (x_ < 0) {
-				x_ = SDL_WINDOWPOS_UNDEFINED;
+			if (x < 0) {
+				x = SDL_WINDOWPOS_UNDEFINED;
 			}
-			if (y_ < 0) {
-				y_ = SDL_WINDOWPOS_UNDEFINED;
-			}
+			if (y < 0) {
+				y = SDL_WINDOWPOS_UNDEFINED;
+			}			
 			SDL_SetWindowPosition(window_, x, y);
-			spdlog::info("[sdl::Window] Reposition window: (x, y) = ({}, {})", x_ == SDL_WINDOWPOS_UNDEFINED ? -1 : x_, y_ == SDL_WINDOWPOS_UNDEFINED ? -1 : y_);
+			spdlog::info("[sdl::Window] Reposition window: (x, y) = ({}, {})", x == SDL_WINDOWPOS_UNDEFINED ? -1 : x, y == SDL_WINDOWPOS_UNDEFINED ? -1 : y);
 		} else {
 			x_ = x;
 			y_ = y;
 		}
+	}
+
+	void Window::setAlwaysOnTop(bool always) {
+		if (window_) {
+			spdlog::warn("[sdl::Window] Not supported, after window creation!");
+		} else {
+			alwaysOnTop_ = always;
+		}
+	}
+
+	bool Window::isAlwaysOnTop() const {
+		return alwaysOnTop_;
 	}
 
 	void Window::setResizeable(bool resizable) {
