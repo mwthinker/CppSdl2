@@ -77,13 +77,9 @@ namespace sdl {
 			return {redByte(), greenByte(), blueByte(), alphaByte()};
 		}
 
-		constexpr bool operator==(Color other) const noexcept {
-			return value_ == other.value_;
-		}
+		friend constexpr bool operator==(Color left, Color right) noexcept;
 
-		constexpr bool operator!=(Color other) const noexcept {
-			return value_ != other.value_;
-		}
+		friend constexpr bool operator!=(Color left, Color right) noexcept;
 
 		constexpr ImU32 toImU32() const noexcept {
 			return value_;
@@ -106,6 +102,14 @@ namespace sdl {
 
 		ImU32 value_{};
 	};
+
+	inline constexpr bool operator==(Color left, Color right) noexcept {
+		return left.value_ == right.value_;
+	}
+
+	inline constexpr bool operator!=(Color left, Color right) noexcept {
+		return left.value_ != right.value_;
+	}
 
 	inline constexpr Color::Color(float red, float green, float blue, float alpha) noexcept
 		: value_{(toByte(red) << IM_COL32_R_SHIFT)

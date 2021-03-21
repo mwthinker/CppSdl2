@@ -27,8 +27,20 @@ namespace sdl {
 		}
 	}
 
-	bool GameController::operator==(SDL_JoystickID joystickId) const {
-		return joystickId == (gameController_ != nullptr ? getInstanceId() : 0);
+	bool operator==(const GameController& gameController, SDL_JoystickID joystickId) {
+		return joystickId == (gameController.gameController_ != nullptr ? gameController.getInstanceId() : 0);
+	}
+
+	bool operator==(SDL_JoystickID joystickId, const GameController& gameController) {
+		return gameController == joystickId;
+	}
+
+	bool operator!=(const GameController& gameController, SDL_JoystickID joystickId) {
+		return !(gameController == joystickId);
+	}
+
+	bool operator!=(SDL_JoystickID joystickId, const GameController& gameController) {
+		return !(gameController == joystickId);
 	}
 
 	const char* GameController::getName() const {

@@ -41,9 +41,9 @@ namespace sdl {
 		
 		bool isValid() const noexcept;
 
-		bool operator==(const Texture& texture) const noexcept;
+		friend bool operator==(const Texture& left, const Texture& right) noexcept;
 		
-		bool operator!=(const Texture& texture) const noexcept;
+		friend bool operator!=(const Texture& left, const Texture& right) noexcept;
 
 		operator GLuint() const noexcept {
 			return texture_;

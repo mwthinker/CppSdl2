@@ -62,12 +62,12 @@ namespace sdl {
 		return texture_ != 0;
 	}
 
-	bool Texture::operator==(const Texture& texture) const noexcept {
-		return texture_ == texture.texture_;
+	bool operator==(const Texture& left, const Texture& right) noexcept {
+		return left.texture_ == right.texture_;
 	}
 
-	bool Texture::operator!=(const Texture& texture) const noexcept {
-		return texture_ != texture.texture_;
+	bool operator!=(const Texture& left, const Texture& right) noexcept {
+		return left.texture_ != right.texture_;
 	}
 
 	GLenum Texture::surfaceFormat(SDL_Surface* surface) {

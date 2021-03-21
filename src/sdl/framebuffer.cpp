@@ -54,12 +54,12 @@ namespace sdl {
 		return frameBuffer_ != 0;
 	}
 
-	bool FrameBuffer::operator==(const FrameBuffer& texture) const noexcept {
-		return frameBuffer_ == texture.frameBuffer_;
+	bool operator==(const FrameBuffer& left, const FrameBuffer& right) noexcept {
+		return left.frameBuffer_ == right.frameBuffer_;
 	}
 
-	bool FrameBuffer::operator!=(const FrameBuffer& texture) const noexcept {
-		return frameBuffer_ != texture.frameBuffer_;
+	bool operator!=(const FrameBuffer& left, const FrameBuffer& right) noexcept {
+		return left.frameBuffer_ != right.frameBuffer_;
 	}
 
 }

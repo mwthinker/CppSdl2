@@ -15,9 +15,9 @@ namespace sdl {
 
 		~Sound();
 
-		bool operator==(const Sound& sound) const noexcept;
+		friend bool operator==(const Sound& left, const Sound& right) noexcept;
 
-		bool operator!=(const Sound& sound) const noexcept;
+		friend bool operator!=(const Sound& sound, const Sound& right) noexcept;
 
 		// Loads a soundfile and creates a sound.
 		explicit Sound(const std::string& filename);
@@ -93,12 +93,12 @@ namespace sdl {
 		return soundBuffer_ ? soundBuffer_->mixChunk : nullptr;
 	}
 
-	inline bool Sound::operator==(const Sound& sound) const noexcept {
-		return soundBuffer_ != nullptr && soundBuffer_ == sound.soundBuffer_;
+	inline bool operator==(const Sound& left, const Sound& right) noexcept {
+		return left.soundBuffer_ == right.soundBuffer_;
 	}
 
-	inline bool Sound::operator!=(const Sound& other) const noexcept {
-		return !(*this == other);
+	inline bool operator!=(const Sound& left, const Sound& right) noexcept {
+		return left.soundBuffer_ != right.soundBuffer_;
 	}
 
 }

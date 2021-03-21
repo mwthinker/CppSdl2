@@ -20,9 +20,9 @@ namespace sdl {
 		Font(Font&& other) noexcept;
 		Font& operator=(Font&& other) noexcept;
 
-		bool operator==(const Font& font) const noexcept;
+		friend bool operator==(const Font& left, const Font& right) noexcept;
 
-		bool operator!=(const Font& font) const noexcept;
+		friend bool operator!=(const Font& left, const Font& right) noexcept;
 
 		int getCharacterSize() const noexcept;
 

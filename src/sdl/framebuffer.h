@@ -26,9 +26,9 @@ namespace sdl {
 		
 		bool isValid() const noexcept;
 
-		bool operator==(const FrameBuffer& other) const noexcept;
+		friend bool operator==(const FrameBuffer& left, const FrameBuffer& right) noexcept;
 		
-		bool operator!=(const FrameBuffer& other) const noexcept;
+		friend bool operator!=(const FrameBuffer& left, const FrameBuffer& right) noexcept;
 
 		operator GLuint() const noexcept {
 			return frameBuffer_;

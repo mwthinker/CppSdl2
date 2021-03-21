@@ -38,12 +38,12 @@ namespace sdl {
 		return *this;
 	}
 
-	bool Font::operator==(const Font& font) const noexcept {
-		return font_ == font.font_;
+	bool operator==(const Font& left, const Font& right) noexcept {
+		return left.font_ == right.font_;
 	}
 
-	bool Font::operator!=(const Font& other) const noexcept {
-		return font_ != other.font_;
+	bool operator!=(const Font& left, const Font& right) noexcept {
+		return left.font_ != right.font_;
 	}
 
 	int Font::getCharacterSize() const noexcept {

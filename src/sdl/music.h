@@ -19,9 +19,9 @@ namespace sdl {
 		// Only one music file can be played.
 		explicit Music(const std::string& filename);
 
-		bool operator==(const Music& music) const;
+		friend bool operator==(const Music& left, const Music& right);
 
-		bool operator!=(const Music& other) const;
+		friend bool operator!=(const Music& left, const Music& right);
 
 		// Play the music one time plus the "loops" variable.
 		// Will stop any other music object already playing.
@@ -76,12 +76,12 @@ namespace sdl {
 		std::shared_ptr<MusicBuffer> musicBuffer_;
 	};
 
-	inline bool Music::operator==(const Music& music) const {
-		return musicBuffer_ != nullptr && musicBuffer_ == music.musicBuffer_;
+	inline bool operator==(const Music& left, const Music& right) {
+		return left.musicBuffer_ == right.musicBuffer_;
 	}
 
-	inline bool Music::operator!=(const Music& other) const {
-		return !(*this == other);
+	inline bool operator!=(const Music& left, const Music& right) {
+		return left.musicBuffer_ != right.musicBuffer_;
 	}
 
 }

@@ -24,7 +24,10 @@ namespace sdl {
 		GameController(const GameController&) = delete;
 		GameController& operator=(const GameController&) = delete;
 
-		bool operator==(SDL_JoystickID joystickId) const;
+		friend bool operator==(const GameController& gameController, SDL_JoystickID joystickId);
+		friend bool operator==(SDL_JoystickID joystickId, const GameController& gameController);
+		friend bool operator!=(const GameController& gameController, SDL_JoystickID joystickId);
+		friend bool operator!=(SDL_JoystickID joystickId, const GameController& gameController);
 
 		const char* getName() const;
 
