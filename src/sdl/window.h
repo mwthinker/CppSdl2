@@ -115,7 +115,13 @@ namespace sdl {
 
 		SDL_GLContext getGlContext();
 
+		virtual SDL_HitTestResult onHitTest(const SDL_Point& area) {
+			return SDL_HITTEST_NORMAL;
+		};
+
 	private:
+		static SDL_HitTestResult hitTestCallback(SDL_Window* sdlWindow, const SDL_Point* area, void* data);
+
 		static constexpr int DefaultWidth{800};
 		static constexpr int DefaultHeight{800};
 		static constexpr int DefaultMajorVersionGl{3};

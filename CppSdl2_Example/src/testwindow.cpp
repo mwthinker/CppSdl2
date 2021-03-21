@@ -5,6 +5,7 @@
 #include <sdl/opengl.h>
 #include <sdl/sprite.h>
 #include <sdl/gamecontroller.h>
+#include <sdl/framebuffer.h>
 
 #include <iostream>
 
@@ -229,7 +230,7 @@ void TestWindow::removeGamepad(SDL_JoystickID instanceId) {
 	}
 }
 
- SDL_HitTestResult hitTestCallback(SDL_Window* win, const SDL_Point* area, void* data) {
+SDL_HitTestResult TestWindow::onHitTest(const SDL_Point& area) {
 	return SDL_HITTEST_DRAGGABLE;
 }
 
@@ -253,8 +254,4 @@ void TestWindow::initPreLoop() {
 	batch2_->uploadToGraphicCard();
 
 	sdl::GameController::loadGameControllerMappings("gamecontrollerdb.txt");
-
-	SDL_SetWindowHitTest(getSdlWindow(), hitTestCallback, nullptr);
-
-
 }

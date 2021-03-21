@@ -113,16 +113,16 @@ namespace sdl {
 			width_,	height_,
 			flags
 		);
-		SDL_SetWindowMinimumSize(window_, minWidth_, minHeight_);
-		SDL_SetWindowMaximumSize(window_, maxWidth_, maxHeight_);
-		setOpacity(opacity_);
-
 		if (window_ == nullptr) {
 			spdlog::error("[sdl::Window] SDL_CreateWindow failed: {}", SDL_GetError());
 			throw std::exception();
 		} else {
 			spdlog::info("[sdl::Window] Windows {} created: \n\t(x, y) = ({}, {}) \n\t(w, h) = ({}, {}) \n\tflags = {}", title_, x_ == SDL_WINDOWPOS_UNDEFINED? -1 : x_, y_ == SDL_WINDOWPOS_UNDEFINED ? -1 : y_, width_, height_, flags);
 		}
+
+		SDL_SetWindowMinimumSize(window_, minWidth_, minHeight_);
+		SDL_SetWindowMaximumSize(window_, maxWidth_, maxHeight_);
+		setOpacity(opacity_);
 
 		if (icon_) {
 			spdlog::debug("[sdl::Window] Windows icon updated");
@@ -133,6 +133,9 @@ namespace sdl {
 		quit_ = false;
 
 		setupOpenGlContext();
+		if (SDL_SetWindowHitTest(window_, hitTestCallback, this) == -1) {
+			spdlog::warn("[sdl::Window] Window hit test failed to be initiated: {}", SDL_GetError());
+		}
 		initPreLoop();
 		runLoop();
 		spdlog::info("[sdl::Window] Loop ended");
@@ -205,7 +208,7 @@ namespace sdl {
 
 	void Window::setAlwaysOnTop(bool always) {
 		if (window_) {
-			spdlog::warn("[sdl::Window] Not supported, after window creation!");
+			spdlog::warn("[sdl::Window] Not supported after window creation!");
 		} else {
 			alwaysOnTop_ = always;
 		}
@@ -362,6 +365,14 @@ namespace sdl {
 
 	SDL_GLContext Window::getGlContext() {
 		return glContext_;
+	}
+
+	SDL_HitTestResult Window::hitTestCallback(SDL_Window* sdlWindow, const SDL_Point* area, void* data) {
+		auto window = static_cast<Window*>(data);
+		if (sdlWindow == window->getSdlWindow() && area != nullptr) {
+			return window->onHitTest(*area);
+		}
+		return SDL_HITTEST_NORMAL;
 	}
 
 }

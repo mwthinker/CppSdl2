@@ -26,6 +26,8 @@ private:
 
 	void eventUpdate(const SDL_Event& windowEvent) override;
 
+	SDL_HitTestResult onHitTest(const SDL_Point& area) override;
+
 	void resize(int w, int h);
 
 	void removeGamepad(SDL_JoystickID instanceId);
