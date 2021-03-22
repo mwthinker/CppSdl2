@@ -24,15 +24,15 @@ namespace sdl::graphic {
 
 namespace sdl::graphic::indexed {
 
-	sdl::BatchView<Vertex> addRectangle(sdl::Batch<Vertex>& batch, const glm::vec2& pos, const glm::vec2& size, Color color);
+	BatchView<Vertex> addRectangle(Batch<Vertex>& batch, const glm::vec2& pos, const glm::vec2& size, Color color);
 
-	sdl::BatchView<Vertex> addRectangleImage(sdl::Batch<Vertex>& batch, const glm::vec2& pos, const glm::vec2& size, const sdl::TextureView& sprite);
+	BatchView<Vertex> addRectangleImage(Batch<Vertex>& batch, const glm::vec2& pos, const glm::vec2& size, const TextureView& sprite, Color color = color::White);
 
-	sdl::BatchView<Vertex> addHexagonImage(sdl::Batch<Vertex>& batch, const glm::vec2& center, float radius, const sdl::TextureView& sprite, float startAngle);
+	BatchView<Vertex> addHexagonImage(Batch<Vertex>& batch, const glm::vec2& center, float radius, const TextureView& sprite, float startAngle);
 
-	sdl::BatchView<Vertex> addHexagon(sdl::Batch<Vertex>& batch, const glm::vec2& center, float innerRadius, float outerRadius, Color color, float startAngle);
+	BatchView<Vertex> addHexagon(Batch<Vertex>& batch, const glm::vec2& center, float innerRadius, float outerRadius, Color color, float startAngle);
 
-	sdl::BatchView<Vertex> addCircle(sdl::Batch<Vertex>& batch, const glm::vec2& center, float radius, Color color, const int iterations, float startAngle);
+	BatchView<Vertex> addCircle(Batch<Vertex>& batch, const glm::vec2& center, float radius, Color color, const int iterations, float startAngle);
 
 }
 
