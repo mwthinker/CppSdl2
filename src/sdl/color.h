@@ -81,6 +81,18 @@ namespace sdl {
 
 		friend constexpr bool operator!=(Color left, Color right) noexcept;
 
+		friend constexpr Color operator*(Color left, Color right) noexcept;
+
+		friend constexpr Color operator+(Color left, Color right) noexcept;
+
+		friend constexpr Color operator-(Color left, Color right) noexcept;
+
+		friend constexpr Color& operator*=(Color& left, Color right) noexcept;
+
+		friend constexpr Color& operator+=(Color& left, Color right) noexcept;
+
+		friend constexpr Color& operator-=(Color& left, Color right) noexcept;
+
 		constexpr ImU32 toImU32() const noexcept {
 			return value_;
 		}
@@ -102,6 +114,16 @@ namespace sdl {
 
 		ImU32 value_{};
 	};
+	
+	template <typename type>
+	inline constexpr type lerp(type a, type b, type t) noexcept {
+		return a + t * (b - a);
+	}
+	
+	template <typename type>
+	inline constexpr Color lerp(Color a, Color b, Color t) noexcept {
+		return a + t * (b - a);
+	}
 
 	inline constexpr bool operator==(Color left, Color right) noexcept {
 		return left.value_ == right.value_;
@@ -109,6 +131,33 @@ namespace sdl {
 
 	inline constexpr bool operator!=(Color left, Color right) noexcept {
 		return left.value_ != right.value_;
+	}
+
+	inline constexpr Color operator*(Color left, Color right) noexcept {
+		return Color{left.red() * right.redByte(), left.green() * right.greenByte(), left.blue() * right.blueByte(), left.alpha() * right.alphaByte()};
+	}
+
+	inline constexpr Color operator+(Color left, Color right) noexcept {
+		return Color{left.red() + right.red(), left.green() + right.green(), left.blue() + right.blue(), left.alpha() + right.alpha()};
+	}
+
+	inline constexpr Color operator-(Color left, Color right) noexcept {
+		return Color{left.red() - right.red(), left.green() - right.green(), left.blue() - right.blue(), left.alpha() - right.alpha()};
+	}
+
+	inline constexpr Color& operator*=(Color& left, Color right) noexcept {
+		left *= right;
+		return left;
+	}
+
+	inline constexpr Color& operator+=(Color& left, Color right) noexcept {
+		left += right;
+		return left;
+	}
+
+	inline constexpr Color& operator-=(Color& left, Color right) noexcept {
+		left -= right;
+		return left;
 	}
 
 	inline constexpr Color::Color(float red, float green, float blue, float alpha) noexcept
@@ -125,7 +174,7 @@ namespace sdl {
 			value_ = createU32(hexToByte(hex[1], hex[2])
 				, hexToByte(hex[3], hex[4])
 				, hexToByte(hex[5], hex[6])).value_;
-		} else {
+		} else if (hex.size() == 9) {
 			value_ = createU32(hexToByte(hex[1], hex[2])
 				, hexToByte(hex[3], hex[4])
 				, hexToByte(hex[5], hex[6])
