@@ -12,20 +12,20 @@ namespace sdl {
 
 	namespace detail {
 
-		template<class InputIterator>
+		template<typename InputIterator>
 		constexpr void staticAssertRandomAccessIterator() {
 			static_assert(std::is_same<std::random_access_iterator_tag,
 				typename std::iterator_traits<InputIterator>::iterator_category>::value,
 				"The function only accepts random access iterator");
 		}
 
-		template<class VertexType>
+		template<typename VertexType>
 		constexpr void staticAssertStandardLayout() {
 			static_assert(std::is_standard_layout<VertexType>(),
 				"Vertex type must be a type of standard layout");
 		}
 
-		template<class IndexType>
+		template<typename IndexType>
 		constexpr void staticAssertIndexType() {
 			static_assert(std::is_integral<IndexType>(),
 				"IndexType must be a integral type ");
@@ -49,10 +49,10 @@ namespace sdl {
 		);
 	}
 
-	template<class T>
+	template<typename T>
 	class Batch;
 
-	template <class Vertex>
+	template <typename Vertex>
 	class SubBatch {
 	public:
 		// ---- Vertexes
@@ -103,7 +103,7 @@ namespace sdl {
 	template<class Vertex>
 	class Batch;
 
-	template <class Vertex>
+	template <typename Vertex>
 	class BatchView {
 	public:
 		friend class Batch<Vertex>;
@@ -128,7 +128,7 @@ namespace sdl {
 		GLsizei size_{};
 	};
 
-	template <class Vertex>
+	template <typename Vertex>
 	class Batch {
 	public:
 		explicit Batch(GLenum usage);
@@ -197,13 +197,13 @@ namespace sdl {
 		GLenum usage_{};
 	};
 
-	template <class Vertex>
+	template <typename Vertex>
 	Batch<Vertex>::Batch(GLenum usage)
 		: usage_{usage} {
 		detail::staticAssertStandardLayout<Vertex>();
 	}
 
-	template <class Vertex>
+	template <typename Vertex>
 	Batch<Vertex>::Batch(Batch&& other) noexcept :
 		fullBatch_{std::move(other.fullBatch_)},
 		vbo_{std::move(other.vbo_)},
@@ -216,7 +216,7 @@ namespace sdl {
 		detail::staticAssertStandardLayout<Vertex>();
 	}
 	
-	template <class Vertex>
+	template <typename Vertex>
 	Batch<Vertex>& Batch<Vertex>::operator=(Batch&& other) noexcept {
 		fullBatch_ = std::move(other.fullBatch_);
 		vbo_ = std::move(other.vbo_);
@@ -228,17 +228,17 @@ namespace sdl {
 		return *this;
 	}
 
-	template <class Vertex>
+	template <typename Vertex>
 	GLenum Batch<Vertex>::getUsage() const noexcept {
 		return usage_;
 	}
 
-	template <class Vertex>
+	template <typename Vertex>
 	float Batch<Vertex>::getVboSizeInMiB() const noexcept {
 		return fullBatch_.totalSizeInBytes() * 1.f / 1024 / 1024;
 	}
 
-	template <class Vertex>
+	template <typename Vertex>
 	void Batch<Vertex>::bind() {
 		if (!vbo_.isGenerated()) {
 			vbo_.generate();
@@ -253,7 +253,7 @@ namespace sdl {
 		}
 	}
 
-	template <class Vertex>
+	template <typename Vertex>
 	void Batch<Vertex>::clear() {
 		if (usage_ == GL_STATIC_DRAW) {
 			spdlog::warn("[sdl::Batch] Batch static, vbo failed to cleare");
@@ -265,17 +265,17 @@ namespace sdl {
 		currentViewIndex_ = 0;
 	}
 
-	template <class Vertex>
+	template <typename Vertex>
 	GLsizei Batch<Vertex>::getSize() const noexcept {
 		return fullBatch_.getSize();
 	}
 	
-	template <class Vertex>
+	template <typename Vertex>
 	GLsizei Batch<Vertex>::getIndexesSize() const noexcept {
 		return fullBatch_.getIndexesSize();
 	}
 
-	template <class Vertex>
+	template <typename Vertex>
 	void Batch<Vertex>::bindAndBufferData() {
 		vbo_.bind(GL_ARRAY_BUFFER);
 		vbo_.bufferData(fullBatch_.getSize() * sizeof(Vertex), fullBatch_.getData(), usage_);
@@ -285,7 +285,7 @@ namespace sdl {
 		}
 	}
 
-	template <class Vertex>
+	template <typename Vertex>
 	void Batch<Vertex>::bindAndBufferSubData() {
 		vbo_.bind(GL_ARRAY_BUFFER);
 		vbo_.bufferSubData(0, fullBatch_.getSize() * sizeof(Vertex), fullBatch_.getData());
@@ -296,7 +296,7 @@ namespace sdl {
 		}
 	}
 
-	template <class Vertex>
+	template <typename Vertex>
 	void Batch<Vertex>::uploadToGraphicCard() {
 		if (usage_ == GL_STATIC_DRAW) {
 			if (vbo_.getSize() > 0) {
@@ -312,7 +312,7 @@ namespace sdl {
 		}
 	}
 
-	template <class Vertex>
+	template <typename Vertex>
 	void Batch<Vertex>::draw(GLenum mode) const {
 		if (fullBatch_.isIndexBatch()) {
 			draw({mode, 0, static_cast<GLsizei>(fullBatch_.getIndexesSize())});
@@ -321,7 +321,7 @@ namespace sdl {
 		}
 	}
 
-	template <class Vertex>
+	template <typename Vertex>
 	bool Batch<Vertex>::isValidBatchView(const BatchView<Vertex>& batchView) const {
 		if (fullBatch_.isIndexBatch()) {
 			return batchView.index_ >= 0 && batchView.index_ + static_cast<GLsizei>(batchView.size_) <= fullBatch_.getIndexesSize();			
@@ -330,7 +330,7 @@ namespace sdl {
 		}
 	}
 
-	template <class Vertex>
+	template <typename Vertex>
 	void Batch<Vertex>::draw(const BatchView<Vertex>& batchView) const {
 		if (vbo_.getSize() > 0) {
 			if (!isValidBatchView(batchView)) {
@@ -350,7 +350,7 @@ namespace sdl {
 		}
 	}
 
-	template <class Vertex>
+	template <typename Vertex>
 	void Batch<Vertex>::add(const SubBatch<Vertex>& subBatch) {
 		const auto& vertexes = subBatch.getVertexes();
 		insert(vertexes.begin(), vertexes.end());
@@ -359,7 +359,7 @@ namespace sdl {
 		insertIndexes(indexes.begin(), indexes.end());
 	}
 
-	template <class Vertex>
+	template <typename Vertex>
 	template<class InputIterator>
 	void Batch<Vertex>::insert(InputIterator begin, InputIterator end) {
 		detail::staticAssertRandomAccessIterator<InputIterator>();
@@ -375,17 +375,17 @@ namespace sdl {
 		}
 	}
 
-	template <class Vertex>
+	template <typename Vertex>
 	void Batch<Vertex>::insert(std::initializer_list<Vertex> list) {
 		insert(list.begin(), list.end());
 	}
 
-	template <class Vertex>
+	template <typename Vertex>
 	void Batch<Vertex>::pushBack(const Vertex& vertex) {
 		fullBatch_.pushBack(vertex);
 	}
 
-	template <class Vertex>
+	template <typename Vertex>
 	void Batch<Vertex>::startBatchView() noexcept {
 		if (fullBatch_.isIndexBatch()) {
 			currentViewIndex_ = static_cast<GLsizei>(fullBatch_.getIndexesSize());
@@ -394,12 +394,12 @@ namespace sdl {
 		}
 	}
 
-	template <class Vertex>
+	template <typename Vertex>
 	void Batch<Vertex>::startAdding() noexcept {
 		currentIndexesIndex_ = static_cast<GLuint>(fullBatch_.getSize());
 	}
 
-	template <class Vertex>
+	template <typename Vertex>
 	BatchView<Vertex> Batch<Vertex>::getBatchView(GLenum mode) const noexcept {
 		if (fullBatch_.isIndexBatch()) {
 			return {mode, currentViewIndex_, static_cast<GLsizei>(fullBatch_.getIndexesSize()) - currentViewIndex_};
@@ -407,7 +407,7 @@ namespace sdl {
 		return {mode, currentViewIndex_, static_cast<GLsizei>(fullBatch_.getSize()) - currentViewIndex_};
 	}
 
-	template <class Vertex>
+	template <typename Vertex>
 	template<class InputIterator>
 	void Batch<Vertex>::insertIndexes(InputIterator begin, InputIterator end) {
 		detail::staticAssertRandomAccessIterator<InputIterator>();
@@ -423,29 +423,29 @@ namespace sdl {
 		}
 	}
 
-	template <class Vertex>
+	template <typename Vertex>
 	void Batch<Vertex>::insertIndexes(std::initializer_list<GLint> list) {
 		insertIndexes(list.begin(), list.end());
 	}
 
-	template <class Vertex>
+	template <typename Vertex>
 	void Batch<Vertex>::pushBackIndex(GLint index) {
 		fullBatch_.pushBackIndex(index + currentIndexesIndex_);
 	}
 
-	template <class Vertex>
+	template <typename Vertex>
 	bool Batch<Vertex>::isEveryIndexSizeValid() const {
 		return fullBatch_.isEveryIndexSizeValid();
 	}
 
-	template <class Vertex>
+	template <typename Vertex>
 	void Batch<Vertex>::assertIndexSizeIsValid(GLenum mode) const {
 		assert(mode != GL_TRIANGLES || (mode == GL_TRIANGLES && fullBatch_.getIndexesSize() % 3 == 0));
 	}
 
 	// ---- Vertexes
 
-	template <class Vertex>
+	template <typename Vertex>
 	template<class InputIterator>
 	void SubBatch<Vertex>::insert(InputIterator begin, InputIterator end) {
 		detail::staticAssertRandomAccessIterator<InputIterator>();
@@ -456,29 +456,29 @@ namespace sdl {
 		vertexes_.insert(vertexes_.end(), begin, end);
 	}
 	
-	template <class Vertex>
+	template <typename Vertex>
 	void SubBatch<Vertex>::insert(std::initializer_list<Vertex> list) {
 		vertexes_.insert(vertexes_.end(), list);
 	}
 
-	template <class Vertex>
+	template <typename Vertex>
 	void SubBatch<Vertex>::pushBack(const Vertex& vertex) {
 		vertexes_.push_back(vertex);
 	}
 
-	template <class Vertex>
+	template <typename Vertex>
 	GLsizei SubBatch<Vertex>::getSize() const noexcept {
 		return static_cast<GLsizei>(vertexes_.size());
 	}
 
-	template <class Vertex>
+	template <typename Vertex>
 	const Vertex* SubBatch<Vertex>::getData() const noexcept {
 		return vertexes_.data();
 	}
 
 	// ---- Indexes
 
-	template <class Vertex>
+	template <typename Vertex>
 	template<class InputIterator>
 	void SubBatch<Vertex>::insertIndexes(InputIterator begin, InputIterator end) {
 		detail::staticAssertRandomAccessIterator<InputIterator>();
@@ -489,45 +489,45 @@ namespace sdl {
 		}
 	}
 
-	template <class Vertex>
+	template <typename Vertex>
 	void SubBatch<Vertex>::insertIndexes(std::initializer_list<GLint> list) {
 		vertexes_.insert(vertexes_.end(), list);
 	}
 
-	template <class Vertex>
+	template <typename Vertex>
 	void SubBatch<Vertex>::pushBackIndex(GLint index) {
 		indexes_.push_back(index);
 	}
 
-	template <class Vertex>
+	template <typename Vertex>
 	GLsizei SubBatch<Vertex>::getIndexesSize() const noexcept {
 		return static_cast<GLsizei>(indexes_.size());
 	}
 
-	template <class Vertex>
+	template <typename Vertex>
 	const GLint* SubBatch<Vertex>::getIndexData() const noexcept {
 		return indexes_.data();
 	}
 
 	// ---- General
 
-	template <class Vertex>
+	template <typename Vertex>
 	void SubBatch<Vertex>::clear() {
 		vertexes_.clear();
 		indexes_.clear();
 	}
 
-	template <class Vertex>
+	template <typename Vertex>
 	int SubBatch<Vertex>::totalSizeInBytes() const noexcept {
 		return static_cast<int>(sizeof(GLuint) * vertexes_.size() + sizeof(Vertex) * indexes_.size());
 	}
 
-	template <class Vertex>
+	template <typename Vertex>
 	bool SubBatch<Vertex>::isIndexBatch() const noexcept {
 		return !indexes_.empty();
 	}
 
-	template <class Vertex>
+	template <typename Vertex>
 	bool SubBatch<Vertex>::isEveryIndexSizeValid() const {
 		for (auto index : indexes_) {
 			if (index < 0 || index >= vertexes_.size()) {
@@ -537,12 +537,12 @@ namespace sdl {
 		return true;
 	}
 
-	template <class Vertex>
+	template <typename Vertex>
 	const std::vector<Vertex>& SubBatch<Vertex>::getVertexes() const noexcept {
 		return vertexes_;
 	}
 
-	template <class Vertex>
+	template <typename Vertex>
 	const std::vector<Vertex>& SubBatch<Vertex>::getIndexes() const noexcept {
 		return indexes_;
 	}

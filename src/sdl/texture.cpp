@@ -62,14 +62,6 @@ namespace sdl {
 		return texture_ != 0;
 	}
 
-	bool operator==(const Texture& left, const Texture& right) noexcept {
-		return left.texture_ == right.texture_;
-	}
-
-	bool operator!=(const Texture& left, const Texture& right) noexcept {
-		return left.texture_ != right.texture_;
-	}
-
 	GLenum Texture::surfaceFormat(SDL_Surface* surface) {
 		switch (surface->format->BytesPerPixel) {
 			case 1:

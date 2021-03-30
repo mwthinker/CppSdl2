@@ -7,8 +7,6 @@
 
 #include <spdlog/spdlog.h>
 
-#include <string>
-#include <memory>
 #include <type_traits>
 
 namespace sdl {
@@ -32,7 +30,7 @@ namespace sdl {
 		
 		void texImage(const Surface& surface);
 
-		template <class FilterFunc>
+		template <typename FilterFunc>
 		void texImage(const Surface& surface, FilterFunc&& filter);
 
 		void texSubImage(const Surface& surface, const Rect& dst);
@@ -55,6 +53,14 @@ namespace sdl {
 		GLuint texture_{};
 	};
 
+	inline bool operator==(const Texture& left, const Texture& right) noexcept {
+		return left.texture_ == right.texture_;
+	}
+
+	inline bool operator!=(const Texture& left, const Texture& right) noexcept {
+		return left.texture_ != right.texture_;
+	}
+
 	inline void Texture::texImage(const Surface& surface) {
 		texImage(surface, []() {
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
@@ -62,7 +68,7 @@ namespace sdl {
 		});
 	}
 
-	template <class FilterFunc>
+	template <typename FilterFunc>
 	void Texture::texImage(const Surface& surface, FilterFunc&& filter) {
 		static_assert(std::is_invocable_r_v<void, FilterFunc>, "Must be invokable, in the form void()");
 		
