@@ -230,10 +230,6 @@ void TestWindow::removeGamepad(SDL_JoystickID instanceId) {
 	}
 }
 
-SDL_HitTestResult TestWindow::onHitTest(const SDL_Point& area) {
-	return SDL_HITTEST_DRAGGABLE;
-}
-
 void TestWindow::initPreLoop() {
 	setLoopSleepingTime(std::chrono::milliseconds{10});
 	sdl::Font font{"Ubuntu-B.ttf", 60};
@@ -254,4 +250,7 @@ void TestWindow::initPreLoop() {
 	batch2_->uploadToGraphicCard();
 
 	sdl::GameController::loadGameControllerMappings("gamecontrollerdb.txt");
+	setHitTestCallback([](const SDL_Point&) {
+		return SDL_HITTEST_DRAGGABLE;
+	});
 }

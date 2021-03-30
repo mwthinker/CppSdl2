@@ -9,6 +9,7 @@
 #include <chrono>
 #include <string>
 #include <utility>
+#include <functional>
 
 namespace sdl {
 
@@ -18,6 +19,8 @@ namespace sdl {
 	// Create a window which handle all user input. The graphic is rendered using OpenGL.
 	class Window {
 	public:
+		using HitTestCallback = std::function<SDL_HitTestResult(const SDL_Point&)>;
+
 		Window();
 
 		Window(int majorVersionGl, int minorVersionGl);
@@ -101,23 +104,24 @@ namespace sdl {
 		
 		std::chrono::nanoseconds getLoopSleepingTime() const noexcept;
 
+		void setHitTestCallback(HitTestCallback onHitTest);
+
+		bool isHitTestCallbackSet() const {
+			return static_cast<bool>(onHitTest_);
+		}
+
 	protected:
 		virtual void initOpenGl() {}
 
 		virtual void initPreLoop() {}
 
-		// Is called by the loop. The frequency in which this function is called is fixed
-		// by the vertical frequency of the monitor (VSYNC) or the sleeping time of the loop.
+		// Is called each loop cycle.
 		virtual void update(const DeltaTime& deltaTime) {}
-
-		// Is called by the loop. Is called when ever a SDL_EVENT occurs.
+		
+		// Is called each loop cycle until all windowEvents are called.
 		virtual void eventUpdate(const SDL_Event& windowEvent) {}
 
 		SDL_GLContext getGlContext();
-
-		virtual SDL_HitTestResult onHitTest(const SDL_Point& area) {
-			return SDL_HITTEST_NORMAL;
-		};
 
 	private:
 		static SDL_HitTestResult hitTestCallback(SDL_Window* sdlWindow, const SDL_Point* area, void* data);
@@ -133,6 +137,7 @@ namespace sdl {
 
 		std::string title_;
 
+		HitTestCallback onHitTest_;
 		SDL_Window* window_{};
 		SDL_GLContext glContext_{};
 		SDL_Surface* icon_{};

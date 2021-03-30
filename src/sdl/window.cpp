@@ -119,9 +119,13 @@ namespace sdl {
 		} else {
 			spdlog::info("[sdl::Window] Windows {} created: \n\t(x, y) = ({}, {}) \n\t(w, h) = ({}, {}) \n\tflags = {}", title_, x_ == SDL_WINDOWPOS_UNDEFINED? -1 : x_, y_ == SDL_WINDOWPOS_UNDEFINED ? -1 : y_, width_, height_, flags);
 		}
-
-		SDL_SetWindowMinimumSize(window_, minWidth_, minHeight_);
-		SDL_SetWindowMaximumSize(window_, maxWidth_, maxHeight_);
+		
+		if (minWidth_ > 0 && minHeight_ > 0) {
+			SDL_SetWindowMinimumSize(window_, minWidth_, minHeight_);
+		}
+		if (maxWidth_ > 0 && maxHeight_ > 0) {
+			SDL_SetWindowMaximumSize(window_, maxWidth_, maxHeight_);
+		}
 		setOpacity(opacity_);
 
 		if (icon_) {
@@ -131,11 +135,9 @@ namespace sdl {
 			icon_ = nullptr;
 		}
 		quit_ = false;
+		setHitTestCallback(onHitTest_);
 
 		setupOpenGlContext();
-		if (SDL_SetWindowHitTest(window_, hitTestCallback, this) == -1) {
-			spdlog::warn("[sdl::Window] Window hit test failed to be initiated: {}", SDL_GetError());
-		}
 		initPreLoop();
 		runLoop();
 		spdlog::info("[sdl::Window] Loop ended");
@@ -304,6 +306,11 @@ namespace sdl {
 
 	void Window::setSize(int width, int height) {
 		if (window_) {
+			if (width < 1 || height < 1) {
+				spdlog::warn("[sdl::Window] Resizing: (w, h) = ({}, {})", width, height);
+				return;
+			}
+
 			spdlog::info("[sdl::Window] Resizing: (w, h) = ({}, {})", width, height);
 			SDL_SetWindowSize(window_, width, height);
 		} else {
@@ -314,6 +321,10 @@ namespace sdl {
 
 	void Window::setMinSize(int width, int height) {
 		if (window_) {
+			if (width < 1 || height < 1) {
+				return;
+			}
+
 			spdlog::info("[sdl::Window] Setting min size: (w, h) = ({}, {})", width, height);
 			SDL_SetWindowMinimumSize(window_, width, height);
 		} else {
@@ -324,6 +335,8 @@ namespace sdl {
 
 	void Window::setMaxSize(int width, int height) {
 		if (window_) {
+			assert(width > 0 && height > 0);
+
 			spdlog::info("[sdl::Window] Setting max size: (w, h) = ({}, {})", width, height);
 			SDL_SetWindowMaximumSize(window_, width, height);
 		} else {
@@ -368,11 +381,18 @@ namespace sdl {
 	}
 
 	SDL_HitTestResult Window::hitTestCallback(SDL_Window* sdlWindow, const SDL_Point* area, void* data) {
-		auto window = static_cast<Window*>(data);
-		if (sdlWindow == window->getSdlWindow() && area != nullptr) {
-			return window->onHitTest(*area);
+		return static_cast<Window*>(data)->onHitTest_(*area);
+	}
+
+	void Window::setHitTestCallback(HitTestCallback onHitTest) {
+		onHitTest_ = std::move(onHitTest);
+		if (onHitTest_) {
+			if (SDL_SetWindowHitTest(window_, hitTestCallback, this) == -1) {
+				spdlog::warn("[sdl::Window] Window hit test failed to be initiated: {}", SDL_GetError());
+			}
+		} else {
+			SDL_SetWindowHitTest(window_, nullptr, this);
 		}
-		return SDL_HITTEST_NORMAL;
 	}
 
 }
