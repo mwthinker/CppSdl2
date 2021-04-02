@@ -1,5 +1,5 @@
 #include "testwindow.h"
-#include "testwindow2.h"
+#include "graphicwindow.h"
 
 #include "testimguiwindow.h"
 #include "types.h"
@@ -250,15 +250,15 @@ void testLoadTextureAtlas2() {
 	spdlog::info("[testLoadTextureAtlas2] Successfully!");
 }
 
-void testBatchWindow() {
+void testGraphicWindow() {
 	try {
-		TestWindow2 w{3, 3};
+		GraphicWindow w{3, 3};
 		std::string glVersion{"OpenGl Version 3.3"};
-		spdlog::info("[testBatchWindow] {}", glVersion);
+		spdlog::info("[testGraphicWindow] {}", glVersion);
 		w.setTitle(glVersion);
 		w.startLoop();
 	} catch (const std::runtime_error& runtimeError) {
-		spdlog::error("[testBatchWindow] Runtime exception: {}", runtimeError.what());
+		spdlog::error("[testGraphicWindow] Runtime exception: {}", runtimeError.what());
 	}
 }
 
@@ -285,7 +285,7 @@ void showHelp(const std::string& programName) {
 void runAll() {
 	testLoadTextureAtlas();
 	testLoadTextureAtlas2();
-	testBatchWindow();
+	testGraphicWindow();
 	testImGuiWindow();
 }
 
@@ -332,7 +332,7 @@ int main(int argc, char** argv) {
 			testLoadTextureAtlas2();
 			return 0;
 		} else if (code == "-3") {
-			testBatchWindow();
+			testGraphicWindow();
 			return 0;
 		} else if (code == "-4") {
 			testImGuiWindow();

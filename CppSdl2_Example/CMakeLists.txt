@@ -17,7 +17,7 @@ add_executable(CppSdl2_Example
 	src/main.cpp
 	src/testshader.h
 	src/testshader.cpp
-	src/testwindow2.h
+	src/graphicwindow.h
 	src/testwindow.cpp
 	src/testwindow.h
 )
