@@ -44,6 +44,7 @@ add_library(ImGui
 	${RemoteImGui_SOURCE_DIR}/backends/imgui_impl_sdl.h
 	${RemoteImGui_SOURCE_DIR}/backends/imgui_impl_sdl.cpp
 	${IMGUI_USER_CONFIG}
+	${CMAKE_CURRENT_SOURCE_DIR}/src/imgui_user.h
 )
 
 target_include_directories(ImGui

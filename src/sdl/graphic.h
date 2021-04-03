@@ -46,7 +46,7 @@ namespace sdl {
 		Graphic();
 		virtual ~Graphic() = default;
 
-		void loadIdentityMatrix();
+		void setIdentityMatrix();
 
 		const glm::mat4& getMatrix() const;
 
@@ -61,6 +61,13 @@ namespace sdl {
 		void popMatrix();
 
 		void pushMatrix();
+
+		template <typename T>
+		void pushMatrix(T&& t) {
+			pushMatrix();
+			t();
+			popMatrix();
+		}
 
 		void addFilledHexagon(const glm::vec2& center, float radius, Color color, float startAngle = 0);
 
@@ -79,12 +86,32 @@ namespace sdl {
 		void clearDraw();
 
 	protected:
-		glm::mat4& getMatrix();
-
-	private:
 		using Batch = sdl::Batch<sdl::Vertex>;
 		using BatchView = sdl::BatchView<sdl::Vertex>;
 
+		glm::mat4& matrix();
+
+		int getMatrixIndex() const {
+			return matrixes_.size() - 1;
+		}
+
+		void add(BatchView&& batchView) {
+			batches_.emplace_back(std::move(batchView), getMatrixIndex());
+			if (dirty_) {
+				matrixes_.push_back({matrixes_.back().matrix, static_cast<int>(matrixes_.size())});
+				dirty_ = false;
+			}
+		}
+
+		void add(BatchView&& batchView, const sdl::TextureView& texture) {
+			batches_.emplace_back(std::move(batchView), texture, getMatrixIndex());
+			if (dirty_) {
+				matrixes_.push_back({matrixes_.back().matrix, static_cast<int>(matrixes_.size())});
+				dirty_ = false;
+			}
+		}
+
+	private:
 		struct BatchData {
 			BatchData() = default;
 			BatchData(BatchView&& batchView, int matrixIndex);
@@ -95,26 +122,32 @@ namespace sdl {
 			int matrixIndex{};
 		};
 
+		struct MatrixPair {
+			glm::mat4 matrix;
+			int lastIndex;
+		};
+
 		void bind(const sdl::Shader& shader);
 
 		void draw(const sdl::Shader& shader, const BatchData& batchData);
 
-		std::vector<glm::mat4> matrixes_;
+		std::vector<MatrixPair> matrixes_;
 		Batch batch_{GL_DYNAMIC_DRAW};
 		std::vector<BatchData> batches_;
 		sdl::VertexArrayObject vao_;
 		int currentMatrixIndex_{};
 		bool initiated_{};
+		bool dirty_{};
 	};
 
 	inline const glm::mat4& Graphic::getMatrix() const {
 		assert(!matrixes_.empty());
-		return matrixes_.back();
+		return matrixes_.back().matrix;
 	}
 
-	inline glm::mat4& Graphic::getMatrix() {
+	inline glm::mat4& Graphic::matrix() {
 		assert(!matrixes_.empty());
-		return matrixes_.back();
+		return matrixes_.back().matrix;
 	}
 
 }

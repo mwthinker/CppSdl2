@@ -46,7 +46,7 @@ namespace sdl {
 		}
 
 		if (SDL_GL_SetSwapInterval(1) < 0) {
-			spdlog::warn("[sdl::Window] Warning: Unable to set VSync! SDL Error: ", SDL_GetError());
+			spdlog::warn("[sdl::Window] Unable to set VSync: ", SDL_GetError());
 		}
 		
 		initGlad();
@@ -56,7 +56,7 @@ namespace sdl {
 			spdlog::info("[sdl::Window] GL_VERSION: {}", version);
 			spdlog::info("[sdl::Window] GL_SHADING_LANGUAGE_VERSION: {}", (char*) glGetString(GL_SHADING_LANGUAGE_VERSION));
 		} else {
-			spdlog::error("[sdl::Window] Error: unknown OpenGL version loadad!");
+			spdlog::error("[sdl::Window] Unknown OpenGL version loadad!");
 			throw std::exception{};
 		}
 	}
@@ -102,7 +102,7 @@ namespace sdl {
 		initOpenGl();
 
 		if (SDL_GL_LoadLibrary(nullptr) != 0) {
-			spdlog::error("[sdl::Window] SDL_GL_LoadLibrary failed {}", SDL_GetError());
+			spdlog::error("[sdl::Window] SDL_GL_LoadLibrary failed: {}", SDL_GetError());
 			spdlog::error("[sdl::Window] Failed to load OpenGL version {}.{}", majorVersionGl_, minorVersionGl_);
 			throw std::exception{};
 		}

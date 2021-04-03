@@ -140,11 +140,12 @@ namespace sdl {
 	}
 
 	Graphic::Graphic() {
-		matrixes_.emplace_back(1.f);
+		matrixes_.push_back({glm::mat4{1}, 0});
 	}
 
-	void Graphic::loadIdentityMatrix() {
-		getMatrix() = glm::mat4{1};
+	void Graphic::setIdentityMatrix() {
+		matrix() = glm::mat4{1};
+		dirty_ = true;
 	}
 
 	void Graphic::draw(const sdl::Shader& shader) {
@@ -156,7 +157,7 @@ namespace sdl {
 			shader.useProgram();
 			bind(shader);
 			batch_.uploadToGraphicCard();
-			shader.setMatrix(matrixes_.front());
+			shader.setMatrix(matrixes_.front().matrix);
 
 			for (auto& batchData : batches_) {
 				draw(shader, batchData);
@@ -166,11 +167,11 @@ namespace sdl {
 	}
 
 	void Graphic::addRectangle(const glm::vec2& pos, const glm::vec2& size, Color color) {
-		batches_.emplace_back(sdlg::addRectangle(batch_, pos, size, color), currentMatrixIndex_);
+		add(sdlg::addRectangle(batch_, pos, size, color));
 	}
 
 	void Graphic::addRectangleImage(const glm::vec2& pos, const glm::vec2& size, const sdl::TextureView& textureView, Color color) {
-		batches_.emplace_back(sdlg::addRectangleImage(batch_, pos, size, textureView, color), textureView, currentMatrixIndex_);
+		add(sdlg::addRectangleImage(batch_, pos, size, textureView, color), textureView);
 	}
 
 	void Graphic::addFilledHexagon(const glm::vec2& center, float radius, Color color, float startAngle) {
@@ -178,27 +179,26 @@ namespace sdl {
 	}
 
 	void Graphic::addHexagonImage(const glm::vec2& center, float radius, const sdl::TextureView& sprite, float startAngle) {
-		batches_.emplace_back(sdlg::addHexagonImage(batch_, center, radius, sprite, startAngle), sprite, currentMatrixIndex_);
+		add(sdlg::addHexagonImage(batch_, center, radius, sprite, startAngle), sprite);
 	}
 
 	void Graphic::addHexagon(const glm::vec2& center, float innerRadius, float outerRadius, Color color, float startAngle) {
-		batches_.emplace_back(sdlg::addHexagon(batch_, center, innerRadius, outerRadius, color, startAngle), currentMatrixIndex_);
+		add(sdlg::addHexagon(batch_, center, innerRadius, outerRadius, color, startAngle));
 	}
 
 	void Graphic::addCircle(const glm::vec2& center, float radius, Color color, const int iterations, float startAngle) {
-		batches_.emplace_back(sdlg::addCircle(batch_, center, radius, color, iterations, startAngle), currentMatrixIndex_);
+		add(sdlg::addCircle(batch_, center, radius, color, iterations, startAngle));
 	}
 
 	void Graphic::bind(const sdl::Shader& shader) {
-		if (!initiated_) {
+		if (initiated_) {
+			vao_.bind();
+		} else {
 			initiated_ = true;
 			vao_.generate();
 			vao_.bind();
 			batch_.bind();
 			shader.setVertexAttribPointer();
-		}
-		else {
-			vao_.bind();
 		}
 	}
 
@@ -212,7 +212,7 @@ namespace sdl {
 		}
 		if (currentMatrixIndex_ != batchData.matrixIndex) {
 			currentMatrixIndex_ = batchData.matrixIndex;
-			shader.setMatrix(matrixes_[currentMatrixIndex_]);
+			shader.setMatrix(matrixes_[currentMatrixIndex_].matrix);
 		}
 		batch_.draw(batchData.batchView);
 	}
@@ -221,37 +221,43 @@ namespace sdl {
 		batch_.clear();
 		batches_.clear();
 		matrixes_.clear();
-		matrixes_.emplace_back(1.f);
+		matrixes_.push_back({glm::mat4{1}, 0});
 		currentMatrixIndex_ = 0;
 	}
 
-	void Graphic::multMatrix(const glm::mat4& matrix) {
-		assert(!matrixes_.empty());
-		matrixes_.back() *= matrix;
+	void Graphic::multMatrix(const glm::mat4& mult) {
+		matrix() *= mult;
+		dirty_ = true;
 	}
 
 	void Graphic::pushMatrix() {
-		assert(!matrixes_.empty());
-		matrixes_.push_back(getMatrix());
+		matrixes_.push_back({getMatrix(), getMatrixIndex()});
+		dirty_ = false;
 	}
 
 	void Graphic::popMatrix() {
-		if (matrixes_.empty()) {
-			return;
+		if (matrixes_.size() > 1) {
+			dirty_ = true; // Just to be safe, don't know if earlier state weas dirty (Maybe ToDo: make dirty part of matrixes vector).
+			int index = getMatrixIndex() - 1;
+			matrixes_.push_back(matrixes_[matrixes_.back().lastIndex]);
+		} else {
+			spdlog::warn("[sdl::Graphic] No matrix to pop");
 		}
-		matrixes_.pop_back();
 	}
 
-	void Graphic::setMatrix(const glm::mat4& model) {
-		getMatrix() = model;
+	void Graphic::setMatrix(const glm::mat4& mat) {
+		matrix() = mat;
+		dirty_ = true;
 	}
 
 	void Graphic::rotate(float angle) {
-		getMatrix() = glm::rotate(getMatrix(), angle, glm::vec3{0, 0, 1});
+		matrix() = glm::rotate(getMatrix(), angle, glm::vec3{0, 0, 1});
+		dirty_ = true;
 	}
 
 	void Graphic::translate(const glm::vec2& pos) {
-		getMatrix() = glm::translate(getMatrix(), glm::vec3{pos, 0});
+		matrix() = glm::translate(getMatrix(), glm::vec3{pos, 0});
+		dirty_ = true;
 	}
 
 }
