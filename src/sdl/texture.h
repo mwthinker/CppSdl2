@@ -26,7 +26,7 @@ namespace sdl {
 		Texture(Texture&& texture) noexcept;
 		Texture& operator=(Texture&& texture) noexcept;
 		
-		void bind() const;
+		void bind();
 		
 		void texImage(const Surface& surface);
 

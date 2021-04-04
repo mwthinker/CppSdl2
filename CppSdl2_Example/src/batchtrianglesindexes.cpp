@@ -112,7 +112,7 @@ void BatchTrianglesIndexes::init() {
 	shader_->setVertexAttribPointer();
 }
 
-void BatchTrianglesIndexes::draw() const {
+void BatchTrianglesIndexes::draw() {
 	shader_->useProgram();
 	vao_.bind();
 	batch_.draw(GL_TRIANGLES);

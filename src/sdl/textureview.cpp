@@ -30,7 +30,7 @@ namespace sdl {
 		, size_{size} {
 	}
 
-	void TextureView::bind() const {
+	void TextureView::bind() {
 		glBindTexture(GL_TEXTURE_2D, texture_);
 	}
 

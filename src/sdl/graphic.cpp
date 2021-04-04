@@ -152,7 +152,7 @@ namespace sdl {
 		}
 	}
 
-	void Graphic::draw(const sdl::Shader& shader) {
+	void Graphic::upload(sdl::Shader& shader) {
 		glActiveTexture(GL_TEXTURE1);
 
 		auto index = currentMatrixIndex_;
@@ -194,7 +194,7 @@ namespace sdl {
 		add(sdlg::addCircle(batch_, center, radius, color, iterations, startAngle));
 	}
 
-	void Graphic::bind(const sdl::Shader& shader) {
+	void Graphic::bind(sdl::Shader& shader) {
 		if (initiated_) {
 			vao_.bind();
 		} else {
@@ -206,7 +206,7 @@ namespace sdl {
 		}
 	}
 
-	void Graphic::draw(const sdl::Shader& shader, const BatchData& batchData) {
+	void Graphic::draw(sdl::Shader& shader, const BatchData& batchData) {
 		if (const auto& texture = batchData.texture; texture) {
 			shader.setTextureId(1);
 			glBindTexture(GL_TEXTURE_2D, texture);
@@ -220,7 +220,7 @@ namespace sdl {
 		batch_.draw(batchData.batchView);
 	}
 
-	void Graphic::clearDraw() {
+	void Graphic::clear() {
 		batch_.clear();
 		batches_.clear();
 		matrixes_.clear();

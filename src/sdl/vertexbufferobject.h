@@ -34,7 +34,7 @@ namespace sdl {
 		void generate();
 
 		// Unbind the current vertex buffer.
-		void unbind() const;
+		void unbind();
 
 		// Return the size in bytes for the current data.
 		GLsizeiptr getSize() const noexcept;

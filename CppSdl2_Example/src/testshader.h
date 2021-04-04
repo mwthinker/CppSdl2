@@ -14,11 +14,11 @@ public:
 	TestShader() = default;
 	TestShader(const std::string& vShader, const std::string& fShader);
 
-	void useProgram() const;
+	void useProgram();
 	void setVertexAttribPointer() const;
 
-	void setProjectionMatrix(const Mat44& matrix) const;
-	void setModelMatrix(const Mat44& matrix) const;
+	void setProjectionMatrix(const Mat44& matrix);
+	void setModelMatrix(const Mat44& matrix);
 
 	class Vertex {
 	public:

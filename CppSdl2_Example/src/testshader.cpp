@@ -20,7 +20,7 @@ TestShader::TestShader(const std::string& vShader, const std::string& fShader) {
 	}
 }
 
-void TestShader::useProgram() const {
+void TestShader::useProgram() {
 	shader_.useProgram();
 }
 
@@ -44,14 +44,12 @@ void TestShader::setVertexAttribPointer() const {
 	sdl::assertGlError();
 }
 
-// Uniforms. -------------------------------------------
-
-void TestShader::setProjectionMatrix(const Mat44& matrix) const {
+void TestShader::setProjectionMatrix(const Mat44& matrix) {
 	shader_.useProgram();
 	glUniformMatrix4fv(uProjIndex_, 1, false, glm::value_ptr(matrix));
 }
 
-void TestShader::setModelMatrix(const Mat44& matrix) const {
+void TestShader::setModelMatrix(const Mat44& matrix) {
 	shader_.useProgram();
 	glUniformMatrix4fv(uModelIndex_, 1, false, glm::value_ptr(matrix));
 }

@@ -57,7 +57,7 @@ private:
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 		sprite_.bindTexture();
-		graphic_.draw(shader_);
+		graphic_.upload(shader_);
 
 		glDisable(GL_BLEND);
 	}
@@ -99,7 +99,7 @@ private:
 						quit();
 						break;
 					case SDLK_c:
-						graphic_.clearDraw();
+						graphic_.clear();
 						break;
 				}
 				break;

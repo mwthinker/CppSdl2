@@ -52,7 +52,7 @@ namespace sdl {
 
 		// Uses the current gl program. I.e. a call to glUseProgram.
 		// Does nothing if the program is not loaded.
-		void useProgram() const;
+		void useProgram();
 
 		// Return if the shader program is linked.
 		bool isLinked() const noexcept {

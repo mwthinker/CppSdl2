@@ -78,7 +78,7 @@ namespace sdl {
 		, textureHeight_{sprite.textureHeight_} {
 	}
 
-	void Sprite::bindTexture() const {
+	void Sprite::bindTexture() {
 		if (image_) {
 			if (std::holds_alternative<SurfaceData>(*image_)) {
 				Texture texture{};

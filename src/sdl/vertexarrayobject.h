@@ -19,7 +19,7 @@ namespace sdl {
 
 		void generate();
 
-		void bind() const;
+		void bind();
 
 		static void unbind();
 

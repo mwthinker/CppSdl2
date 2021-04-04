@@ -25,7 +25,7 @@ namespace sdl {
 		return *this;
 	}
 
-	void Texture::bind() const {
+	void Texture::bind() {
 		if (texture_ != 0) {
 			glBindTexture(GL_TEXTURE_2D, texture_);
 			assertGlError();

@@ -83,11 +83,11 @@ void main() {
 		}
 	}
 
-	void Shader::useProgram() const {
+	void Shader::useProgram() {
 		shader_.useProgram();
 	}
 
-	void Shader::setVertexAttribPointer() const {
+	void Shader::setVertexAttribPointer() {
 		if (shader_.isLinked()) {
 			glEnableVertexAttribArray(aPos_);
 			glVertexAttribPointer(aPos_, sizeof(Vertex::pos) / sizeof(GLfloat) , GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid*) offsetof(Vertex, pos));
@@ -105,11 +105,11 @@ void main() {
 		}
 	}
 
-	void Shader::setMatrix(const glm::mat4& matrix) const {
+	void Shader::setMatrix(const glm::mat4& matrix) {
 		glUniformMatrix4fv(uMat_, 1, GL_FALSE, glm::value_ptr(matrix));
 	}
 
-	void Shader::setTextureId(GLint textureId) const {
+	void Shader::setTextureId(GLint textureId) {
 		if (textureId < 0) {
 			glUniform1f(uUseTexture_, 0.f);
 		} else {

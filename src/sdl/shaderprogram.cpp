@@ -175,7 +175,7 @@ namespace sdl {
 		return loadAndLink(vShader, "", fShader);
 	}
 
-	void ShaderProgram::useProgram() const {
+	void ShaderProgram::useProgram() {
 		if (programObjectId_ != 0) {
 			glUseProgram(programObjectId_);
 			assertGlError();

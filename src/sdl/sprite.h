@@ -53,7 +53,7 @@ namespace sdl {
 
 		Sprite(const Sprite& sprite, const Rect& rect);
 
-		void bindTexture() const;
+		void bindTexture();
 
 		TextureView getTextureView() const;
 

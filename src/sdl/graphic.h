@@ -81,9 +81,9 @@ namespace sdl {
 
 		void addHexagon(const glm::vec2& center, float innerRadius, float outerRadius, Color color, float startAngle = 0);
 
-		void draw(const sdl::Shader& shader);
+		void upload(sdl::Shader& shader);
 
-		void clearDraw();
+		void clear();
 
 	protected:
 		using Batch = sdl::Batch<sdl::Vertex>;
@@ -121,9 +121,9 @@ namespace sdl {
 			int lastIndex;
 		};
 
-		void bind(const sdl::Shader& shader);
+		void bind(sdl::Shader& shader);
 
-		void draw(const sdl::Shader& shader, const BatchData& batchData);
+		void draw(sdl::Shader& shader, const BatchData& batchData);
 
 		std::vector<MatrixPair> matrixes_;
 		Batch batch_{GL_DYNAMIC_DRAW};

@@ -49,7 +49,7 @@ namespace sdl {
 			return size_;
 		}
 
-		void bind() const;
+		void bind();
 
 		operator GLuint() const noexcept {
 			return texture_;

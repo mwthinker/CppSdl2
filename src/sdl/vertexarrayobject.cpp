@@ -38,7 +38,7 @@ namespace sdl {
 		}
 	}
 
-	void VertexArrayObject::bind() const {
+	void VertexArrayObject::bind() {
 		if (vao_ != 0) {
 			glBindVertexArray(vao_);
 			assertGlError();

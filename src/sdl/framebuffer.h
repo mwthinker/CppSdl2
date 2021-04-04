@@ -16,9 +16,9 @@ namespace sdl {
 		FrameBuffer(FrameBuffer&& other) noexcept;
 		FrameBuffer& operator=(FrameBuffer&& other) noexcept;
 		
-		void bind() const;
+		void bind();
 
-		void unbind() const;
+		void unbind();
 
 		static void bindDefault();
 
@@ -37,6 +37,14 @@ namespace sdl {
 	private:
 		GLuint frameBuffer_{};
 	};
+
+	inline bool operator==(const FrameBuffer& left, const FrameBuffer& right) noexcept {
+		return left.frameBuffer_ == right.frameBuffer_;
+	}
+
+	inline bool operator!=(const FrameBuffer& left, const FrameBuffer& right) noexcept {
+		return left.frameBuffer_ != right.frameBuffer_;
+	}
 
 }
 

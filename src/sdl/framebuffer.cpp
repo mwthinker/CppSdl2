@@ -23,7 +23,7 @@ namespace sdl {
 		return *this;
 	}
 
-	void FrameBuffer::bind() const {
+	void FrameBuffer::bind() {
 		if (frameBuffer_ != 0) {
 			glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer_);
 			assertGlError();
@@ -32,7 +32,7 @@ namespace sdl {
 		}
 	}
 
-	void FrameBuffer::unbind() const {
+	void FrameBuffer::unbind() {
 		bindDefault();
 	}
 
@@ -52,14 +52,6 @@ namespace sdl {
 
 	bool FrameBuffer::isValid() const noexcept {
 		return frameBuffer_ != 0;
-	}
-
-	bool operator==(const FrameBuffer& left, const FrameBuffer& right) noexcept {
-		return left.frameBuffer_ == right.frameBuffer_;
-	}
-
-	bool operator!=(const FrameBuffer& left, const FrameBuffer& right) noexcept {
-		return left.frameBuffer_ != right.frameBuffer_;
 	}
 
 }

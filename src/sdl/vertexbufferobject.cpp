@@ -90,7 +90,7 @@ namespace sdl {
 		}
 	}
 
-	void VertexBufferObject::unbind() const {
+	void VertexBufferObject::unbind() {
 		glBindBuffer(target_, 0);
 		assertGlError();
 	}

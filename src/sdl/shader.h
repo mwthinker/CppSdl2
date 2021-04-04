@@ -19,13 +19,13 @@ namespace sdl {
 		Shader(Shader&& other) noexcept = default;
 		Shader& operator=(Shader&& other) noexcept = default;
 
-		void useProgram() const;
+		void useProgram();
 
-		void setVertexAttribPointer() const;
+		void setVertexAttribPointer();
 
-		void setMatrix(const glm::mat4& matrix) const;
+		void setMatrix(const glm::mat4& matrix);
 
-		void setTextureId(GLint textureId) const;
+		void setTextureId(GLint textureId);
 
 	private:
 		Shader(const GLchar* vShade, const GLchar* fShader);

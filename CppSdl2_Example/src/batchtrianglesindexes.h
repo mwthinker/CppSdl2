@@ -29,7 +29,7 @@ public:
 
 	void init();
 
-	void draw() const;
+	void draw();
 
 private:
 	std::shared_ptr<TestShader> shader_;
