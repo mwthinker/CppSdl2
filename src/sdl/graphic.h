@@ -92,23 +92,17 @@ namespace sdl {
 		glm::mat4& matrix();
 
 		int getMatrixIndex() const {
-			return matrixes_.size() - 1;
+			return static_cast<int>(matrixes_.size() - 1);
 		}
 
 		void add(BatchView&& batchView) {
 			batches_.emplace_back(std::move(batchView), getMatrixIndex());
-			if (dirty_) {
-				matrixes_.push_back({matrixes_.back().matrix, static_cast<int>(matrixes_.size())});
-				dirty_ = false;
-			}
+			dirty_ = false;
 		}
 
 		void add(BatchView&& batchView, const sdl::TextureView& texture) {
 			batches_.emplace_back(std::move(batchView), texture, getMatrixIndex());
-			if (dirty_) {
-				matrixes_.push_back({matrixes_.back().matrix, static_cast<int>(matrixes_.size())});
-				dirty_ = false;
-			}
+			dirty_ = false;
 		}
 
 	private:
@@ -137,7 +131,7 @@ namespace sdl {
 		sdl::VertexArrayObject vao_;
 		int currentMatrixIndex_{};
 		bool initiated_{};
-		bool dirty_{};
+		bool dirty_{true};
 	};
 
 	inline const glm::mat4& Graphic::getMatrix() const {

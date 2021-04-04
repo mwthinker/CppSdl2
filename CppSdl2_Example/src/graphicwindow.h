@@ -98,6 +98,9 @@ private:
 					case SDLK_ESCAPE:
 						quit();
 						break;
+					case SDLK_c:
+						graphic_.clearDraw();
+						break;
 				}
 				break;
 		}
@@ -105,10 +108,7 @@ private:
 	}
 
 	void resize(int w, int h) {
-		sdl::assertGlError();
 		glViewport(0, 0, w, h);
-		//shader_.setProjectionMatrix(glm::ortho(0, w, 0, h));
-		sdl::assertGlError();
 	}
 
 	sdl::Shader shader_;

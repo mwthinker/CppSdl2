@@ -144,8 +144,12 @@ namespace sdl {
 	}
 
 	void Graphic::setIdentityMatrix() {
-		matrix() = glm::mat4{1};
-		dirty_ = true;
+		if (dirty_) {
+			matrix() = glm::mat4{1};
+		} else {
+			dirty_ = true;
+			matrixes_.push_back({glm::mat4{1}, matrixes_.back().lastIndex});
+		}
 	}
 
 	void Graphic::draw(const sdl::Shader& shader) {
@@ -206,8 +210,7 @@ namespace sdl {
 		if (const auto& texture = batchData.texture; texture) {
 			shader.setTextureId(1);
 			glBindTexture(GL_TEXTURE_2D, texture);
-		}
-		else {
+		} else {
 			shader.setTextureId(-1);
 		}
 		if (currentMatrixIndex_ != batchData.matrixIndex) {
@@ -226,13 +229,16 @@ namespace sdl {
 	}
 
 	void Graphic::multMatrix(const glm::mat4& mult) {
-		matrix() *= mult;
-		dirty_ = true;
+		if (dirty_) {
+			matrix() *= mult;
+		} else {
+			matrixes_.push_back({getMatrix() * mult, matrixes_.back().lastIndex});
+		}
 	}
 
 	void Graphic::pushMatrix() {
-		matrixes_.push_back({getMatrix(), getMatrixIndex()});
-		dirty_ = false;
+		matrixes_.push_back(matrixes_.back());
+		dirty_ = true;
 	}
 
 	void Graphic::popMatrix() {
@@ -246,18 +252,30 @@ namespace sdl {
 	}
 
 	void Graphic::setMatrix(const glm::mat4& mat) {
-		matrix() = mat;
-		dirty_ = true;
+		if (dirty_) {
+			matrix() = mat;
+		} else {
+			dirty_ = true;
+			matrixes_.push_back({mat, matrixes_.back().lastIndex});
+		}
 	}
 
 	void Graphic::rotate(float angle) {
-		matrix() = glm::rotate(getMatrix(), angle, glm::vec3{0, 0, 1});
-		dirty_ = true;
+		if (dirty_) {
+			matrix() = glm::rotate(getMatrix(), angle, glm::vec3{0, 0, 1});
+		} else {
+			dirty_ = true;
+			matrixes_.push_back({glm::rotate(getMatrix(), angle, glm::vec3{0, 0, 1}), matrixes_.back().lastIndex});
+		}
 	}
 
 	void Graphic::translate(const glm::vec2& pos) {
-		matrix() = glm::translate(getMatrix(), glm::vec3{pos, 0});
-		dirty_ = true;
+		if (dirty_) {
+			matrix() = glm::translate(getMatrix(), glm::vec3{pos, 0});
+		} else {
+			dirty_ = true;
+			matrixes_.push_back({glm::translate(getMatrix(), glm::vec3{pos, 0}), matrixes_.back().lastIndex});
+		}
 	}
 
 }
