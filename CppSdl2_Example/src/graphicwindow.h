@@ -49,14 +49,14 @@ private:
 			addSquare(sdl::color::Green);
 		});
 
-		sprite_.bindTexture();
+		sprite_.bind();
 		sdl::assertGlError();
 	}
 
 	void update(const sdl::DeltaTime& deltaTime) override {
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-		sprite_.bindTexture();
+		sprite_.bind();
 		graphic_.upload(shader_);
 
 		glDisable(GL_BLEND);

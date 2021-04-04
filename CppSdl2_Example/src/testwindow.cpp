@@ -82,12 +82,12 @@ void TestWindow::update(const sdl::DeltaTime& deltaTime) {
 
 	// Update model matrix.
 	shader_->useProgram();
-	sprite_.bindTexture();
+	sprite_.bind();
 	shader_->setModelMatrix(Mat44(1));
 	shader_->setProjectionMatrix(Mat44(1));
 	batch_->draw();	
 
-	text_.bindTexture();
+	text_.bind();
 	batch2_->draw();
 
 	glDisable(GL_BLEND);

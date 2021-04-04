@@ -78,21 +78,27 @@ namespace sdl {
 		, textureHeight_{sprite.textureHeight_} {
 	}
 
-	void Sprite::bindTexture() {
-		if (image_) {
-			if (std::holds_alternative<SurfaceData>(*image_)) {
-				Texture texture{};
-				texture.generate();
-				texture.texImage(std::get<SurfaceData>(*image_).surface, std::move(std::get<SurfaceData>(*image_).filter));
-				texture.bind();
-				*image_ = std::move(texture);
-			} else {
-				std::get<Texture>(*image_).bind();
-			}
+	void Sprite::bind() {
+		if (!image_) {
+			return;
+		}
+
+		if (std::holds_alternative<SurfaceData>(*image_)) {
+			Texture texture{};
+			texture.generate();
+			texture.texImage(std::get<SurfaceData>(*image_).surface, std::move(std::get<SurfaceData>(*image_).filter));
+			texture.bind();
+			*image_ = std::move(texture);
+		} else {
+			std::get<Texture>(*image_).bind();
 		}
 	}
 
 	TextureView Sprite::getTextureView() const {
+		if (!image_) {
+			return {};
+		}
+
 		try {
 			return {std::get<Texture>(*image_), getX() / textureWidth_, getY() / textureHeight_, getWidth() / textureWidth_, getHeight() / textureHeight_};
 		} catch (std::bad_variant_access&) {
@@ -137,14 +143,15 @@ namespace sdl {
 	}
 
 	bool Sprite::isValid() const noexcept {
-		if (image_) {
-			if (std::holds_alternative<SurfaceData>(*image_)) {
-				return std::get<SurfaceData>(*image_).surface.isLoaded();
-			} else {
-				return std::get<Texture>(*image_).isValid();
-			}
+		if (!image_) {
+			return false;
 		}
-		return false;
+
+		if (std::holds_alternative<SurfaceData>(*image_)) {
+			return std::get<SurfaceData>(*image_).surface.isLoaded();
+		} else {
+			return std::get<Texture>(*image_).isValid();
+		}
 	}
 
 	bool Sprite::equalSource(const Sprite& s1, const Sprite& s2) noexcept {

@@ -132,7 +132,7 @@ namespace sdl {
 	}
 
 	void TextureAtlas::bind() {
-		sprite_.bindTexture();
+		sprite_.bind();
 	}
 
 	TextureView TextureAtlas::getTextureView(const std::string& key) const {
