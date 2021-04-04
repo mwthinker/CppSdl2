@@ -131,6 +131,10 @@ namespace sdl {
 		return sprite_;
 	}
 
+	void TextureAtlas::bind() {
+		sprite_.bindTexture();
+	}
+
 	TextureView TextureAtlas::getTextureView(const std::string& key) const {
 		if (auto it = images_.find(key); it != images_.end()) {
 			return it->second.getTextureView();

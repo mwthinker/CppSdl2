@@ -37,6 +37,8 @@ namespace sdl {
 
 		const Sprite& get() const;
 
+		void bind();
+
 		TextureView getTextureView() const;
 
 		TextureView getTextureView(const std::string& key) const;
