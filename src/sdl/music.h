@@ -8,7 +8,6 @@
 
 namespace sdl {
 
-	// A music class.
 	class Music {
 	public:
 		// Creates a empty music object. Does nothing, but is safe to use as
@@ -51,14 +50,13 @@ namespace sdl {
 		// Get the volume. A value between [0,1].
 		// Return the volume of the music object, may however
 		// not be the volume on other music currently playing.
-		float getVolume() const;
+		float getVolume() const noexcept;
 
-		// Return true if the music points to a soundfile in memory.
-		// Else false.
-		bool isValid() const;
+		// Return true if the music points to a soundfile in memory. Else false.
+		bool isValid() const noexcept;
 
 		// Use with care! Return the pointer to the Mix_Music data.
-		Mix_Music* getMixMusic() const {
+		Mix_Music* getMixMusic() const noexcept {
 			return musicBuffer_ ? musicBuffer_->mixMusic : nullptr;
 		}
 

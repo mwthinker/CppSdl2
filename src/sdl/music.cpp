@@ -3,6 +3,7 @@
 #include <spdlog/spdlog.h>
 
 #include <memory>
+#include <algorithm>
 
 namespace sdl {
 
@@ -34,15 +35,15 @@ namespace sdl {
 	}
 
 	void Music::setVolume(float volume) {
-		volume_ = volume;
-		Mix_VolumeMusic((int) (volume_ * MIX_MAX_VOLUME));
+		volume_ = std::clamp(volume, 0.f, 1.f);
+		Mix_VolumeMusic(static_cast<float>(volume_ * MIX_MAX_VOLUME));
 	}
 
-	float Music::getVolume() const {
+	float Music::getVolume() const noexcept {
 		return volume_;
 	}
 
-	bool Music::isValid() const {
+	bool Music::isValid() const noexcept {
 		return musicBuffer_ ? musicBuffer_->valid : false;
 	}
 
@@ -50,7 +51,7 @@ namespace sdl {
 		mixMusic = Mix_LoadMUS(filename.c_str());
 		if (mixMusic == nullptr) {
 			valid = false;
-			spdlog::warn("[sdl::Music] {} failed to load!", filename);
+			spdlog::warn("[sdl::Music] {} failed to load {}: {}", filename, Mix_GetError());
 		}
 	}
 
