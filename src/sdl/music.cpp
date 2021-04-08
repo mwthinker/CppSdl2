@@ -51,7 +51,7 @@ namespace sdl {
 		mixMusic = Mix_LoadMUS(filename.c_str());
 		if (mixMusic == nullptr) {
 			valid = false;
-			spdlog::warn("[sdl::Music] {} failed to load {}: {}", filename, Mix_GetError());
+			spdlog::warn("[sdl::Music] failed to load {}: {}", filename, Mix_GetError());
 		}
 	}
 
