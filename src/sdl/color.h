@@ -170,7 +170,11 @@ namespace sdl {
 	}
 
 	inline constexpr Color::Color(std::string_view hex) noexcept {
-		if (hex.size() == 7) {
+		if (hex.size() == 4) {
+			value_ = createU32(hexToByte(hex[1], hex[1])
+				, hexToByte(hex[2], hex[2])
+				, hexToByte(hex[3], hex[3])).value_;
+		} else if (hex.size() == 7) {
 			value_ = createU32(hexToByte(hex[1], hex[2])
 				, hexToByte(hex[3], hex[4])
 				, hexToByte(hex[5], hex[6])).value_;
