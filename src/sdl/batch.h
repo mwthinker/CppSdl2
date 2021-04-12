@@ -324,7 +324,7 @@ namespace sdl {
 	template <typename Vertex>
 	bool Batch<Vertex>::isValidBatchView(const BatchView<Vertex>& batchView) const {
 		if (fullBatch_.isIndexBatch()) {
-			return batchView.index_ >= 0 && batchView.index_ + static_cast<GLsizei>(batchView.size_) <= fullBatch_.getIndexesSize();			
+			return batchView.index_ >= 0 && batchView.index_ + static_cast<GLsizei>(batchView.size_) <= fullBatch_.getIndexesSize();
 		} else {
 			return batchView.index_ >= 0 && batchView.index_ + static_cast<GLsizei>(batchView.size_) <= fullBatch_.getSize();
 		}

@@ -225,15 +225,12 @@ namespace sdl {
 		}
 
 		inline constexpr bool isValidHexColor(std::string_view hex) noexcept {
-			if (hex.size() == 7 && hex[0] == '#') {
-				for (int i = 1; i < 7; ++i) {
-					if (!isValidHexChar(hex[i])) {
-						return false;
-					}
-				}
-				return true;
-			} else if (hex.size() == 9) {
-				for (int i = 1; i < 7; ++i) {
+			if (hex.empty() || hex[0] != '#') {
+				return false;
+			}
+
+			if (hex.size() == 4 || hex.size() == 7 || hex.size() == 9) {
+				for (int i = 1; i < hex.size(); ++i) {
 					if (!isValidHexChar(hex[i])) {
 						return false;
 					}
