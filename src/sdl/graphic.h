@@ -27,6 +27,8 @@ namespace sdl::graphic {
 
 namespace sdl::graphic::indexed {
 
+	BatchView<Vertex> addLine(Batch<Vertex>& batch, const glm::vec2& p1, const glm::vec2& p2, float width, Color color);
+
 	BatchView<Vertex> addRectangle(Batch<Vertex>& batch, const glm::vec2& pos, const glm::vec2& size, Color color);
 
 	BatchView<Vertex> addRectangleImage(Batch<Vertex>& batch, const glm::vec2& pos, const glm::vec2& size, const TextureView& sprite, Color color = color::White);
@@ -36,6 +38,8 @@ namespace sdl::graphic::indexed {
 	BatchView<Vertex> addHexagon(Batch<Vertex>& batch, const glm::vec2& center, float innerRadius, float outerRadius, Color color, float startAngle);
 
 	BatchView<Vertex> addCircle(Batch<Vertex>& batch, const glm::vec2& center, float radius, Color color, const int iterations, float startAngle);
+
+	BatchView<Vertex> addCircleOutline(Batch<Vertex>& batch, const glm::vec2& center, float radius, float width, Color color, const int iterations, float startAngle);
 
 }
 
@@ -69,13 +73,17 @@ namespace sdl {
 			popMatrix();
 		}
 
+		void addLine(const glm::vec2& p1, const glm::vec2& p2, float width, Color color);
+
 		void addFilledHexagon(const glm::vec2& center, float radius, Color color, float startAngle = 0);
 
 		void addRectangle(const glm::vec2& pos, const glm::vec2& size, Color color);
 
 		void addRectangleImage(const glm::vec2& pos, const glm::vec2& size, const sdl::TextureView& textureView, Color color = sdl::color::White);
 
-		void addCircle(const glm::vec2& center, float radius, Color color, const int iterations = 40, float startAngle = 0);
+		void addCircle(const glm::vec2& center, float radius, Color color, const int iterations = 30, float startAngle = 0);
+
+		void addCircleOutline(const glm::vec2& center, float radius, float width, Color color, const int iterations = 30, float startAngle = 0);
 
 		void addHexagonImage(const glm::vec2& center, float radius, const sdl::TextureView& sprite, float startAngle = 0);
 

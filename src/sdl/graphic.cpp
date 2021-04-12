@@ -2,6 +2,8 @@
 
 #include <glm/gtx/rotate_vector.hpp>
 #include <glm/gtx/component_wise.hpp>
+#include <glm/gtx/vector_angle.hpp>
+
 #include <array>
 
 namespace sdl::graphic {
@@ -25,6 +27,22 @@ namespace sdl::graphic {
 }
 
 namespace sdl::graphic::indexed {
+
+	BatchView<Vertex> addLine(Batch<Vertex>& batch, const glm::vec2& p1, const glm::vec2& p2, float width, Color color) {
+		batch.startBatchView();
+		batch.startAdding();
+
+		auto angle = glm::angle(p1, p2);
+		auto dp = 0.5f * width * glm::rotate(glm::vec2{1.f, 0.f}, angle + Pi / 2);
+
+		batch.pushBack(Vertex{p1 - dp, {}, color});
+		batch.pushBack(Vertex{p2 - dp, {}, color});
+		batch.pushBack(Vertex{p2 + dp, {}, color});
+		batch.pushBack(Vertex{p1 + dp, {}, color});
+		batch.insertIndexes({0, 1, 2, 0, 2, 3});
+
+		return batch.getBatchView(GL_TRIANGLES);
+	}
 
 	BatchView<Vertex> addRectangle(Batch<Vertex>& batch, const glm::vec2& pos, const glm::vec2& size, Color color) {
 		batch.startBatchView();
@@ -122,6 +140,25 @@ namespace sdl::graphic::indexed {
 		return batch.getBatchView(GL_TRIANGLES);
 	}
 
+	BatchView<Vertex> addCircleOutline(Batch<Vertex>& batch, const glm::vec2& center, float radius, float width, Color color, const int iterations, float startAngle) {
+		batch.startBatchView();
+		batch.startAdding();
+
+		for (int i = 0; i <= iterations; ++i) {
+			auto rad = 2 * Pi * i / iterations + startAngle;
+			auto outerEdge = center + glm::rotate(glm::vec2{radius + width * 0.5f, 0.f}, rad);
+			auto innerEdge = center + glm::rotate(glm::vec2{radius - width * 0.5f, 0.f}, rad);
+
+			batch.pushBack({outerEdge, {0.f, 0.f}, color});
+			batch.pushBack({innerEdge, {0.f, 0.f}, color});
+		}
+		for (int i = 0; i < iterations * 2 - 1; i += 2) {
+			batch.insertIndexes({i, i + 2, i + 3, i + 3, i + 1, i});
+		}
+
+		return batch.getBatchView(GL_TRIANGLES);
+	}
+
 }
 
 namespace sdl {
@@ -170,6 +207,10 @@ namespace sdl {
 		currentMatrixIndex_ = index;
 	}
 
+	void Graphic::addLine(const glm::vec2& p1, const glm::vec2& p2, float width, Color color) {
+		add(sdlg::addLine(batch_, p1, p2, width, color));
+	}
+
 	void Graphic::addRectangle(const glm::vec2& pos, const glm::vec2& size, Color color) {
 		add(sdlg::addRectangle(batch_, pos, size, color));
 	}
@@ -192,6 +233,10 @@ namespace sdl {
 
 	void Graphic::addCircle(const glm::vec2& center, float radius, Color color, const int iterations, float startAngle) {
 		add(sdlg::addCircle(batch_, center, radius, color, iterations, startAngle));
+	}
+
+	void Graphic::addCircleOutline(const glm::vec2& center, float radius, float width, Color color, const int iterations, float startAngle) {
+		add(sdlg::addCircleOutline(batch_, center, radius, width, color, iterations, startAngle));
 	}
 
 	void Graphic::bind(sdl::Shader& shader) {
