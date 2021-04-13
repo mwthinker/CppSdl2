@@ -35,7 +35,10 @@ private:
 
 		graphic_.addRectangle({0.1f, 0.4f}, {0.2f, 0.2f}, sdl::color::White);
 		graphic_.addRectangle({-0.1f, -0.4f}, {0.2f, 0.2f}, sdl::color::Red);
-		graphic_.addCircle({-0.5f, 0.5f}, 0.3f, sdl::color::Green, 40);
+		graphic_.addCircle({-0.5f, 0.5f}, 0.3f, sdl::color::Green);
+		graphic_.addCircleOutline({0.5f, 0.5f}, 0.3f, 0.01f, sdl::color::html::Aqua);
+
+		graphic_.addLine({-0.3f, -0.3f}, {-0.4f, -0.7f}, 0.01f, sdl::color::html::Aqua);
 
 		addAxis();
 

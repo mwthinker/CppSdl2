@@ -32,8 +32,7 @@ namespace sdl::graphic::indexed {
 		batch.startBatchView();
 		batch.startAdding();
 
-		auto angle = glm::angle(p1, p2);
-		auto dp = 0.5f * width * glm::rotate(glm::vec2{1.f, 0.f}, angle + Pi / 2);
+		auto dp = 0.5f * width * glm::rotate(glm::normalize(p2 - p1), Pi / 2);
 
 		batch.pushBack(Vertex{p1 - dp, {}, color});
 		batch.pushBack(Vertex{p2 - dp, {}, color});
