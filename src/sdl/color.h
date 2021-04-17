@@ -6,6 +6,7 @@
 #include <SDL_pixels.h>
 
 #include <string_view>
+#include <string>
 #include <algorithm>
 
 namespace sdl {
