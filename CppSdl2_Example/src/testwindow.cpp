@@ -101,7 +101,7 @@ void TestWindow::eventUpdate(const SDL_Event& windowEvent) {
 			break;
 		case SDL_MOUSEWHEEL:
 		{
-			float add = windowEvent.wheel.y * 5;
+			auto add = windowEvent.wheel.y * 5;
 			auto [w, h] = getSize();
 			std::cout << windowEvent.wheel.which << " add = " << add << "\n";
 			setSize(add + w, add + h);

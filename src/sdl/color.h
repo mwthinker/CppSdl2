@@ -105,7 +105,7 @@ namespace sdl {
 			: value_{value} {
 		}
 
-		static constexpr int hexToByte(char first, char second) noexcept {
+		static constexpr uint8_t hexToByte(char first, char second) noexcept {
 			return color::hexToInt(first) << 4 | color::hexToInt(second);
 		}
 
@@ -231,7 +231,7 @@ namespace sdl {
 			}
 
 			if (hex.size() == 4 || hex.size() == 7 || hex.size() == 9) {
-				for (int i = 1; i < hex.size(); ++i) {
+				for (std::size_t i = 1; i < hex.size(); ++i) {
 					if (!isValidHexChar(hex[i])) {
 						return false;
 					}

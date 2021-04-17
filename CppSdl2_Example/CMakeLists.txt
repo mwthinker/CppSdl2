@@ -21,6 +21,18 @@ add_executable(CppSdl2_Example
 	src/testwindow.cpp
 	src/testwindow.h
 )
+
+if (MSVC)
+	target_compile_options(CppSdl2_Example
+		PRIVATE
+			/W3 /WX /permissive-
+	)
+else()
+	target_compile_options(CppSdl2_Example
+		PRIVATE
+			-Wall -Wextra -Wnon-virtual-dtor -pedantic -Wcast-align -Woverloaded-virtual -Wno-unused-parameter
+	)
+endif()
 	
 target_link_libraries(CppSdl2_Example
 	PRIVATE

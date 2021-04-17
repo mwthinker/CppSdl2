@@ -6,7 +6,7 @@
 
 namespace {
 
-	void test() {
+	[[maybe_unused]] void test() {
 		sdl::BatchView<TestShader::Vertex> batchData;
 		sdl::Batch<TestShader::Vertex> batch{GL_DYNAMIC_DRAW};
 		
@@ -26,7 +26,6 @@ TestImGuiWindow::TestImGuiWindow() {
 }
 
 void TestImGuiWindow::imGuiEventUpdate(const SDL_Event& windowEvent) {
-	auto& io = ImGui::GetIO();
 	switch (windowEvent.type) {
 		case SDL_WINDOWEVENT:
 			switch (windowEvent.window.event) {

@@ -72,6 +72,18 @@ add_library(CppSdl2
 
 add_subdirectory(ImGui)
 
+if (MSVC)
+	target_compile_options(CppSdl2
+		PRIVATE
+			/W3 /WX /permissive-
+	)
+else()
+	target_compile_options(CppSdl2
+		PRIVATE
+			-Wall -Wextra -Wnon-virtual-dtor -pedantic -Wcast-align -Woverloaded-virtual -Wno-unused-parameter
+	)
+endif()
+
 target_compile_definitions(CppSdl2
 	PUBLIC
 		NOMINMAX

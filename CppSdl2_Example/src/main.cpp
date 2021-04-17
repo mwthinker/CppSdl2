@@ -171,6 +171,12 @@ std::vector<HtmlColor> getHtmlColors() {
 	return htmlColors;
 }
 
+void testPrintColors() {
+	for (const auto& htmlColor : getHtmlColors()) {
+		spdlog::info("{}: {}", htmlColor.name, htmlColor.color.toHexString());
+	}
+}
+
 // Test to load directly to ram memory.
 void testLoadTextureAtlas() {
 	sdl::Surface red{200, 100, Red};
@@ -229,7 +235,7 @@ void testLoadTextureAtlas2() {
 				sprite = atlas.add(blue, 50);
 				break;
 			default:
-				if (++index < htmlColors.size()) {
+				if (++index < static_cast<int>(htmlColors.size())) {
 					auto html = htmlColors[index];
 					sprite = atlas.add(sdl::Surface{30, 30, html.color}, 1);
 					spdlog::info("[testLoadTextureAtlas2] Color added {} = {} ", html.name, html.color.toHexString());
@@ -276,13 +282,15 @@ void showHelp(const std::string& programName) {
 	std::cout << "\n";
 	std::cout << "Options:\n";
 	std::cout << "\t" << "-h --help                show this help" << "\n";
-	std::cout << "\t" << "-1                       testLoadTextureAtlas" << "\n";
-	std::cout << "\t" << "-2                       testLoadTextureAtlas2" << "\n";
-	std::cout << "\t" << "-3                       testBatchWindow" << "\n";
-	std::cout << "\t" << "-4                       testImGuiWindow" << "\n";
+	std::cout << "\t" << "-1                       testPrintColors" << "\n";
+	std::cout << "\t" << "-2                       testLoadTextureAtlas" << "\n";
+	std::cout << "\t" << "-3                       testLoadTextureAtlas2" << "\n";
+	std::cout << "\t" << "-4                       testBatchWindow" << "\n";
+	std::cout << "\t" << "-5                       testImGuiWindow" << "\n";
 }
 
 void runAll() {
+	testPrintColors();
 	testLoadTextureAtlas();
 	testLoadTextureAtlas2();
 	testGraphicWindow();
@@ -326,15 +334,17 @@ int main(int argc, char** argv) {
 			showHelp(programName);
 			return 0;
 		} else if (code == "-1") {
+			testPrintColors();
+		} else if (code == "-2") {
 			testLoadTextureAtlas();
 			return 0;
-		} else if (code == "-2") {
+		} else if (code == "-3") {
 			testLoadTextureAtlas2();
 			return 0;
-		} else if (code == "-3") {
+		} else if (code == "-4") {
 			testGraphicWindow();
 			return 0;
-		} else if (code == "-4") {
+		} else if (code == "-5") {
 			testImGuiWindow();
 			return 0;
 		} else {

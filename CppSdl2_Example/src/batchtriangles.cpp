@@ -16,9 +16,6 @@ namespace {
     inline TestShader::Vertex createHexCornerVertex(const TestShader::Vertex& vertex, float size, int nbr) {
 		TestShader::Vertex corner = vertex;
 		corner.pos_ = getHexCorner(vertex.pos_, size, nbr);
-		float x = corner.pos_.x;
-		float y = corner.pos_.y;
-		//sdl::logger()->info("Pos: ({},{})", corner.pos_.x, corner.pos_.y);
 		return  corner;
 	}
 

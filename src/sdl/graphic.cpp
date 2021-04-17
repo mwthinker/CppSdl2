@@ -170,8 +170,8 @@ namespace sdl {
 	}
 
 	Graphic::BatchData::BatchData(BatchView&& batchView, const sdl::TextureView& texture, int matrixIndex)
-		: texture{texture}
-		, batchView{batchView}
+		: batchView{batchView}
+		, texture{texture}
 		, matrixIndex{matrixIndex} {
 	}
 
@@ -288,7 +288,6 @@ namespace sdl {
 	void Graphic::popMatrix() {
 		if (matrixes_.size() > 1) {
 			dirty_ = true; // Just to be safe, don't know if earlier state weas dirty (Maybe ToDo: make dirty part of matrixes vector).
-			int index = getMatrixIndex() - 1;
 			matrixes_.push_back(matrixes_[matrixes_.back().lastIndex]);
 		} else {
 			spdlog::warn("[sdl::Graphic] No matrix to pop");

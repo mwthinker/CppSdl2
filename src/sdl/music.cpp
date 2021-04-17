@@ -36,7 +36,7 @@ namespace sdl {
 
 	void Music::setVolume(float volume) {
 		volume_ = std::clamp(volume, 0.f, 1.f);
-		Mix_VolumeMusic(static_cast<float>(volume_ * MIX_MAX_VOLUME));
+		Mix_VolumeMusic(static_cast<int>(volume_ * MIX_MAX_VOLUME));
 	}
 
 	float Music::getVolume() const noexcept {

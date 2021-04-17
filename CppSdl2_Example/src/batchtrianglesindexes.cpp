@@ -11,16 +11,12 @@ namespace {
 	inline Vec2 getHexCorner(Vec2 center, float size, int nbr) {
 		auto angleDeg = 60 * nbr - 30;
 		auto angleRad = PI / 180 * angleDeg;
-		float x = center.x + size * std::cos(angleRad);
 		return {center.x + size * std::cos(angleRad), center.y + size * std::sin(angleRad)};
 	}
 
 	inline TestShader::Vertex createHexCornerVertex(const TestShader::Vertex& vertex, float size, int nbr) {
 		auto corner = vertex;
 		corner.pos_ = getHexCorner(vertex.pos_, size, nbr);
-		float x = corner.pos_.x;
-		float y = corner.pos_.y;
-		//sdl::logger()->info("Pos: ({},{})", corner.pos_.x, corner.pos_.y);
 		return  corner;
 	}
 

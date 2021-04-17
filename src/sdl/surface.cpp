@@ -17,8 +17,8 @@ namespace sdl {
 		template <typename Pixel>
 		void flipVerticalGeneric(SDL_Surface* surface) {
 			assert(surface != nullptr);
-			for (size_t i = 0; i < surface->h / 2; ++i) {
-				for (size_t j = 0; j < surface->w; ++j) {
+			for (int i = 0; i < surface->h / 2; ++i) {
+				for (int j = 0; j < surface->w; ++j) {
 					auto startElement = static_cast<Pixel*>(surface->pixels) + i * surface->w + j;
 					auto endElement = static_cast<Pixel*>(surface->pixels) + (surface->h - i - 1) * surface->w + j;
 					std::swap(*startElement, *endElement);
