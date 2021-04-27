@@ -147,18 +147,15 @@ namespace sdl {
 	}
 
 	inline constexpr Color& operator*=(Color& left, Color right) noexcept {
-		left *= right;
-		return left;
+		return left = left * right;
 	}
 
 	inline constexpr Color& operator+=(Color& left, Color right) noexcept {
-		left += right;
-		return left;
+		return left = left + right;;
 	}
 
 	inline constexpr Color& operator-=(Color& left, Color right) noexcept {
-		left -= right;
-		return left;
+		return left = left - right;
 	}
 
 	inline constexpr Color::Color(float red, float green, float blue, float alpha) noexcept
