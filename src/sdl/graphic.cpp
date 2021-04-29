@@ -276,7 +276,7 @@ namespace sdl {
 		if (dirty_) {
 			matrix() *= mult;
 		} else {
-			matrixes_.push_back({getMatrix() * mult, matrixes_.back().lastIndex});
+			matrixes_.push_back({getMatrix() * mult, static_cast<int>(matrixes_.size())});
 		}
 	}
 
@@ -299,7 +299,7 @@ namespace sdl {
 			matrix() = mat;
 		} else {
 			dirty_ = true;
-			matrixes_.push_back({mat, matrixes_.back().lastIndex});
+			matrixes_.push_back({mat, static_cast<int>(matrixes_.size())});
 		}
 	}
 
@@ -308,7 +308,7 @@ namespace sdl {
 			matrix() = glm::rotate(getMatrix(), angle, glm::vec3{0, 0, 1});
 		} else {
 			dirty_ = true;
-			matrixes_.push_back({glm::rotate(getMatrix(), angle, glm::vec3{0, 0, 1}), matrixes_.back().lastIndex});
+			matrixes_.push_back({glm::rotate(getMatrix(), angle, glm::vec3{0, 0, 1}), static_cast<int>(matrixes_.size())});
 		}
 	}
 
@@ -317,7 +317,7 @@ namespace sdl {
 			matrix() = glm::translate(getMatrix(), glm::vec3{pos, 0});
 		} else {
 			dirty_ = true;
-			matrixes_.push_back({glm::translate(getMatrix(), glm::vec3{pos, 0}), matrixes_.back().lastIndex});
+			matrixes_.push_back({glm::translate(getMatrix(), glm::vec3{pos, 0}), static_cast<int>(matrixes_.size())});
 		}
 	}
 
