@@ -1,9 +1,10 @@
 {
+	"$schema": "https://raw.githubusercontent.com/microsoft/vcpkg/master/scripts/vcpkg.schema.json",
 	"name": "cppsdl2",
 	"version-string": "0.1.0",
 	"port-version": 1,
 	"homepage": "https://github.com/mwthinker/CppSdl2",
-	"description": "A C++ wrapper around SDL2 (Simple Direct Media Layer) and OpenGl.",
+	"description": "A C++ wrapper around SDL2 (Simple Direct Media Layer) and OpenGL (> v2.1).",
 	"license": "MIT",
 	"dependencies": [
 		"sdl2-image",

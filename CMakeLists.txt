@@ -68,6 +68,7 @@ add_library(CppSdl2
 	src/sdl/vertexbufferobject.h
 	src/sdl/window.cpp
 	src/sdl/window.h
+	vcpkg.json
 )
 
 add_subdirectory(ImGui)
