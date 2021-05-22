@@ -44,13 +44,13 @@ namespace sdl {
 		TextureView getTextureView(const std::string& key) const;
 
 	private:
-		class Node : public std::enable_shared_from_this<Node> {
+		class Node {
 		public:
 			// Insert an image on the plane, dimensions defined by the root node.
 			// Should only be called by the root node.
 			// Return the node containing the image if successful, else null
 			// is returned.
-			std::shared_ptr<Node> insert(const Surface& surface, int border);
+			Node* insert(const Surface& surface, int border);
 
 			Node(Rect rect);
 
@@ -60,10 +60,10 @@ namespace sdl {
 				return rect_;
 			}
 
-			bool image{};
+			bool image = false;
 		private:
-			std::shared_ptr<Node> left_;
-			std::shared_ptr<Node> right_;
+			std::unique_ptr<Node> left_;
+			std::unique_ptr<Node> right_;
 			Rect rect_{};
 		};
 
@@ -71,7 +71,7 @@ namespace sdl {
 		// a first image added at the top left corner of the defined plane.
 		// Return the node containing the image if successful, else null
 		// is returned.
-		static std::shared_ptr<Node> createRoot(std::unique_ptr<Node>& root,
+		static Node* createRoot(std::unique_ptr<Node>& root,
 			int width, int height, const Surface& surface, int border);
 
 		Sprite sprite_;

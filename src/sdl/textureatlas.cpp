@@ -4,7 +4,7 @@
 
 namespace sdl {
 
-	std::shared_ptr<TextureAtlas::Node> TextureAtlas::createRoot(std::unique_ptr<Node>& root,
+	TextureAtlas::Node* TextureAtlas::createRoot(std::unique_ptr<Node>& root,
 		int width, int height, const Surface& surface, int border) {
 		
 		// Image doesn't fit?
@@ -21,7 +21,7 @@ namespace sdl {
 		: rect_{rect} {
 	}
 
-	std::shared_ptr<TextureAtlas::Node> TextureAtlas::Node::insert(const Surface& surface, int border) {
+	TextureAtlas::Node* TextureAtlas::Node::insert(const Surface& surface, int border) {
 		// Is not a leaf!
 		if (left_ != nullptr && right_ != nullptr) {
 			if (auto node = left_->insert(surface, border); node != nullptr) {
@@ -44,22 +44,22 @@ namespace sdl {
 			// Fits perfectly?
 			if (surface.getWidth() + 2 * border == rect_.w && surface.getHeight() + 2 * border == rect_.h) {
 				image = true;
-				return shared_from_this();
+				return this;
 			}
 
 			// Split the node in half.
 			if (rect_.w - surface.getWidth() < rect_.h - surface.getHeight()) { // Split vertical.
-				left_ = std::make_shared<Node>(Rect{rect_.x, rect_.y,
+				left_ = std::make_unique<Node>(Rect{rect_.x, rect_.y,
 					rect_.w, surface.getHeight() + 2 * border}); // Up.
 
-				right_ = std::make_shared<Node>(Rect{rect_.x, rect_.y + surface.getHeight() + 2 * border,
+				right_ = std::make_unique<Node>(Rect{rect_.x, rect_.y + surface.getHeight() + 2 * border,
 					rect_.w, rect_.h - surface.getHeight() - 2 * border}); // Down.
 			
 			} else { // Split horizontal.
-				left_ = std::make_shared<Node>(Rect{rect_.x, rect_.y,
+				left_ = std::make_unique<Node>(Rect{rect_.x, rect_.y,
 					surface.getWidth() + 2 * border, rect_.h}); // Left.
 				
-				right_ = std::make_shared<Node>(Rect{rect_.x + surface.getWidth() + 2 * border, rect_.y,
+				right_ = std::make_unique<Node>(Rect{rect_.x + surface.getWidth() + 2 * border, rect_.y,
 					rect_.w - surface.getWidth() - 2 * border, rect_.h}); // Right.
 			}
 
@@ -70,7 +70,6 @@ namespace sdl {
 
 	TextureAtlas::TextureAtlas(int width, int height, std::function<void()>&& filter)
 		: sprite_{Surface{width, height}, std::move(filter)} {
-
 	}
 
 	const Sprite& TextureAtlas::add(const std::string& filename, int border, const std::string& uniqueKey) {
@@ -92,7 +91,7 @@ namespace sdl {
 		auto it = images_.find(key);
 		if (key.empty() || it == images_.end()) {
 			if (surface.isLoaded()) {
-				std::shared_ptr<Node> node;
+				Node* node = nullptr;
 				if (root_) {
 					node = root_->insert(surface, border);
 				} else {
