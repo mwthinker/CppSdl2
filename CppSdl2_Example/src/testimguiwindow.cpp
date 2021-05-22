@@ -23,6 +23,7 @@ TestImGuiWindow::TestImGuiWindow() {
 	sdl::Window::setTitle("Test");
 	sdl::Window::setIcon("tetris.bmp");
 	sdl::ImGuiWindow::setShowDemoWindow(true);
+	sdl::ImGuiWindow::setShowColorWindow(true);
 }
 
 void TestImGuiWindow::imGuiEventUpdate(const SDL_Event& windowEvent) {

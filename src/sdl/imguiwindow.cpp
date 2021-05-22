@@ -6,6 +6,33 @@
 
 namespace sdl {
 
+	namespace {
+
+		void showColorWindow(bool& open) {
+			ImGui::SetNextWindowSize({310.f, 400.f});
+			ImGui::Window("Html Colors", &open, ImGuiWindowFlags_NoResize, []() {
+				ImGui::Text("Copy color to clipboard by clicking");
+
+				static const auto htmlColors = color::html::getHtmlColors();
+				static std::string colorStr = "                   ";
+				int nbr = 0;
+				for (const auto& [name, color] : htmlColors) {
+					++nbr;
+					colorStr.clear();
+					colorStr += name;
+					colorStr += "##1";
+					if (ImGui::ColorButton(colorStr.c_str(), color)) {
+						ImGui::SetClipboardText(name.c_str());
+					}
+					if (nbr % 10 != 0) {
+						ImGui::SameLine();
+					}
+				}
+			});
+		}
+
+	}
+
 	ImGuiWindow::ImGuiWindow(int majorVersionGl, int minorVersionGl)
 		: Window{majorVersionGl, minorVersionGl} {
 	}
@@ -22,8 +49,7 @@ namespace sdl {
 		auto& io = ImGui::GetIO();
 		io.ConfigFlags |= ImGuiConfigFlags_DockingEnable | ImGuiConfigFlags_ViewportsEnable;
 
-		if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
-		{
+		if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable) {
 			auto& style = ImGui::GetStyle();
 			style.WindowRounding = 0.0f;
 			style.Colors[ImGuiCol_WindowBg].w = 1.0f;
@@ -44,6 +70,9 @@ namespace sdl {
 
 		if (showDemoWindow_) {
 			ImGui::ShowDemoWindow(&showDemoWindow_);
+		}
+		if (showColorWindow_) {
+			showColorWindow(showColorWindow_);
 		}
 
 		ImGui::Render();

@@ -10,7 +10,7 @@ namespace ImGui {
 	namespace Helper {
 
 		void PrimWriteVtx(ImDrawList* drawList, const sdl::Vertex& vertex) {
-			drawList->PrimWriteVtx({vertex.pos.x, vertex.pos.y}, {vertex.tex.x, vertex.tex.y}, vertex.color.toImU32());
+			drawList->PrimWriteVtx(vertex.pos, vertex.tex, vertex.color.toImU32());
 		}
 
 		void AddHexagonImage(const sdl::TextureView& sprite, glm::vec2 center, float radius, float startAngle) {

@@ -18,6 +18,9 @@ namespace sdl {
 		bool isShowDemoWindow() const;
 		void setShowDemoWindow(bool show);
 
+		bool isShowColorWindow() const;
+		void setShowColorWindow(bool show);
+
 	protected:
 		void initPreLoop() override;
 
@@ -31,7 +34,8 @@ namespace sdl {
 		virtual void imGuiUpdate(const DeltaTime& deltaTime) {};
 		virtual void imGuiPostUpdate(const DeltaTime& deltaTime) {};
 		
-		bool showDemoWindow_{};
+		bool showDemoWindow_ = false;
+		bool showColorWindow_ = false;
 	};
 
 	inline bool ImGuiWindow::isShowDemoWindow() const {
@@ -40,6 +44,14 @@ namespace sdl {
 
 	inline void ImGuiWindow::setShowDemoWindow(bool show) {
 		showDemoWindow_ = show;
+	}
+
+	inline bool ImGuiWindow::isShowColorWindow() const {
+		return showColorWindow_;
+	}
+
+	inline void ImGuiWindow::setShowColorWindow(bool show) {
+		showColorWindow_ = show;
 	}
 
 }

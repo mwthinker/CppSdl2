@@ -7,6 +7,7 @@
 
 #include <string_view>
 #include <string>
+#include <vector>
 #include <algorithm>
 
 namespace sdl {
@@ -410,6 +411,13 @@ namespace sdl {
 		constexpr sdl::Color Silver{"#C0C0C0"};
 		constexpr sdl::Color LightGray{"#D3D3D3"};
 		constexpr sdl::Color Gainsboro{"#DCDCDC"};
+
+		struct Pair {
+			std::string name;
+			sdl::Color color;
+		};
+
+		std::vector<Pair> getHtmlColors();
 	}
 
 }
