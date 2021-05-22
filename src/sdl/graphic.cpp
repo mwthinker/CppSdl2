@@ -28,8 +28,7 @@ namespace sdl::graphic {
 
 namespace sdl::graphic::indexed {
 
-	BatchView<Vertex> addLine(Batch<Vertex>& batch, const glm::vec2& p1, const glm::vec2& p2, float width, Color color) {
-		batch.startBatchView();
+	void addLine(Batch<Vertex>& batch, const glm::vec2& p1, const glm::vec2& p2, float width, Color color) {
 		batch.startAdding();
 
 		auto dp = 0.5f * width * glm::rotate(glm::normalize(p2 - p1), Pi / 2);
@@ -39,25 +38,18 @@ namespace sdl::graphic::indexed {
 		batch.pushBack(Vertex{p2 + dp, {}, color});
 		batch.pushBack(Vertex{p1 + dp, {}, color});
 		batch.insertIndexes({0, 1, 2, 0, 2, 3});
-
-		return batch.getBatchView(GL_TRIANGLES);
 	}
 
-	BatchView<Vertex> addRectangle(Batch<Vertex>& batch, const glm::vec2& pos, const glm::vec2& size, Color color) {
-		batch.startBatchView();
+	void addRectangle(Batch<Vertex>& batch, const glm::vec2& pos, const glm::vec2& size, Color color) {
 		batch.startAdding();
-
 		batch.pushBack(Vertex{pos, {}, color});
 		batch.pushBack(Vertex{pos + glm::vec2{size.x, 0.f}, {}, color});
 		batch.pushBack(Vertex{pos + size, {}, color});
 		batch.pushBack(Vertex{pos + glm::vec2{0.f, size.y}, {}, color});
-
 		batch.insertIndexes({0, 1, 2, 0, 2, 3});
-		return batch.getBatchView(GL_TRIANGLES);
 	}
 
-	BatchView<Vertex> addRectangleImage(Batch<Vertex>& batch, const glm::vec2& pos, const glm::vec2& size, const TextureView& texture, Color color) {
-		batch.startBatchView();
+	void addRectangleImage(Batch<Vertex>& batch, const glm::vec2& pos, const glm::vec2& size, const TextureView& texture, Color color) {
 		batch.startAdding();
 
 		if (texture) {
@@ -68,11 +60,9 @@ namespace sdl::graphic::indexed {
 
 			batch.insertIndexes({0, 1, 2, 0, 2, 3});
 		}
-		return batch.getBatchView(GL_TRIANGLES);
 	}
 
-	BatchView<Vertex> addHexagonImage(Batch<Vertex>& batch, const glm::vec2& center, float radius, const sdl::TextureView& sprite, float startAngle) {
-		batch.startBatchView();
+	void addHexagonImage(Batch<Vertex>& batch, const glm::vec2& center, float radius, const sdl::TextureView& sprite, float startAngle) {
 		batch.startAdding();
 
 		if (sprite) {
@@ -91,12 +81,9 @@ namespace sdl::graphic::indexed {
 				batch.insertIndexes({0, i, (i % 6) + 1});
 			}
 		}
-
-		return batch.getBatchView(GL_TRIANGLES);
 	}
 
-	BatchView<Vertex> addHexagon(Batch<Vertex>& batch, const glm::vec2& center, float innerRadius, float outerRadius, Color color, float startAngle) {
-		batch.startBatchView();
+	void addHexagon(Batch<Vertex>& batch, const glm::vec2& center, float innerRadius, float outerRadius, Color color, float startAngle) {
 		batch.startAdding();
 
 		auto innerCorners = getHexagonCorners(center, innerRadius, startAngle);
@@ -117,11 +104,9 @@ namespace sdl::graphic::indexed {
 			batch.pushBackIndex((i + 1) % 6);
 			batch.pushBackIndex(6 + (i + 1) % 6);
 		}
-		return batch.getBatchView(GL_TRIANGLES);
 	}
 
-	BatchView<Vertex> addCircle(Batch<Vertex>& batch, const glm::vec2& center, float radius, Color color, const int iterations, float startAngle) {
-		batch.startBatchView();
+	void addCircle(Batch<Vertex>& batch, const glm::vec2& center, float radius, Color color, const int iterations, float startAngle) {
 		batch.startAdding();
 
 		batch.pushBack({center, {0.f, 0.f}, color});
@@ -135,12 +120,9 @@ namespace sdl::graphic::indexed {
 		for (int i = 1; i <= iterations; ++i) {
 			batch.insertIndexes({0, i, (i % iterations) + 1});
 		}
-
-		return batch.getBatchView(GL_TRIANGLES);
 	}
 
-	BatchView<Vertex> addCircleOutline(Batch<Vertex>& batch, const glm::vec2& center, float radius, float width, Color color, const int iterations, float startAngle) {
-		batch.startBatchView();
+	void addCircleOutline(Batch<Vertex>& batch, const glm::vec2& center, float radius, float width, Color color, const int iterations, float startAngle) {
 		batch.startAdding();
 
 		for (int i = 0; i <= iterations; ++i) {
@@ -154,8 +136,6 @@ namespace sdl::graphic::indexed {
 		for (int i = 0; i < iterations * 2 - 1; i += 2) {
 			batch.insertIndexes({i, i + 2, i + 3, i + 3, i + 1, i});
 		}
-
-		return batch.getBatchView(GL_TRIANGLES);
 	}
 
 }
@@ -207,35 +187,51 @@ namespace sdl {
 	}
 
 	void Graphic::addLine(const glm::vec2& p1, const glm::vec2& p2, float width, Color color) {
-		add(sdlg::addLine(batch_, p1, p2, width, color));
+		batch_.startBatchView();
+		sdlg::addLine(batch_, p1, p2, width, color);
+		add(batch_.getBatchView(GL_TRIANGLES));
 	}
 
 	void Graphic::addRectangle(const glm::vec2& pos, const glm::vec2& size, Color color) {
-		add(sdlg::addRectangle(batch_, pos, size, color));
+		batch_.startBatchView();
+		sdlg::addRectangle(batch_, pos, size, color);
+		add(batch_.getBatchView(GL_TRIANGLES));
 	}
 
 	void Graphic::addRectangleImage(const glm::vec2& pos, const glm::vec2& size, const sdl::TextureView& textureView, Color color) {
-		add(sdlg::addRectangleImage(batch_, pos, size, textureView, color), textureView);
+		batch_.startBatchView();
+		sdlg::addRectangleImage(batch_, pos, size, textureView, color);
+		add(batch_.getBatchView(GL_TRIANGLES));
 	}
 
 	void Graphic::addFilledHexagon(const glm::vec2& center, float radius, Color color, float startAngle) {
+		batch_.startBatchView();
 		addCircle(center, radius, color, 6, startAngle);
+		add(batch_.getBatchView(GL_TRIANGLES));
 	}
 
 	void Graphic::addHexagonImage(const glm::vec2& center, float radius, const sdl::TextureView& sprite, float startAngle) {
-		add(sdlg::addHexagonImage(batch_, center, radius, sprite, startAngle), sprite);
+		batch_.startBatchView();
+		sdlg::addHexagonImage(batch_, center, radius, sprite, startAngle);
+		add(batch_.getBatchView(GL_TRIANGLES));
 	}
 
 	void Graphic::addHexagon(const glm::vec2& center, float innerRadius, float outerRadius, Color color, float startAngle) {
-		add(sdlg::addHexagon(batch_, center, innerRadius, outerRadius, color, startAngle));
+		batch_.startBatchView();
+		sdlg::addHexagon(batch_, center, innerRadius, outerRadius, color, startAngle);
+		add(batch_.getBatchView(GL_TRIANGLES));
 	}
 
 	void Graphic::addCircle(const glm::vec2& center, float radius, Color color, const int iterations, float startAngle) {
-		add(sdlg::addCircle(batch_, center, radius, color, iterations, startAngle));
+		batch_.startBatchView();
+		sdlg::addCircle(batch_, center, radius, color, iterations, startAngle);
+		add(batch_.getBatchView(GL_TRIANGLES));
 	}
 
 	void Graphic::addCircleOutline(const glm::vec2& center, float radius, float width, Color color, const int iterations, float startAngle) {
-		add(sdlg::addCircleOutline(batch_, center, radius, width, color, iterations, startAngle));
+		batch_.startBatchView();
+		sdlg::addCircleOutline(batch_, center, radius, width, color, iterations, startAngle);
+		add(batch_.getBatchView(GL_TRIANGLES));
 	}
 
 	void Graphic::bind(sdl::Shader& shader) {

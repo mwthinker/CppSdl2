@@ -27,19 +27,19 @@ namespace sdl::graphic {
 
 namespace sdl::graphic::indexed {
 
-	BatchView<Vertex> addLine(Batch<Vertex>& batch, const glm::vec2& p1, const glm::vec2& p2, float width, Color color);
+	void addLine(Batch<Vertex>& batch, const glm::vec2& p1, const glm::vec2& p2, float width, Color color);
 
-	BatchView<Vertex> addRectangle(Batch<Vertex>& batch, const glm::vec2& pos, const glm::vec2& size, Color color);
+	void addRectangle(Batch<Vertex>& batch, const glm::vec2& pos, const glm::vec2& size, Color color);
 
-	BatchView<Vertex> addRectangleImage(Batch<Vertex>& batch, const glm::vec2& pos, const glm::vec2& size, const TextureView& sprite, Color color = color::White);
+	void addRectangleImage(Batch<Vertex>& batch, const glm::vec2& pos, const glm::vec2& size, const TextureView& sprite, Color color = color::White);
 
-	BatchView<Vertex> addHexagonImage(Batch<Vertex>& batch, const glm::vec2& center, float radius, const TextureView& sprite, float startAngle);
+	void addHexagonImage(Batch<Vertex>& batch, const glm::vec2& center, float radius, const TextureView& sprite, float startAngle);
 
-	BatchView<Vertex> addHexagon(Batch<Vertex>& batch, const glm::vec2& center, float innerRadius, float outerRadius, Color color, float startAngle);
+	void addHexagon(Batch<Vertex>& batch, const glm::vec2& center, float innerRadius, float outerRadius, Color color, float startAngle);
 
-	BatchView<Vertex> addCircle(Batch<Vertex>& batch, const glm::vec2& center, float radius, Color color, const int iterations, float startAngle);
+	void addCircle(Batch<Vertex>& batch, const glm::vec2& center, float radius, Color color, const int iterations, float startAngle);
 
-	BatchView<Vertex> addCircleOutline(Batch<Vertex>& batch, const glm::vec2& center, float radius, float width, Color color, const int iterations, float startAngle);
+	void addCircleOutline(Batch<Vertex>& batch, const glm::vec2& center, float radius, float width, Color color, const int iterations, float startAngle);
 
 }
 
@@ -120,8 +120,8 @@ namespace sdl {
 			BatchData(BatchView&& batchView, const sdl::TextureView& texture, int matrixIndex);
 
 			BatchView batchView;
-			GLuint texture{};
-			int matrixIndex{};
+			GLuint texture = 0;
+			int matrixIndex = 0;
 		};
 
 		struct MatrixPair {
@@ -137,8 +137,8 @@ namespace sdl {
 		Batch batch_{GL_DYNAMIC_DRAW};
 		std::vector<BatchData> batches_;
 		sdl::VertexArrayObject vao_;
-		int currentMatrixIndex_{};
-		bool initiated_{};
+		int currentMatrixIndex_ = 0;
+		bool initiated_ = false;
 		bool dirty_{true};
 	};
 

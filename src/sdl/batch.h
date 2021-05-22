@@ -57,7 +57,7 @@ namespace sdl {
 	public:
 		// ---- Vertexes
 		
-		template<class InputIterator>
+		template<typename InputIterator>
 		void insert(InputIterator begin, InputIterator end);
 		
 		void insert(std::initializer_list<Vertex> list);
@@ -70,7 +70,7 @@ namespace sdl {
 		
 		// ---- Indexes
 		
-		template<class InputIterator>
+		template<typename InputIterator>
 		void insertIndexes(InputIterator begin, InputIterator end);
 
 		void insertIndexes(std::initializer_list<GLint> list);
@@ -100,7 +100,7 @@ namespace sdl {
 		std::vector<GLint> indexes_;
 	};
 
-	template<class Vertex>
+	template<typename Vertex>
 	class Batch;
 
 	template <typename Vertex>
@@ -158,7 +158,7 @@ namespace sdl {
 
 		void add(const SubBatch<Vertex>& subBatch);
 
-		template<class InputIterator>
+		template<typename InputIterator>
 		void insert(InputIterator begin, InputIterator end);
 
 		void insert(std::initializer_list<Vertex> list);
@@ -171,7 +171,7 @@ namespace sdl {
 		
 		BatchView<Vertex> getBatchView(GLenum mode) const noexcept;
 
-		template<class InputIterator>
+		template<typename InputIterator>
 		void insertIndexes(InputIterator begin, InputIterator end);
 
 		void insertIndexes(std::initializer_list<GLint> list);
@@ -360,7 +360,7 @@ namespace sdl {
 	}
 
 	template <typename Vertex>
-	template<class InputIterator>
+	template<typename InputIterator>
 	void Batch<Vertex>::insert(InputIterator begin, InputIterator end) {
 		detail::staticAssertRandomAccessIterator<InputIterator>();
 
@@ -408,7 +408,7 @@ namespace sdl {
 	}
 
 	template <typename Vertex>
-	template<class InputIterator>
+	template<typename InputIterator>
 	void Batch<Vertex>::insertIndexes(InputIterator begin, InputIterator end) {
 		detail::staticAssertRandomAccessIterator<InputIterator>();
 		detail::staticAssertIndexType<std::decay_t<decltype(*begin)>>();
@@ -446,7 +446,7 @@ namespace sdl {
 	// ---- Vertexes
 
 	template <typename Vertex>
-	template<class InputIterator>
+	template<typename InputIterator>
 	void SubBatch<Vertex>::insert(InputIterator begin, InputIterator end) {
 		detail::staticAssertRandomAccessIterator<InputIterator>();
 
@@ -479,7 +479,7 @@ namespace sdl {
 	// ---- Indexes
 
 	template <typename Vertex>
-	template<class InputIterator>
+	template<typename InputIterator>
 	void SubBatch<Vertex>::insertIndexes(InputIterator begin, InputIterator end) {
 		detail::staticAssertRandomAccessIterator<InputIterator>();
 		detail::staticAssertIndexType<std::decay_t<decltype(*begin)>>();
