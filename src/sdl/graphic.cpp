@@ -201,7 +201,7 @@ namespace sdl {
 	void Graphic::addRectangleImage(const glm::vec2& pos, const glm::vec2& size, const sdl::TextureView& textureView, Color color) {
 		batch_.startBatchView();
 		sdlg::addRectangleImage(batch_, pos, size, textureView, color);
-		add(batch_.getBatchView(GL_TRIANGLES));
+		add(batch_.getBatchView(GL_TRIANGLES), textureView);
 	}
 
 	void Graphic::addFilledHexagon(const glm::vec2& center, float radius, Color color, float startAngle) {
@@ -210,10 +210,10 @@ namespace sdl {
 		add(batch_.getBatchView(GL_TRIANGLES));
 	}
 
-	void Graphic::addHexagonImage(const glm::vec2& center, float radius, const sdl::TextureView& sprite, float startAngle) {
+	void Graphic::addHexagonImage(const glm::vec2& center, float radius, const sdl::TextureView& textureView, float startAngle) {
 		batch_.startBatchView();
-		sdlg::addHexagonImage(batch_, center, radius, sprite, startAngle);
-		add(batch_.getBatchView(GL_TRIANGLES));
+		sdlg::addHexagonImage(batch_, center, radius, textureView, startAngle);
+		add(batch_.getBatchView(GL_TRIANGLES), textureView);
 	}
 
 	void Graphic::addHexagon(const glm::vec2& center, float innerRadius, float outerRadius, Color color, float startAngle) {
