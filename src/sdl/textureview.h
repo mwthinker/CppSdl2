@@ -9,7 +9,7 @@ namespace sdl {
 
 	class TextureView {
 	public:
-		TextureView() = default;
+		constexpr TextureView() = default;
 
 		explicit TextureView(const Texture& texture) noexcept;
 
@@ -51,14 +51,14 @@ namespace sdl {
 
 		void bind();
 
-		operator GLuint() const noexcept {
+		constexpr operator GLuint() const noexcept {
 			return texture_;
 		}
 
 	private:
 		glm::vec2 pos_{0.f, 0.f};
 		glm::vec2 size_{1.f, 1.f};
-		GLuint texture_{};
+		GLuint texture_ = 0;
 	};
 
 }

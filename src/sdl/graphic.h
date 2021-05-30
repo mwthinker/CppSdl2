@@ -61,7 +61,7 @@ namespace sdl {
 		void rotate(float angle);
 
 		void translate(const glm::vec2& pos);
-		
+
 		void popMatrix();
 
 		void pushMatrix();
@@ -97,18 +97,23 @@ namespace sdl {
 		using Batch = sdl::Batch<sdl::Vertex>;
 		using BatchView = sdl::BatchView<sdl::Vertex>;
 
-		glm::mat4& matrix();
+		glm::mat4& matrix() noexcept;
 
-		int getMatrixIndex() const {
+		int getMatrixIndex() const noexcept {
 			return static_cast<int>(matrixes_.size() - 1);
 		}
 
-		void add(BatchView&& batchView) {
-			batches_.emplace_back(std::move(batchView), getMatrixIndex());
-			dirty_ = false;
-		}
+		void add(BatchView&& batchView, const sdl::TextureView& texture = {}) {
+			if (!batches_.empty()) {
+				auto& backData = batches_.back();
 
-		void add(BatchView&& batchView, const sdl::TextureView& texture) {
+				if (getMatrixIndex() == backData.matrixIndex
+					&& backData.texture == texture
+					&& backData.batchView.tryMerge(batchView)) {
+					return;
+				}
+			}
+
 			batches_.emplace_back(std::move(batchView), texture, getMatrixIndex());
 			dirty_ = false;
 		}
@@ -139,7 +144,7 @@ namespace sdl {
 		sdl::VertexArrayObject vao_;
 		int currentMatrixIndex_ = 0;
 		bool initiated_ = false;
-		bool dirty_{true};
+		bool dirty_ = true;
 	};
 
 	inline const glm::mat4& Graphic::getMatrix() const {
@@ -147,7 +152,7 @@ namespace sdl {
 		return matrixes_.back().matrix;
 	}
 
-	inline glm::mat4& Graphic::matrix() {
+	inline glm::mat4& Graphic::matrix() noexcept {
 		assert(!matrixes_.empty());
 		return matrixes_.back().matrix;
 	}

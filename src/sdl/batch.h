@@ -64,6 +64,8 @@ namespace sdl {
 		
 		void pushBack(const Vertex& vertex);
 
+		bool isEmpty() const noexcept;
+
 		GLsizei getSize() const noexcept;
 
 		const Vertex* getData() const noexcept;
@@ -112,6 +114,18 @@ namespace sdl {
 			detail::staticAssertStandardLayout<Vertex>();
 		}
 
+		bool isEmpty() const noexcept {
+			return size_ == 0;
+		}
+
+		bool tryMerge(const BatchView& view) noexcept {
+			if (mode_ == view.mode_ && index_ + size_ == view.index_) {
+				size_ += view.size_;
+				return true;
+			}
+			return false;
+		};
+
 	private:
 		BatchView(GLenum mode, GLsizei index, GLsizei size) noexcept
 			: mode_{mode}
@@ -123,14 +137,16 @@ namespace sdl {
 			detail::staticAssertStandardLayout<Vertex>();
 		}
 
-		GLenum mode_{};
-		GLsizei index_{};
-		GLsizei size_{};
+		GLenum mode_ = 0;
+		GLsizei index_ = 0;
+		GLsizei size_ = 0;
 	};
 
 	template <typename Vertex>
 	class Batch {
 	public:
+		friend class Gl;
+
 		explicit Batch(GLenum usage);
 
 		~Batch() = default;
@@ -148,6 +164,9 @@ namespace sdl {
 		void bind();
 
 		void clear();
+
+		bool isEmpty() const noexcept;
+
 		GLsizei getSize() const noexcept;
 
 		GLsizei getIndexesSize() const noexcept;
@@ -192,9 +211,9 @@ namespace sdl {
 		sdl::VertexBufferObject vbo_;
 		sdl::VertexBufferObject vboIndexes_;
 		
-		GLsizei currentViewIndex_{};
-		GLuint currentIndexesIndex_{};
-		GLenum usage_{};
+		GLsizei currentViewIndex_ = 0;
+		GLuint currentIndexesIndex_ = 0;
+		GLenum usage_ = 0;
 	};
 
 	template <typename Vertex>
@@ -263,6 +282,11 @@ namespace sdl {
 		fullBatch_.clear();
 		currentIndexesIndex_ = 0;
 		currentViewIndex_ = 0;
+	}
+	
+	template <typename Vertex>
+	bool Batch<Vertex>::isEmpty() const noexcept {
+		return fullBatch_.isEmpty();
 	}
 
 	template <typename Vertex>
@@ -464,6 +488,11 @@ namespace sdl {
 	template <typename Vertex>
 	void SubBatch<Vertex>::pushBack(const Vertex& vertex) {
 		vertexes_.push_back(vertex);
+	}
+
+	template <typename Vertex>
+	bool SubBatch<Vertex>::isEmpty() const noexcept {
+		return vertexes_.empty();
 	}
 
 	template <typename Vertex>

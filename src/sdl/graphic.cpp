@@ -66,10 +66,10 @@ namespace sdl::graphic::indexed {
 		batch.startAdding();
 
 		if (sprite) {
-			glm::vec2 texHalfSize = sprite.getSize() * 0.5f;
-			glm::vec2 texMiddlePos = sprite.getPosition() + texHalfSize;
+			auto texHalfSize = sprite.getSize() * 0.5f;
+			auto texMiddlePos = sprite.getPosition() + texHalfSize;
 
-			Vertex centerVertex{center, texMiddlePos, sdl::color::White};
+			auto centerVertex = Vertex{center, texMiddlePos, sdl::color::White};
 			batch.pushBack(centerVertex);
 
 			for (int i = 0; i < 6; ++i) {

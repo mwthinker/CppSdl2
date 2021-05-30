@@ -33,14 +33,14 @@ namespace sdl {
 		sdl::ShaderProgram shader_;
 		
 		// Vertex buffer attributes.
-		int aPos_{-1};
-		int aTex_{-1};
-		int aColor_{-1};
+		int aPos_ = -1;
+		int aTex_ = -1;
+		int aColor_ = -1;
 
 		// Vertex buffer uniforms.
-		int uMat_{-1};
-		int uTexture_{-1};
-		int uUseTexture_{-1};
+		int uMat_ = -1;
+		int uTexture_ = -1;
+		int uUseTexture_ = -1;
 	};
 
 }
