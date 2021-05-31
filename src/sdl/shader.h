@@ -25,7 +25,7 @@ namespace sdl {
 
 		void setMatrix(const glm::mat4& matrix);
 
-		void setTextureId(GLint textureId);
+		void setTextureId(int textureId);
 
 	private:
 		Shader(const GLchar* vShade, const GLchar* fShader);

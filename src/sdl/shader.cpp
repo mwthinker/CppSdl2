@@ -109,7 +109,7 @@ void main() {
 		glUniformMatrix4fv(uMat_, 1, GL_FALSE, glm::value_ptr(matrix));
 	}
 
-	void Shader::setTextureId(GLint textureId) {
+	void Shader::setTextureId(int textureId) {
 		if (textureId < 0) {
 			glUniform1f(uUseTexture_, 0.f);
 		} else {

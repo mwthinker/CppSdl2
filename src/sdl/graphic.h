@@ -3,15 +3,16 @@
 
 #include "vertex.h"
 
-#include <sdl/batch.h>
-#include <sdl/textureview.h>
-#include <sdl/vertexarrayobject.h>
-#include <sdl/vertexbufferobject.h>
-#include <sdl/shader.h>
+#include "batch.h"
+#include "textureview.h"
+#include "vertexarrayobject.h"
+#include "vertexbufferobject.h"
+#include "shader.h"
 
 #include <glm/gtc/constants.hpp>
 
 #include <array>
+#include <type_traits>
 
 namespace sdl::graphic {
 
@@ -68,6 +69,7 @@ namespace sdl {
 
 		template <typename T>
 		void pushMatrix(T&& t) {
+			static_assert(std::is_invocable_v<void()>, "type T must be callable void() .");
 			pushMatrix();
 			t();
 			popMatrix();
@@ -99,34 +101,15 @@ namespace sdl {
 
 		glm::mat4& matrix() noexcept;
 
-		int getMatrixIndex() const noexcept {
-			return static_cast<int>(matrixes_.size() - 1);
-		}
+		int getMatrixIndex() const noexcept;
 
-		void add(BatchView&& batchView, const sdl::TextureView& texture = {}) {
-			if (!batches_.empty()) {
-				auto& backData = batches_.back();
-
-				if (getMatrixIndex() == backData.matrixIndex
-					&& backData.texture == texture
-					&& backData.batchView.tryMerge(batchView)) {
-					return;
-				}
-			}
-
-			batches_.emplace_back(std::move(batchView), texture, getMatrixIndex());
-			dirty_ = false;
-		}
+		void add(BatchView&& batchView, const sdl::TextureView& texture = {});
 
 	private:
 		struct BatchData {
-			BatchData() = default;
-			BatchData(BatchView&& batchView, int matrixIndex);
-			BatchData(BatchView&& batchView, const sdl::TextureView& texture, int matrixIndex);
-
 			BatchView batchView;
-			GLuint texture = 0;
-			int matrixIndex = 0;
+			GLuint texture;
+			int matrixIndex;
 		};
 
 		struct MatrixPair {
@@ -155,6 +138,10 @@ namespace sdl {
 	inline glm::mat4& Graphic::matrix() noexcept {
 		assert(!matrixes_.empty());
 		return matrixes_.back().matrix;
+	}
+
+	inline int Graphic::getMatrixIndex() const noexcept {
+		return static_cast<int>(matrixes_.size() - 1);
 	}
 
 }

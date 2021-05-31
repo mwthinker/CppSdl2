@@ -470,12 +470,11 @@ namespace sdl {
 	// ---- Vertexes
 
 	template <typename Vertex>
-	template<typename InputIterator>
+	template <typename InputIterator>
 	void SubBatch<Vertex>::insert(InputIterator begin, InputIterator end) {
 		detail::staticAssertRandomAccessIterator<InputIterator>();
-
-		const auto size = static_cast<int>(end - begin);
-		assert(size >= 0);
+		
+		assert(end - begin >= 0);
 
 		vertexes_.insert(vertexes_.end(), begin, end);
 	}

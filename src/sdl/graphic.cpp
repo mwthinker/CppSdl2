@@ -6,6 +6,16 @@
 
 #include <array>
 
+namespace {
+
+	GLint getActiveTextureId() {
+		GLint id;
+		glGetIntegerv(GL_TEXTURE_BINDING_2D, &id);
+		return id;
+	}
+
+}
+
 namespace sdl::graphic {
 	
 	glm::vec2 getHexagonCorner(int nbr, float startAngle) {
@@ -144,17 +154,6 @@ namespace sdl {
 
 	namespace sdlg = sdl::graphic::indexed;
 
-	Graphic::BatchData::BatchData(BatchView&& batchView, int matrixIndex)
-		: batchView{batchView}
-		, matrixIndex{matrixIndex} {
-	}
-
-	Graphic::BatchData::BatchData(BatchView&& batchView, const sdl::TextureView& texture, int matrixIndex)
-		: batchView{batchView}
-		, texture{texture}
-		, matrixIndex{matrixIndex} {
-	}
-
 	Graphic::Graphic() {
 		matrixes_.push_back({glm::mat4{1}, 0});
 	}
@@ -169,21 +168,25 @@ namespace sdl {
 	}
 
 	void Graphic::upload(sdl::Shader& shader) {
+		if (batch_.isEmpty()) {
+			return;
+		}
+		
+		auto lastTexture = getActiveTextureId();
 		glActiveTexture(GL_TEXTURE1);
 
 		auto index = currentMatrixIndex_;
 		currentMatrixIndex_ = -1;
-		if (batch_.getSize() > 0) {
-			shader.useProgram();
-			bind(shader);
-			batch_.uploadToGraphicCard();
-			shader.setMatrix(matrixes_.front().matrix);
-
-			for (auto& batchData : batches_) {
-				draw(shader, batchData);
-			}
+		shader.useProgram();
+		bind(shader);
+		batch_.uploadToGraphicCard();
+		shader.setMatrix(matrixes_.front().matrix);
+		for (const auto& batchData : batches_) {
+			draw(shader, batchData);
 		}
+		
 		currentMatrixIndex_ = index;
+		glBindTexture(GL_TEXTURE_2D, lastTexture);
 	}
 
 	void Graphic::addLine(const glm::vec2& p1, const glm::vec2& p2, float width, Color color) {
@@ -266,6 +269,22 @@ namespace sdl {
 		matrixes_.clear();
 		matrixes_.push_back({glm::mat4{1}, 0});
 		currentMatrixIndex_ = 0;
+		dirty_ = true;
+	}
+
+	void Graphic::add(BatchView&& batchView, const sdl::TextureView& texture) {
+		if (!batches_.empty()) {
+			auto& backData = batches_.back();
+
+			if (getMatrixIndex() == backData.matrixIndex
+				&& backData.texture == texture
+				&& backData.batchView.tryMerge(batchView)) {
+				return;
+			}
+		}
+
+		batches_.emplace_back(BatchData{batchView, texture, getMatrixIndex()});
+		dirty_ = false;
 	}
 
 	void Graphic::multMatrix(const glm::mat4& mult) {
@@ -282,11 +301,11 @@ namespace sdl {
 	}
 
 	void Graphic::popMatrix() {
-		if (matrixes_.size() > 1) {
+		if (matrixes_.empty()) {
+			spdlog::warn("[sdl::Graphic] No matrix to pop");
+		} else {
 			dirty_ = true; // Just to be safe, don't know if earlier state weas dirty (Maybe ToDo: make dirty part of matrixes vector).
 			matrixes_.push_back(matrixes_[matrixes_.back().lastIndex]);
-		} else {
-			spdlog::warn("[sdl::Graphic] No matrix to pop");
 		}
 	}
 
