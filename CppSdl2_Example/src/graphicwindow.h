@@ -38,7 +38,8 @@ private:
 		graphic_.addCircle({-0.5f, 0.5f}, 0.3f, sdl::color::Green);
 		graphic_.addCircleOutline({0.5f, 0.5f}, 0.3f, 0.01f, sdl::color::html::Aqua);
 
-		graphic_.addLine({-0.3f, -0.3f}, {-0.4f, -0.7f}, 0.01f, sdl::color::html::Aqua);
+		graphic_.addLine({-0.3f, -0.3f}, {-0.4f, -0.7f}, 0.01f, sdl::color::html::Aqua);		
+		graphic_.addPolygon({{-0.1f, -0.1f}, {0.0f, 0.1f}, {0.1f, -0.1f}}, sdl::Color{1.f, 0.f, 0.f, 0.1f});
 
 		addAxis();
 
@@ -57,12 +58,11 @@ private:
 	}
 
 	void update(const sdl::DeltaTime& deltaTime) override {
-		glEnable(GL_BLEND);
+		sdl::GlEnableScoped scoped{GL_BLEND, GL_LINE_SMOOTH};
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
 		sprite_.bind();
 		graphic_.upload(shader_);
-
-		glDisable(GL_BLEND);
 	}
 
 	void eventUpdate(const SDL_Event& windowEvent) override {
@@ -84,19 +84,23 @@ private:
 				switch (windowEvent.key.keysym.sym) {
 					case SDLK_UP:
 						graphic_.translate({0.0f, 0.2f});
-						addSquare(sdl::color::html::Tomato);
+						//addSquare(sdl::color::html::Tomato);
+						graphic_.addPixel({0.1f, 0.1f}, sdl::color::Red, 8.f);
 						break;
 					case SDLK_DOWN:
 						graphic_.translate({0.0f, -0.2f});
-						addSquare(sdl::color::html::Tomato);
+						//addSquare(sdl::color::html::Tomato);
+						graphic_.addPixelLine({{0.1f, 0.1f}, {-0.3f, 0.5f}, {0.2f, 0.3f}}, sdl::color::Red);
 						break;
 					case SDLK_LEFT:
 						graphic_.rotate(0.1f);
 						addSquare(sdl::color::html::Tomato);
+						graphic_.addPixel({0.1f, 0.1f}, sdl::color::Blue);
 						break;
 					case SDLK_RIGHT:
 						graphic_.rotate(-0.1f);
 						addSquare(sdl::color::html::Tomato);
+						graphic_.addPixel({0.1f, 0.1f}, sdl::color::html::DarkOrange, 2.f);
 						break;
 					case SDLK_ESCAPE:
 						quit();

@@ -8,11 +8,28 @@
 
 namespace {
 
-	GLint getActiveTextureId() {
-		GLint id;
-		glGetIntegerv(GL_TEXTURE_BINDING_2D, &id);
-		return id;
-	}
+	struct GlScopedState {
+		GlScopedState() {
+			glGetIntegerv(GL_TEXTURE_BINDING_2D, &texture);
+			glGetIntegerv(GL_ACTIVE_TEXTURE, &activeTexture);
+			glGetBooleanv(GL_PROGRAM_POINT_SIZE, &point);
+		}
+
+		~GlScopedState() {
+			glBindTexture(GL_TEXTURE_2D, texture);
+			glActiveTexture(activeTexture);
+
+			if (point) {
+				glEnable(GL_PROGRAM_POINT_SIZE);
+			} else {
+				glDisable(GL_PROGRAM_POINT_SIZE);
+			}
+		}
+
+		GLint texture;
+		GLint  activeTexture;
+		GLboolean point;
+	};
 
 }
 
@@ -148,6 +165,17 @@ namespace sdl::graphic::indexed {
 		}
 	}
 
+	void addPolygon(Batch<Vertex>& batch, std::initializer_list<glm::vec2> points, Color color) {
+		batch.startAdding();
+		for (const auto& point : points) {
+			batch.pushBack({point, {}, color});
+		}
+		
+		for (int i = 1; i < points.size() - 1; ++i) {
+			batch.insertIndexes({0, i, i + 1});
+		}
+	}
+
 }
 
 namespace sdl {
@@ -172,7 +200,8 @@ namespace sdl {
 			return;
 		}
 		
-		auto lastTexture = getActiveTextureId();
+		GlScopedState currentState;
+
 		glActiveTexture(GL_TEXTURE1);
 
 		auto index = currentMatrixIndex_;
@@ -186,7 +215,30 @@ namespace sdl {
 		}
 		
 		currentMatrixIndex_ = index;
-		glBindTexture(GL_TEXTURE_2D, lastTexture);
+	}
+
+	void Graphic::addPixel(const glm::vec2& point, Color color, float size) {
+		batch_.startBatchView();
+		batch_.startAdding();
+		batch_.pushBack({point, {size, size}, color});
+		batch_.pushBackIndex(0);
+		add(batch_.getBatchView(GL_POINTS));
+	}
+
+	void Graphic::addPixelLine(std::initializer_list<glm::vec2> points, Color color) {
+		batch_.startBatchView();
+		batch_.startAdding();
+
+		for (const auto& point : points) {
+			batch_.pushBack({point, {}, color});
+		}
+
+		for (int i = 1; i < points.size(); ++i) {
+			batch_.pushBackIndex(i - 1);
+			batch_.pushBackIndex(i);
+		}
+
+		add(batch_.getBatchView(GL_LINES));
 	}
 
 	void Graphic::addLine(const glm::vec2& p1, const glm::vec2& p2, float width, Color color) {
@@ -234,6 +286,12 @@ namespace sdl {
 	void Graphic::addCircleOutline(const glm::vec2& center, float radius, float width, Color color, const int iterations, float startAngle) {
 		batch_.startBatchView();
 		sdlg::addCircleOutline(batch_, center, radius, width, color, iterations, startAngle);
+		add(batch_.getBatchView(GL_TRIANGLES));
+	}
+
+	void Graphic::addPolygon(std::initializer_list<glm::vec2> points, Color color) {
+		batch_.startBatchView();
+		sdlg::addPolygon(batch_, points, color);
 		add(batch_.getBatchView(GL_TRIANGLES));
 	}
 

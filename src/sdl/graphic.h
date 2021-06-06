@@ -42,6 +42,8 @@ namespace sdl::graphic::indexed {
 
 	void addCircleOutline(Batch<Vertex>& batch, const glm::vec2& center, float radius, float width, Color color, const int iterations, float startAngle);
 
+	void addPolygon(Batch<Vertex>& batch, std::initializer_list<glm::vec2> points, Color color);
+
 }
 
 namespace sdl {
@@ -75,6 +77,10 @@ namespace sdl {
 			popMatrix();
 		}
 
+		void addPixel(const glm::vec2& point, Color color, float size = 1.f);
+
+		void addPixelLine(std::initializer_list<glm::vec2> points, Color color);
+
 		void addLine(const glm::vec2& p1, const glm::vec2& p2, float width, Color color);
 
 		void addFilledHexagon(const glm::vec2& center, float radius, Color color, float startAngle = 0);
@@ -87,6 +93,8 @@ namespace sdl {
 
 		void addCircleOutline(const glm::vec2& center, float radius, float width, Color color, const int iterations = 30, float startAngle = 0);
 
+		void addPolygon(std::initializer_list<glm::vec2> points, Color color);
+		
 		void addHexagonImage(const glm::vec2& center, float radius, const sdl::TextureView& sprite, float startAngle = 0);
 
 		void addHexagon(const glm::vec2& center, float innerRadius, float outerRadius, Color color, float startAngle = 0);

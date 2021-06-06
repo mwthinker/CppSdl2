@@ -126,6 +126,10 @@ namespace sdl {
 			return false;
 		};
 
+		bool isIndexSizeValid() const noexcept {
+			return mode_ != GL_TRIANGLES || (mode_ == GL_TRIANGLES && size_ % 3 == 0);
+		}
+
 	private:
 		BatchView(GLenum mode, GLsizei index, GLsizei size) noexcept
 			: mode_{mode}
@@ -204,8 +208,6 @@ namespace sdl {
 		void bindAndBufferSubData();
 
 		bool isValidBatchView(const BatchView<Vertex>& batchView) const;
-
-		void assertIndexSizeIsValid(GLenum mode) const;
 		
 		SubBatch<Vertex> fullBatch_;
 		sdl::VertexBufferObject vbo_;
@@ -363,7 +365,7 @@ namespace sdl {
 			}
 
 			if (fullBatch_.isIndexBatch()) {
-				assertIndexSizeIsValid(batchView.mode_);
+				assert(batchView.isIndexSizeValid());
 				glDrawElements(batchView.mode_, batchView.size_, GL_UNSIGNED_INT, reinterpret_cast<void*>(batchView.index_ * sizeof(GLint)));
 			} else {
 				glDrawArrays(batchView.mode_, batchView.index_, batchView.size_);
@@ -460,11 +462,6 @@ namespace sdl {
 	template <typename Vertex>
 	bool Batch<Vertex>::isEveryIndexSizeValid() const {
 		return fullBatch_.isEveryIndexSizeValid();
-	}
-
-	template <typename Vertex>
-	void Batch<Vertex>::assertIndexSizeIsValid(GLenum mode) const {
-		assert(mode != GL_TRIANGLES || (mode == GL_TRIANGLES && fullBatch_.getIndexesSize() % 3 == 0));
 	}
 
 	// ---- Vertexes

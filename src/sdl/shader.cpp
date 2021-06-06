@@ -9,22 +9,23 @@ namespace sdl {
 
 	namespace {
 
-		constexpr const GLchar* A_POS = "aPos";
-		constexpr const GLchar* A_TEX = "aTex";
-		constexpr const GLchar* A_COL = "aColor";
+		constexpr const GLchar* aPos = "aPos";
+		constexpr const GLchar* aTex = "aTex";
+		constexpr const GLchar* aCol = "aColor";
 
-		constexpr const GLchar* U_MAT = "uMat";
-		constexpr const GLchar* U_TEXTURE = "uTexture";
-		constexpr const GLchar* U_USE_TEXTURE = "uUseTexture";
+		constexpr const GLchar* uMat = "uMat";
+		constexpr const GLchar* uTexture = "uTexture";
+		constexpr const GLchar* uUseTexture = "uUseTexture";
 
-		constexpr void VERTEX_EQUAL_IMDRAWVERT() {
+		constexpr void vertexEqualImDrawVert() {
 			static_assert(sizeof(ImDrawVert::col) == sizeof(Vertex::color));
 			static_assert(sizeof(ImDrawVert::pos) == sizeof(Vertex::pos));
 			static_assert(sizeof(ImDrawVert::uv) == sizeof(Vertex::tex));
 			static_assert(sizeof(ImDrawVert) == sizeof(Vertex));
 		}
 
-		constexpr const GLchar* VertexShaderGlsl_330 = R"(#version 330 core
+		constexpr const GLchar* VertexShaderGlsl_330 = 
+R"(#version 330 core
 
 uniform mat4 uMat;
 
@@ -36,13 +37,15 @@ out vec2 fragTex;
 out vec4 fragColor;
 
 void main() {
-    fragTex = aTex;
-    fragColor = aColor;
-    gl_Position = uMat * vec4(aPos.xy, 0, 1);
+	fragTex = aTex;
+	fragColor = aColor;
+	gl_Position = uMat * vec4(aPos.xy, 0, 1);
+	gl_PointSize = aTex.x;
 }
 )";
 
-		constexpr const GLchar* FragmentShaderGlsl_330 = R"(#version 330 core
+		constexpr const GLchar* FragmentShaderGlsl_330 =
+R"(#version 330 core
 
 uniform sampler2D uTexture;
 uniform float uUseTexture;
@@ -50,10 +53,10 @@ uniform float uUseTexture;
 in vec2 fragTex;
 in vec4 fragColor;
 
-out vec4 Out_Color;
+out vec4 oColor;
 
 void main() {
-    Out_Color = fragColor * (texture(uTexture, fragTex.st) * uUseTexture + (1 - uUseTexture));
+	oColor = fragColor * (texture(uTexture, fragTex.st) * uUseTexture + (1 - uUseTexture));
 }
 )";
 
@@ -64,20 +67,20 @@ void main() {
 	}
 
 	Shader::Shader(const GLchar* vShade, const GLchar* fShader) {
-		shader_.bindAttribute(A_POS);
-		shader_.bindAttribute(A_TEX);
-		shader_.bindAttribute(A_COL);
+		shader_.bindAttribute(aPos);
+		shader_.bindAttribute(aTex);
+		shader_.bindAttribute(aCol);
 
 		if (shader_.loadAndLink(vShade, fShader)) {
 			// Collect the vertex buffer attributes indexes.
-			aPos_ = shader_.getAttributeLocation(A_POS);
-			aTex_ = shader_.getAttributeLocation(A_TEX);
-			aColor_ = shader_.getAttributeLocation(A_COL);
+			aPos_ = shader_.getAttributeLocation(aPos);
+			aTex_ = shader_.getAttributeLocation(aTex);
+			aColor_ = shader_.getAttributeLocation(aCol);
 
 			// Collect the vertex buffer uniforms indexes.
-			uMat_ = shader_.getUniformLocation(U_MAT);
-			uTexture_ = shader_.getUniformLocation(U_TEXTURE);
-			uUseTexture_ = shader_.getUniformLocation(U_USE_TEXTURE);
+			uMat_ = shader_.getUniformLocation(uMat);
+			uTexture_ = shader_.getUniformLocation(uTexture);
+			uUseTexture_ = shader_.getUniformLocation(uUseTexture);
 		} else {
 			spdlog::warn("[sdl::Shader] failed to create VinShader, shader not linked");
 		}
