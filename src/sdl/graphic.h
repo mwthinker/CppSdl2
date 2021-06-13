@@ -44,6 +44,9 @@ namespace sdl::graphic::indexed {
 
 	void addPolygon(Batch<Vertex>& batch, std::initializer_list<glm::vec2> points, Color color);
 
+	template <typename Iterator>
+	void addPolygon(Batch<Vertex>& batch, Iterator begin, Iterator end, Color color);
+
 }
 
 namespace sdl {
@@ -81,6 +84,9 @@ namespace sdl {
 
 		void addPixelLine(std::initializer_list<glm::vec2> points, Color color);
 
+		template <typename Iterator>
+		void addPixelLine(Iterator begin, Iterator end, Color color);
+
 		void addLine(const glm::vec2& p1, const glm::vec2& p2, float width, Color color);
 
 		void addFilledHexagon(const glm::vec2& center, float radius, Color color, float startAngle = 0);
@@ -94,6 +100,9 @@ namespace sdl {
 		void addCircleOutline(const glm::vec2& center, float radius, float width, Color color, const int iterations = 30, float startAngle = 0);
 
 		void addPolygon(std::initializer_list<glm::vec2> points, Color color);
+
+		template <typename Iterator>
+		void addPolygon(Iterator begin, Iterator end, Color color);
 		
 		void addHexagonImage(const glm::vec2& center, float radius, const sdl::TextureView& sprite, float startAngle = 0);
 
@@ -138,6 +147,39 @@ namespace sdl {
 		bool dirty_ = true;
 	};
 
+	inline void Graphic::addPolygon(std::initializer_list<glm::vec2> points, Color color) {
+		addPolygon(points.begin(), points.end(), color);
+	}
+
+	template <typename Iterator>
+	void Graphic::addPolygon(Iterator begin, Iterator end, Color color) {
+		batch_.startBatchView();
+		sdl::graphic::indexed::addPolygon(batch_, begin, end, color);
+		add(batch_.getBatchView(GL_LINES));
+	}
+
+	inline void Graphic::addPixelLine(std::initializer_list<glm::vec2> points, Color color) {
+		addPixelLine(points.begin(), points.end(), color);
+	}
+
+	template <typename Iterator>
+	void Graphic::addPixelLine(Iterator begin, Iterator end, Color color) {
+		batch_.startBatchView();
+		batch_.startAdding();
+
+		for (auto it = begin; it != end; ++it) {
+			batch_.pushBack({*it, {}, color});
+		}
+
+		const auto size = std::distance(begin, end);
+		for (int i = 1; i < size; ++i) {
+			batch_.pushBackIndex(i - 1);
+			batch_.pushBackIndex(i);
+		}
+
+		add(batch_.getBatchView(GL_LINES));
+	}
+
 	inline const glm::mat4& Graphic::getMatrix() const {
 		assert(!matrixes_.empty());
 		return matrixes_.back().matrix;
@@ -150,6 +192,26 @@ namespace sdl {
 
 	inline int Graphic::getMatrixIndex() const noexcept {
 		return static_cast<int>(matrixes_.size() - 1);
+	}
+
+}
+
+namespace sdl::graphic::indexed {
+
+	inline void addPolygon(Batch<Vertex>& batch, std::initializer_list<glm::vec2> points, Color color) {
+		addPolygon(batch, points.begin(), points.end(), color);
+	}
+
+	template <typename Iterator>
+	void addPolygon(Batch<Vertex>& batch, Iterator begin, Iterator end, Color color) {
+		batch.startAdding();
+		for (auto it = begin; it != end; ++it) {
+			batch.pushBack({*it, {}, color});
+		}
+		const auto size = std::distance(begin, end);
+		for (int i = 1; i < size - 1; ++i) {
+			batch.insertIndexes({0, i, i + 1});
+		}
 	}
 
 }
