@@ -3,7 +3,7 @@ project(ImGui
 		"ImGui Docking branch: https://github.com/ocornut/imgui"
 	LANGUAGES
 		CXX
-	VERSION 1.83
+	VERSION 1.84.1
 )
 
 include(FetchContent)
@@ -11,7 +11,7 @@ FetchContent_Declare(RemoteImGui
 	GIT_REPOSITORY
 		https://github.com/ocornut/imgui.git
 	GIT_TAG
-		1b435ae3e07ca813eb3ef40aaabe7053f5570fae
+		47fb332fb20921658732107e115aa397e9b08cbe
 )
 FetchContent_MakeAvailable(RemoteImGui)
 FetchContent_GetProperties(RemoteImGui
@@ -56,7 +56,7 @@ target_include_directories(ImGui
 
 target_link_libraries(ImGui
 	PUBLIC
-		SDL2::SDL2 SDL2::SDL2main SDL2::SDL2-static
+		SDL2::SDL2 SDL2::SDL2main SDL2::SDL2
 		glad::glad
 		freetype
 		glm::glm
@@ -64,6 +64,7 @@ target_link_libraries(ImGui
 
 target_compile_definitions(ImGui
 	PUBLIC
+		IMGUI_DISABLE_OBSOLETE_FUNCTIONS
 		IMGUI_INCLUDE_IMGUI_USER_H
 		IMGUI_ENABLE_FREETYPE
 		IMGUI_USER_CONFIG=\"${IMGUI_USER_CONFIG}\"
