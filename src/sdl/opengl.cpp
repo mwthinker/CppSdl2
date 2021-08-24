@@ -20,8 +20,10 @@ namespace sdl {
 					return "GL_OUT_OF_MEMORY";
 				case GL_INVALID_FRAMEBUFFER_OPERATION:
 					return "GL_INVALID_FRAMEBUFFER_OPERATION";
+#ifdef GL_CONTEXT_LOST
 				case GL_CONTEXT_LOST:
 					return "GL_CONTEXT_LOST";
+#endif 
 			}
 			return "Unknown GL error code";
 		}
@@ -32,5 +34,7 @@ namespace sdl {
 			spdlog::warn("[sdl::OpenGl] OpenGl error: {}={} - {}: {}", error, errorString(error), file, line);
 		}
 	}
+
+
 
 }

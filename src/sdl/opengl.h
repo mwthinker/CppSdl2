@@ -1,10 +1,6 @@
 #ifndef CPPSDL2_SDL_OPENGL_H
 #define CPPSDL2_SDL_OPENGL_H
 
-#ifdef _WIN32
-#include <windows.h>
-#endif
-
 #include <glad/glad.h>
 #include <tuple>
 
@@ -35,7 +31,9 @@ namespace sdl {
 				value == GL_ALPHA_TEST ||
 				value == GL_BLEND ||
 				value == GL_CULL_FACE ||
+#ifdef GL_DEBUG_OUTPUT
 				value == GL_DEBUG_OUTPUT ||
+#endif
 				value == GL_DEPTH_CLAMP ||
 				value == GL_DEPTH_TEST ||
 				value == GL_DITHER ||

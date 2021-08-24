@@ -34,7 +34,7 @@ namespace sdl {
 	}
 	
 	inline void assertValidDrawMode(GLenum mode) {
-		assert(
+		bool warning =
 			GL_TRIANGLES == mode ||
 			GL_POINTS == mode ||
 			GL_LINE_STRIP == mode ||
@@ -42,11 +42,13 @@ namespace sdl {
 			GL_LINES == mode ||
 			GL_LINE_STRIP_ADJACENCY == mode ||
 			GL_LINES_ADJACENCY == mode ||
+#ifdef GL_PATCHES
+			GL_PATCHES == mode ||
+#endif
 			GL_TRIANGLE_FAN == mode ||
 			GL_TRIANGLE_STRIP_ADJACENCY == mode ||
-			GL_TRIANGLES_ADJACENCY == mode ||
-			GL_PATCHES == mode
-		);
+			GL_TRIANGLES_ADJACENCY == mode;
+		assert(warning);
 	}
 
 	template<typename T>
