@@ -71,7 +71,7 @@ namespace sdl {
 			return nullptr;
 		}
 
-	} // Namespace anonymous.
+	}
 
 	void flipVertical(Surface& surface) {
 		if (surface.surface_ != nullptr) {

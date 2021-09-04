@@ -35,7 +35,7 @@ namespace sdl {
 		}
 
 	private:
-		GLuint frameBuffer_{};
+		GLuint frameBuffer_ = 0;
 	};
 
 	inline bool operator==(const FrameBuffer& left, const FrameBuffer& right) noexcept {

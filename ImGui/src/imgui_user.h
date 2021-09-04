@@ -1,10 +1,11 @@
 #ifndef CPPSDL2_IMGUI_USER_H
 #define CPPSDL2_IMGUI_USER_H
 
+#include <concepts>
+
 namespace ImGui {
 
-	template <class T>
-	bool Window(const char* name, bool* p_open, ImGuiWindowFlags flags, T&& t) {
+	bool Window(const char* name, bool* p_open, ImGuiWindowFlags flags, std::invocable auto&& t) {
 		bool success = ImGui::Begin(name, p_open, flags);
 		if (success) {
 			t();
@@ -13,8 +14,7 @@ namespace ImGui {
 		return success;
 	}
 
-	template <class T>
-	bool Window(const char* name, bool* p_open, T&& t) {
+	bool Window(const char* name, bool* p_open, std::invocable auto&& t) {
 		bool success = ImGui::Begin(name, p_open);
 		if (success) {
 			t();
@@ -23,8 +23,7 @@ namespace ImGui {
 		return success;
 	}
 
-	template <class T>
-	bool Window(const char* name, T&& t) {
+	bool Window(const char* name, std::invocable auto&& t) {
 		bool success = ImGui::Begin(name);
 		if (success) {
 			t();
@@ -33,8 +32,7 @@ namespace ImGui {
 		return success;
 	}
 
-	template <class T>
-	bool MainWindow(const char* name, T&& t) {
+	bool MainWindow(const char* name, std::invocable auto&& t) {
 		const auto& viewPort = *ImGui::GetMainViewport();
 		ImGui::SetNextWindowPos(viewPort.Pos);
 		ImGui::SetNextWindowSize(viewPort.Size);
@@ -52,7 +50,7 @@ namespace ImGui {
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, {0, 0});
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.f);
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.f);
-		ImGui::PushStyleColor(ImGuiCol_WindowBg, {0,0,0,0});
+		ImGui::PushStyleColor(ImGuiCol_WindowBg, {0, 0, 0, 0});
 
 		bool result = ImGui::Window("Main", nullptr, ImguiNoWindow, t);
 		ImGui::PopStyleColor();
@@ -60,8 +58,7 @@ namespace ImGui {
 		return result;
 	}
 
-	template <class T>
-	bool ChildWindow(const char* name, const ImVec2& size, bool border, ImGuiWindowFlags flags, T&& t) {
+	bool ChildWindow(const char* name, const ImVec2& size, bool border, ImGuiWindowFlags flags, std::invocable auto&& t) {
 		bool success = ImGui::BeginChild(name, size, border, flags);
 		if (success) {
 			t();
@@ -70,8 +67,7 @@ namespace ImGui {
 		return success;
 	}
 
-	template <class T>
-	bool ChildWindow(const char* name, const ImVec2& size, bool border, T&& t) {
+	bool ChildWindow(const char* name, const ImVec2& size, bool border, std::invocable auto&& t) {
 		bool success = ImGui::BeginChild(name, size, border);
 		if (success) {
 			t();
@@ -80,8 +76,7 @@ namespace ImGui {
 		return success;
 	}
 
-	template <class T>
-	bool ChildWindow(const char* name, const ImVec2& size, T&& t) {
+	bool ChildWindow(const char* name, const ImVec2& size, std::invocable auto&& t) {
 		bool success = ImGui::BeginChild(name, size);
 		if (success) {
 			t();
@@ -90,8 +85,7 @@ namespace ImGui {
 		return success;
 	}
 
-	template <class T>
-	bool ChildWindow(const char* name, T&& t) {
+	bool ChildWindow(const char* name, std::invocable auto&& t) {
 		bool success = ImGui::BeginChild(name);
 		if (success) {
 			t();
@@ -100,8 +94,7 @@ namespace ImGui {
 		return success;
 	}
 
-	template <class T>
-	bool Menu(const char* label, bool enabled, T&& t) {
+	bool Menu(const char* label, bool enabled, std::invocable auto&& t) {
 		bool success = ImGui::BeginMenu(label, enabled);
 		if (success) {
 			t();
@@ -110,8 +103,7 @@ namespace ImGui {
 		return success;
 	}
 
-	template <class T>
-	bool Menu(const char* label, T&& t) {
+	bool Menu(const char* label, std::invocable auto&& t) {
 		bool success = ImGui::BeginMenu(label);
 		if (success) {
 			t();
@@ -120,8 +112,7 @@ namespace ImGui {
 		return success;
 	}
 
-	template <class T>
-	bool MenuBar(T&& t) {
+	bool MenuBar(std::invocable auto&& t) {
 		bool success = ImGui::BeginMenuBar();
 		if (success) {
 			t();
@@ -130,8 +121,7 @@ namespace ImGui {
 		return success;
 	}
 
-	template <class T>
-	bool MainMenuBar(T&& t) {
+	bool MainMenuBar(std::invocable auto&& t) {
 		bool success = ImGui::BeginMainMenuBar();
 		if (success) {
 			t();
@@ -140,8 +130,7 @@ namespace ImGui {
 		return success;
 	}
 
-	template <class T>
-	bool PopupModal(const char* name, bool* p_open, ImGuiWindowFlags flags, T&& t) {
+	bool PopupModal(const char* name, bool* p_open, ImGuiWindowFlags flags, std::invocable auto&& t) {
 		bool success = ImGui::BeginPopupModal(name, p_open, flags);
 		if (success) {
 			t();
@@ -150,8 +139,7 @@ namespace ImGui {
 		return success;
 	}
 
-	template <class T>
-	bool PopupModal(const char* name, bool* p_open, T&& t) {
+	bool PopupModal(const char* name, bool* p_open, std::invocable auto&& t) {
 		bool success = ImGui::BeginPopupModal(name, p_open);
 		if (success) {
 			t();
@@ -160,8 +148,7 @@ namespace ImGui {
 		return success;
 	}
 
-	template <class T>
-	bool Popup(const char* str_id, ImGuiWindowFlags flags, T&& t) {
+	bool Popup(const char* str_id, ImGuiWindowFlags flags, std::invocable auto&& t) {
 		bool success = ImGui::BeginPopup(str_id, flags);
 		if (success) {
 			t();
@@ -170,8 +157,7 @@ namespace ImGui {
 		return success;
 	}
 
-	template <class T>
-	bool Popup(const char* str_id, T&& t) {
+	bool Popup(const char* str_id, std::invocable auto&& t) {
 		bool success = ImGui::BeginPopup(str_id);
 		if (success) {
 			t();
@@ -180,8 +166,7 @@ namespace ImGui {
 		return success;
 	}
 
-	template <class T>
-	bool PopupModal(const char* name, T&& t) {
+	bool PopupModal(const char* name, std::invocable auto&& t) {
 		bool success = ImGui::BeginPopupModal(name);
 		if (success) {
 			t();
@@ -190,15 +175,13 @@ namespace ImGui {
 		return success;
 	}
 
-	template <class T>
-	void Tooltip(T&& t) {
+	void Tooltip(std::invocable auto&& t) {
 		ImGui::BeginTooltip();
 		t();
 		ImGui::EndTooltip();
 	}
 
-	template <class T>
-	bool ComboScoped(const char* label, const char* preview_value, ImGuiComboFlags flags, T&& t) {
+	bool ComboScoped(const char* label, const char* preview_value, ImGuiComboFlags flags, std::invocable auto&& t) {
 		bool success = ImGui::BeginCombo(label, preview_value, flags);
 		if (success) {
 			t();
@@ -207,8 +190,7 @@ namespace ImGui {
 		return success;
 	}
 
-	template <class T>
-	bool ComboScoped(const char* label, const char* preview_value, T&& t) {
+	bool ComboScoped(const char* label, const char* preview_value, std::invocable auto&& t) {
 		bool success = ImGui::BeginCombo(label, preview_value);
 		if (success) {
 			t();

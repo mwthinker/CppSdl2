@@ -51,7 +51,7 @@ namespace sdl {
 		friend class TextureAtlas;
 		friend void flipVertical(Surface& surface);
 
-		SDL_Surface* surface_{};
+		SDL_Surface* surface_ = nullptr;
 	};
 
 }

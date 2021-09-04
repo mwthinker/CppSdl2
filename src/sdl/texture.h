@@ -30,8 +30,7 @@ namespace sdl {
 		
 		void texImage(const Surface& surface);
 
-		template <typename FilterFunc>
-		void texImage(const Surface& surface, FilterFunc&& filter);
+		void texImage(const Surface& surface, std::invocable auto&& filter);
 
 		void texSubImage(const Surface& surface, const Rect& dst);
 
@@ -68,10 +67,7 @@ namespace sdl {
 		});
 	}
 
-	template <typename FilterFunc>
-	void Texture::texImage(const Surface& surface, FilterFunc&& filter) {
-		static_assert(std::is_invocable_r_v<void, FilterFunc>, "Must be invokable, in the form void()");
-		
+	void Texture::texImage(const Surface& surface, std::invocable auto&& filter) {
 		if (!surface.isLoaded()) {
 			spdlog::debug("[sdl::Texture] Failed to bind, must be loaded first");
 			return;

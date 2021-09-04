@@ -95,8 +95,8 @@ namespace sdl {
 		mutable std::shared_ptr<ImageVariant> image_;
 
 		Rect rect_{};
-		int textureWidth_{};
-		int textureHeight_{};
+		int textureWidth_ = 0;
+		int textureHeight_ = 0;
 	};
 
 }

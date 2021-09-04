@@ -31,8 +31,8 @@ namespace sdl {
 	private:
 		friend class Surface;
 
-		TTF_Font* font_{};
-		int characterSize_{};
+		TTF_Font* font_ = nullptr;
+		int characterSize_= 0;
 	};
 
 }

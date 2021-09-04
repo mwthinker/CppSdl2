@@ -70,7 +70,7 @@ namespace sdl {
 			std::string error;
 		};
 				
-		float volume_{1.f};
+		float volume_ = 1.f;
 		std::shared_ptr<MusicBuffer> musicBuffer_;
 	};
 

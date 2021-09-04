@@ -139,36 +139,37 @@ namespace sdl {
 	}
 
 	bool ShaderProgram::loadAndLink(const std::string& vShader, const std::string& gShader, const std::string& fShader) {
-		if (programObjectId_ == 0) {
-			programObjectId_ = glCreateProgram();
-			assertGlError();
-			
-			if (programObjectId_ == 0) {
-				spdlog::error("[sdl::ShaderProgram] Failed to create program");
-				return false;
-			}
-
-			if (0 == loadShader(programObjectId_, GL_VERTEX_SHADER, vShader.c_str())) {
-			    return false;
-			}
-			if (!gShader.empty() && 0 == loadShader(programObjectId_, GL_GEOMETRY_SHADER, gShader.c_str())) {
-				return false;
-			}
-			if (0 == loadShader(programObjectId_, GL_FRAGMENT_SHADER, fShader.c_str())) {
-                return false;
-			}
-
-			bindAllAttributes();
-
-			if (!linkProgram()) {
-				return false;
-			}
-
-			useProgram();
-			return true;
+		if (programObjectId_ != 0) {
+			spdlog::warn("[sdl::ShaderProgram] Failed to load and link, opengl program already generated");
+			return false;
 		}
-		spdlog::warn("[sdl::ShaderProgram] Failed to load and link, opengl program already generated");
-		return false;
+		
+		programObjectId_ = glCreateProgram();
+		assertGlError();
+			
+		if (programObjectId_ == 0) {
+			spdlog::error("[sdl::ShaderProgram] Failed to create program");
+			return false;
+		}
+
+		if (0 == loadShader(programObjectId_, GL_VERTEX_SHADER, vShader.c_str())) {
+			return false;
+		}
+		if (!gShader.empty() && 0 == loadShader(programObjectId_, GL_GEOMETRY_SHADER, gShader.c_str())) {
+			return false;
+		}
+		if (0 == loadShader(programObjectId_, GL_FRAGMENT_SHADER, fShader.c_str())) {
+            return false;
+		}
+
+		bindAllAttributes();
+
+		if (!linkProgram()) {
+			return false;
+		}
+
+		useProgram();
+		return true;
 	}
 
 	bool ShaderProgram::loadAndLink(const std::string& vShader, const std::string& fShader) {

@@ -82,9 +82,9 @@ namespace sdl {
 
 		std::shared_ptr<SoundBuffer> soundBuffer_;
 
-		float volume_{1.f};
-		int channel_{-1};
-		int id_{};
+		float volume_ = 1.f;
+		int channel_ = -1;
+		int id_ = 0;
 
 		static int lastId_;
 	};

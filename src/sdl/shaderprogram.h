@@ -67,7 +67,7 @@ namespace sdl {
 		std::map<std::string, GLuint> attributes_;
 		mutable std::map<std::string, GLuint> uniforms_;
 		
-		GLuint programObjectId_{};
+		GLuint programObjectId_ = 0;
 	};
 
 }

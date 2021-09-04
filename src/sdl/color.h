@@ -114,15 +114,9 @@ namespace sdl {
 			return std::clamp<ImU32>(static_cast<ImU32>(value * 255.f + 0.5f), 0, 255);
 		}
 
-		ImU32 value_{};
+		ImU32 value_ = 0;
 	};
 	
-	template <typename type>
-	inline constexpr type lerp(type a, type b, type t) noexcept {
-		return a + t * (b - a);
-	}
-	
-	template <typename type>
 	inline constexpr Color lerp(Color a, Color b, Color t) noexcept {
 		return a + t * (b - a);
 	}
