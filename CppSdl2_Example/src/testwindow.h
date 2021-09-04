@@ -15,8 +15,8 @@ public:
 	TestWindow(const sdl::Sprite& sprite = {});
 
 	// Execute the function when space bar is pressed.
-	void setSpaceFunction(const std::function<void()>& func) {
-		func_ = func;
+	void setSpaceFunction(std::function<void()>&& func) {
+		func_ = std::move(func);
 	}
 
 private:

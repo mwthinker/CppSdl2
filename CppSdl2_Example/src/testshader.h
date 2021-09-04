@@ -43,13 +43,13 @@ public:
 private:
 	sdl::ShaderProgram shader_;
 
-	int aPosIndex_{-1};
-	int aTexIndex_{-1};
-	int aColorIndex_{-1};
-	int aTextureIndex_{-1};
+	int aPosIndex_ = -1;
+	int aTexIndex_ = -1;
+	int aColorIndex_ = -1;
+	int aTextureIndex_ = -1;
 
-	int uProjIndex_{-1};
-	int uModelIndex_{-1};
+	int uProjIndex_ = -1;
+	int uModelIndex_ = -1;
 };
 
 #endif

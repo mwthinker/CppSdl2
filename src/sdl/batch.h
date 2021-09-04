@@ -31,6 +31,7 @@ namespace sdl {
 	template<typename T>
 	concept VertexType = std::is_standard_layout_v<T>;
 
+
 	template<VertexType T>
 	class Batch;
 
@@ -39,8 +40,7 @@ namespace sdl {
 	public:
 		// ---- Vertexes
 		
-		template<typename InputIterator> requires std::random_access_iterator<InputIterator>
-		void insert(InputIterator begin, InputIterator end);
+		void insert(std::input_iterator auto begin, std::input_iterator auto end);
 		
 		void insert(std::initializer_list<Vertex> list);
 		
@@ -54,8 +54,7 @@ namespace sdl {
 		
 		// ---- Indexes
 		
-		template<typename InputIterator> requires std::random_access_iterator<InputIterator>
-		void insertIndexes(InputIterator begin, InputIterator end);
+		void insertIndexes(std::input_iterator auto begin, std::input_iterator auto end);
 
 		void insertIndexes(std::initializer_list<GLint> list);
 
@@ -158,8 +157,7 @@ namespace sdl {
 
 		void add(const SubBatch<Vertex>& subBatch);
 
-		template<typename InputIterator> requires std::random_access_iterator<InputIterator>
-		void insert(InputIterator begin, InputIterator end);
+		void insert(std::input_iterator auto begin, std::input_iterator auto end);
 
 		void insert(std::initializer_list<Vertex> list);
 
@@ -171,8 +169,7 @@ namespace sdl {
 		
 		BatchView<Vertex> getBatchView(GLenum mode) const noexcept;
 
-		template<typename InputIterator> requires std::random_access_iterator<InputIterator>
-		void insertIndexes(InputIterator begin, InputIterator end);
+		void insertIndexes(std::input_iterator auto begin, std::input_iterator auto end);
 
 		void insertIndexes(std::initializer_list<GLint> list);
 
@@ -360,8 +357,7 @@ namespace sdl {
 	}
 
 	template <VertexType Vertex>
-	template<typename InputIterator> requires std::random_access_iterator<InputIterator>
-	void Batch<Vertex>::insert(InputIterator begin, InputIterator end) {
+	void Batch<Vertex>::insert(std::input_iterator auto begin, std::input_iterator auto end) {
 		if (usage_ != GL_STATIC_DRAW) {
 			fullBatch_.insert(begin, end);
 		} else {
@@ -406,8 +402,7 @@ namespace sdl {
 	}
 
 	template <VertexType Vertex>
-	template<typename InputIterator> requires std::random_access_iterator<InputIterator>
-	void Batch<Vertex>::insertIndexes(InputIterator begin, InputIterator end) {
+	void Batch<Vertex>::insertIndexes(std::input_iterator auto begin, std::input_iterator auto end) {
 		if (vbo_.getSize() != 0 && usage_ == GL_STATIC_DRAW) {
 			spdlog::error("[sdl::Batch] Vertex data is static, data index can't be modified");
 			return;
@@ -436,8 +431,7 @@ namespace sdl {
 	// ---- Vertexes
 
 	template <VertexType Vertex>
-	template<typename InputIterator> requires std::random_access_iterator<InputIterator>
-	void SubBatch<Vertex>::insert(InputIterator begin, InputIterator end) {
+	void SubBatch<Vertex>::insert(std::input_iterator auto begin, std::input_iterator auto end) {
 		assert(end - begin >= 0);
 
 		vertexes_.insert(vertexes_.end(), begin, end);
@@ -471,8 +465,7 @@ namespace sdl {
 	// ---- Indexes
 
 	template <VertexType Vertex>
-	template<typename InputIterator> requires std::random_access_iterator<InputIterator>
-	void SubBatch<Vertex>::insertIndexes(InputIterator begin, InputIterator end) {
+	void SubBatch<Vertex>::insertIndexes(std::input_iterator auto begin, std::input_iterator auto end) {
 		for (auto it = begin; it != end; ++it) {
 			indexes_.push_back(*it);
 		}

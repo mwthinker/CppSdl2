@@ -44,8 +44,7 @@ namespace sdl::graphic::indexed {
 
 	void addPolygon(Batch<Vertex>& batch, std::initializer_list<glm::vec2> points, Color color);
 
-	template <typename Iterator>
-	void addPolygon(Batch<Vertex>& batch, Iterator begin, Iterator end, Color color);
+	void addPolygon(Batch<Vertex>& batch, std::input_iterator auto begin, std::input_iterator auto end, Color color);
 
 }
 
@@ -72,9 +71,7 @@ namespace sdl {
 
 		void pushMatrix();
 
-		template <typename T>
-		void pushMatrix(T&& t) {
-			static_assert(std::is_invocable_v<void()>, "type T must be callable void() .");
+		void pushMatrix(std::invocable auto&& t) {
 			pushMatrix();
 			t();
 			popMatrix();
@@ -84,8 +81,7 @@ namespace sdl {
 
 		void addPixelLine(std::initializer_list<glm::vec2> points, Color color);
 
-		template <typename Iterator>
-		void addPixelLine(Iterator begin, Iterator end, Color color);
+		void addPixelLine(std::input_iterator auto begin, std::input_iterator auto end, Color color);
 
 		void addLine(const glm::vec2& p1, const glm::vec2& p2, float width, Color color);
 
@@ -101,8 +97,7 @@ namespace sdl {
 
 		void addPolygon(std::initializer_list<glm::vec2> points, Color color);
 
-		template <typename Iterator>
-		void addPolygon(Iterator begin, Iterator end, Color color);
+		void addPolygon(std::input_iterator auto begin, std::input_iterator auto end, Color color);
 		
 		void addHexagonImage(const glm::vec2& center, float radius, const sdl::TextureView& sprite, float startAngle = 0);
 
@@ -151,8 +146,7 @@ namespace sdl {
 		addPolygon(points.begin(), points.end(), color);
 	}
 
-	template <typename Iterator>
-	void Graphic::addPolygon(Iterator begin, Iterator end, Color color) {
+	void Graphic::addPolygon(std::input_iterator auto begin, std::input_iterator auto end, Color color) {
 		batch_.startBatchView();
 		sdl::graphic::indexed::addPolygon(batch_, begin, end, color);
 		add(batch_.getBatchView(GL_LINES));
@@ -162,8 +156,7 @@ namespace sdl {
 		addPixelLine(points.begin(), points.end(), color);
 	}
 
-	template <typename Iterator>
-	void Graphic::addPixelLine(Iterator begin, Iterator end, Color color) {
+	void Graphic::addPixelLine(std::input_iterator auto begin, std::input_iterator auto end, Color color) {
 		batch_.startBatchView();
 		batch_.startAdding();
 
@@ -202,8 +195,7 @@ namespace sdl::graphic::indexed {
 		addPolygon(batch, points.begin(), points.end(), color);
 	}
 
-	template <typename Iterator>
-	void addPolygon(Batch<Vertex>& batch, Iterator begin, Iterator end, Color color) {
+	void addPolygon(Batch<Vertex>& batch, std::input_iterator auto begin, std::input_iterator auto end, Color color) {
 		batch.startAdding();
 		for (auto it = begin; it != end; ++it) {
 			batch.pushBack({*it, {}, color});
