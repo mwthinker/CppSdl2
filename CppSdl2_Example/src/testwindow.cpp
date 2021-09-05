@@ -141,8 +141,8 @@ void TestWindow::eventUpdate(const SDL_Event& windowEvent) {
 					}
 					break;
 				case SDLK_SPACE:
-					if (func_) {
- 						func_();
+					if (onSpacePressed_) {
+						onSpacePressed_();
 					}
 					break;
 				case SDLK_ESCAPE:

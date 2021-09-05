@@ -14,9 +14,8 @@ class TestWindow : public sdl::Window {
 public:
 	TestWindow(const sdl::Sprite& sprite = {});
 
-	// Execute the function when space bar is pressed.
-	void setSpaceFunction(std::function<void()>&& func) {
-		func_ = std::move(func);
+	void setSpaceFunction(std::function<void()>&& onSpacePressed) {
+		onSpacePressed_ = std::move(onSpacePressed);
 	}
 
 private:
@@ -30,12 +29,12 @@ private:
 
 	void removeGamepad(SDL_JoystickID instanceId);
 
-	bool focus_{true};
+	bool focus_ = true;
 	sdl::Sprite sprite_;
 	sdl::Sprite text_;
-	int controllerEvent_{};
+	int controllerEvent_ = 0;
 	
-	std::function<void()> func_;
+	std::function<void()> onSpacePressed_;
 
 	std::shared_ptr<TestShader> shader_;
 	std::shared_ptr<BatchTriangles> batch_;
