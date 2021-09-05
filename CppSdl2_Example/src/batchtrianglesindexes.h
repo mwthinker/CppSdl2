@@ -33,7 +33,7 @@ public:
 
 private:
 	std::shared_ptr<TestShader> shader_;
-	sdl::Batch<TestShader::Vertex> batch_;
+	sdl::BatchIndexed<TestShader::Vertex> batch_;
 	sdl::VertexArrayObject vao_;
 };
 

@@ -24,27 +24,23 @@ namespace sdl::graphic {
 
 	[[nodiscard]] std::array<glm::vec2, 6> getHexagonCorners(const glm::vec2& center, float radius, float startAngle = 0.f);
 
-}
+	void addLine(BatchIndexed<Vertex>& batch, const glm::vec2& p1, const glm::vec2& p2, float width, Color color);
 
-namespace sdl::graphic::indexed {
+	void addRectangle(BatchIndexed<Vertex>& batch, const glm::vec2& pos, const glm::vec2& size, Color color);
 
-	void addLine(Batch<Vertex>& batch, const glm::vec2& p1, const glm::vec2& p2, float width, Color color);
+	void addRectangleImage(BatchIndexed<Vertex>& batch, const glm::vec2& pos, const glm::vec2& size, const TextureView& sprite, Color color = color::White);
 
-	void addRectangle(Batch<Vertex>& batch, const glm::vec2& pos, const glm::vec2& size, Color color);
+	void addHexagonImage(BatchIndexed<Vertex>& batch, const glm::vec2& center, float radius, const TextureView& sprite, float startAngle);
 
-	void addRectangleImage(Batch<Vertex>& batch, const glm::vec2& pos, const glm::vec2& size, const TextureView& sprite, Color color = color::White);
+	void addHexagon(BatchIndexed<Vertex>& batch, const glm::vec2& center, float innerRadius, float outerRadius, Color color, float startAngle);
 
-	void addHexagonImage(Batch<Vertex>& batch, const glm::vec2& center, float radius, const TextureView& sprite, float startAngle);
+	void addCircle(BatchIndexed<Vertex>& batch, const glm::vec2& center, float radius, Color color, const int iterations, float startAngle);
 
-	void addHexagon(Batch<Vertex>& batch, const glm::vec2& center, float innerRadius, float outerRadius, Color color, float startAngle);
+	void addCircleOutline(BatchIndexed<Vertex>& batch, const glm::vec2& center, float radius, float width, Color color, const int iterations, float startAngle);
 
-	void addCircle(Batch<Vertex>& batch, const glm::vec2& center, float radius, Color color, const int iterations, float startAngle);
+	void addPolygon(BatchIndexed<Vertex>& batch, std::initializer_list<glm::vec2> points, Color color);
 
-	void addCircleOutline(Batch<Vertex>& batch, const glm::vec2& center, float radius, float width, Color color, const int iterations, float startAngle);
-
-	void addPolygon(Batch<Vertex>& batch, std::initializer_list<glm::vec2> points, Color color);
-
-	void addPolygon(Batch<Vertex>& batch, std::input_iterator auto begin, std::input_iterator auto end, Color color);
+	void addPolygon(BatchIndexed<Vertex>& batch, std::input_iterator auto begin, std::input_iterator auto end, Color color);
 
 }
 
@@ -108,7 +104,7 @@ namespace sdl {
 		void clear();
 
 	protected:
-		using Batch = sdl::Batch<sdl::Vertex>;
+		using Batch = sdl::BatchIndexed<sdl::Vertex>;
 		using BatchView = sdl::BatchView<sdl::Vertex>;
 
 		glm::mat4& matrix() noexcept;
@@ -148,7 +144,7 @@ namespace sdl {
 
 	void Graphic::addPolygon(std::input_iterator auto begin, std::input_iterator auto end, Color color) {
 		batch_.startBatchView();
-		sdl::graphic::indexed::addPolygon(batch_, begin, end, color);
+		sdl::graphic::addPolygon(batch_, begin, end, color);
 		add(batch_.getBatchView(GL_LINES));
 	}
 
@@ -189,13 +185,13 @@ namespace sdl {
 
 }
 
-namespace sdl::graphic::indexed {
+namespace sdl::graphic {
 
-	inline void addPolygon(Batch<Vertex>& batch, std::initializer_list<glm::vec2> points, Color color) {
+	inline void addPolygon(BatchIndexed<Vertex>& batch, std::initializer_list<glm::vec2> points, Color color) {
 		addPolygon(batch, points.begin(), points.end(), color);
 	}
 
-	void addPolygon(Batch<Vertex>& batch, std::input_iterator auto begin, std::input_iterator auto end, Color color) {
+	void addPolygon(BatchIndexed<Vertex>& batch, std::input_iterator auto begin, std::input_iterator auto end, Color color) {
 		batch.startAdding();
 		for (auto it = begin; it != end; ++it) {
 			batch.pushBack({*it, {}, color});
