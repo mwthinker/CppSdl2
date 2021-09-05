@@ -3,17 +3,19 @@
 
 #include <glad/glad.h>
 #include <tuple>
+#if __cpp_lib_source_location // TODO! Remove when clang and GCC has support.
+#include <source_location>
+#endif
 
 namespace sdl {
-	
+		
 	template <typename... Caps>
+	requires std::conjunction_v<std::is_same<int, Caps>...> || std::conjunction_v<std::is_same<GLenum, Caps>...>
 	class GlEnableScoped {
 	public:
-		// Enable server-side GL capabilities.
 		explicit GlEnableScoped(Caps... caps)
 			: caps_{caps...}
 		{
-			static_assert(std::conjunction_v<std::is_same<int, Caps>...> || std::conjunction_v<std::is_same<GLenum, Caps>...>, "Must use int or GLenum");
 			std::apply([](auto&&... caps) {
 				((glEnable(caps)), ...);
 				((assert(isValid(caps))), ...);
@@ -53,21 +55,14 @@ namespace sdl {
 		std::tuple<Caps...> caps_;
 	};
 
-// Function checkGlError() prints all OpenGL errors during debug mode.
-#if _DEBUG
+	// Print all OpenGL errors under debug
 
-	// Print all OpenGL errors.
-	// Call check_gl_error instead if the error checking only should be in debug mode.
-	void _assertGlError(const char* file, int line);
+#if __cpp_lib_source_location
 
-#define assertGlError() _assertGlError(__FILE__,__LINE__)
+	void assertGlError(std::source_location location = std::source_location::current());
 #else
-
-	inline void _empty() {}
-
-#define assertGlError() _empty()
+	inline void assertGlError() {}
 #endif
-
 }
 
 #endif

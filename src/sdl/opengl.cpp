@@ -29,12 +29,20 @@ namespace sdl {
 		}
 	}
 
-	void _assertGlError(const char* file, int line) {
+#if __cpp_lib_source_location
+	void assertGlError(std::source_location location)
+	{
+#if _DEBUG
+		auto fileName = location.file_name();
+		auto line = location.line();
+		auto functionName = location.function_name();
+
 		while (GLenum error = glGetError()) {
-			spdlog::warn("[sdl::OpenGl] OpenGl error: {}={} - {}: {}", error, errorString(error), file, line);
+			spdlog::warn("[sdl::OpenGl] File: {}, Line: {}, Function: {}, Error: {}={}"
+				, fileName, line, functionName, error, errorString(error));
 		}
+#endif
 	}
-
-
+#endif
 
 }
