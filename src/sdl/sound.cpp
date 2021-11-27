@@ -6,7 +6,7 @@
 
 namespace sdl {
 
-	int Sound::lastId_{};
+	int Sound::lastId_ = 0;
 
 	Sound::Sound()
 		: id_{++lastId_} {
@@ -37,7 +37,6 @@ namespace sdl {
 
 	void Sound::play(int loops) {
 		if (soundBuffer_ && soundBuffer_->valid) {
-			// Have no chanel? Or has stopped played the sound?
 			if (!ownChannel() || !isPlaying()) {
 				channel_ = Mix_PlayChannel(-1, soundBuffer_->mixChunk, loops);
 				if (channel_ != -1) {
@@ -46,7 +45,7 @@ namespace sdl {
 					setVolume(volume_);
 				} else {
 					// All channels is being used.
-					spdlog::warn("[sdl::Sound] Failed to play sound, id {}, all channels is being used! {}", id_);
+					spdlog::warn("[sdl::Sound] Failed to play sound, id {}, all channels is being used!", id_);
 					spdlog::warn("[sdl::Sound] Mix_GetError(): {}", Mix_GetError());
 				}
 			} else {
@@ -57,8 +56,7 @@ namespace sdl {
 
 	void Sound::pause() {
 		if (soundBuffer_ && soundBuffer_->valid) {
-			// Owns the channel?
-			if (SoundBuffer::channelList[channel_] == id_) {
+			if (ownChannel()) {
 				Mix_Pause(channel_);
 			}
 		}
