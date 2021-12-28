@@ -5,9 +5,6 @@ namespace sdl {
 	using namespace color;
 
 	std::string Color::toHexString() const {
-		constexpr glm::vec4 a(1.f, 2.f, 3.f, 4.f);
-		constexpr glm::vec4 b{};
-
 		return {'#'
 			, intToHex((value_ & (0xf0 << IM_COL32_R_SHIFT)) >> IM_COL32_R_SHIFT >> 4), intToHex((value_ & (0x0f << IM_COL32_R_SHIFT)) >> IM_COL32_R_SHIFT)
 			, intToHex((value_ & (0xf0 << IM_COL32_G_SHIFT)) >> IM_COL32_G_SHIFT >> 4), intToHex((value_ & (0x0f << IM_COL32_G_SHIFT)) >> IM_COL32_G_SHIFT)
