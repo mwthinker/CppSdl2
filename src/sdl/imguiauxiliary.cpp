@@ -96,7 +96,7 @@ namespace ImGui {
 		auto drawList = ImGui::GetWindowDrawList();
 		drawList->PushTextureID((ImTextureID) (intptr_t) texture);
 		drawList->PrimReserve(6, 4);
-		Helper::AddImageQuad(texture, {0.f, 0.f}, ImGui::GetWindowSize());
+		Helper::AddImageQuad(texture, ImGui::GetCursorScreenPos(), ImGui::GetWindowSize());
 		drawList->PopTextureID();
 	}
 
