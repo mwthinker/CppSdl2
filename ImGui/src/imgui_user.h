@@ -199,6 +199,12 @@ namespace ImGui {
 		return success;
 	}
 
+	void Group(std::invocable auto&& t) {
+		ImGui::BeginGroup();
+		t();
+		ImGui::EndGroup();
+	}
+
 }
 
 #endif
