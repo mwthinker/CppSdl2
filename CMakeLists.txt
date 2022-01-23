@@ -1,13 +1,4 @@
-cmake_minimum_required(VERSION 3.16)
-
-set(VCPKG_ROOT $ENV{VCPKG_ROOT})
-if (DEFINED ENV{VCPKG_ROOT} AND NOT DEFINED CMAKE_TOOLCHAIN_FILE)
-	set(CMAKE_TOOLCHAIN_FILE "${VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake"
-		CACHE STRING ""
-	)
-	message(STATUS "Use VCPKG CMAKE_TOOLCHAIN_FILE: ${CMAKE_TOOLCHAIN_FILE}")
-endif ()
-
+cmake_minimum_required(VERSION 3.21)
 project(CppSdl2
 	DESCRIPTION
 		"A C++-Wrapper of SDL2 and OpenGL"
