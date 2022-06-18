@@ -23,7 +23,7 @@ if (Catch2_FOUND)
 	target_link_libraries(CppSdl2_Test
 		PRIVATE
 			CppSdl2
-			Catch2::Catch2
+			Catch2::Catch2 Catch2::Catch2WithMain
 	)
 
 	set_target_properties(CppSdl2_Test

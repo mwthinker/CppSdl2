@@ -25,7 +25,7 @@ public:
 
 	void addCircle(float x, float y, float radius, const int iterations = 40);
 
-    void addHexagon(float x, float y, float size);
+	void addHexagon(float x, float y, float size);
 
 	void init();
 

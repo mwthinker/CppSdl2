@@ -1,5 +1,6 @@
-// main() provided by Catch in file main.cpp.
-#include <catch2/catch.hpp>
+#include <catch2/catch_test_macros.hpp>
+#include <catch2/benchmark/catch_benchmark.hpp>
+
 
 TEST_CASE("benchmarked", "[!benchmark]") {
 
