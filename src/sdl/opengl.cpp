@@ -6,7 +6,7 @@ namespace sdl {
 
 	namespace {
 
-		constexpr const char* errorString(GLenum error) {
+		static const char* errorString(GLenum error) {
 			switch (error) {
 				case GL_INVALID_ENUM:
 					return "GL_INVALID_ENUM";
@@ -30,16 +30,15 @@ namespace sdl {
 	}
 
 #if __cpp_lib_source_location
-	void assertGlError(std::source_location location)
-	{
+	void assertGlError(std::source_location location) {
 #if _DEBUG
 		auto fileName = location.file_name();
 		auto line = location.line();
 		auto functionName = location.function_name();
 
 		while (GLenum error = glGetError()) {
-			spdlog::warn("[sdl::OpenGl] File: {}, Line: {}, Function: {}, Error: {}={}"
-				, fileName, line, functionName, error, errorString(error));
+			spdlog::warn("[sdl::OpenGl] File: {}, Line: {}, Function: {}, Error: {}={}", 
+				fileName, line, functionName, error, errorString(error));
 		}
 #endif
 	}

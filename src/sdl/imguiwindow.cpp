@@ -22,7 +22,7 @@ namespace sdl {
 					colorStr += name;
 					colorStr += "##1";
 					if (ImGui::ColorButton(colorStr.c_str(), color)) {
-						ImGui::SetClipboardText(name.c_str());
+						ImGui::SetClipboardText(name);
 					}
 					if (nbr % 10 != 0) {
 						ImGui::SameLine();
