@@ -13,7 +13,6 @@ if (Catch2_FOUND)
 	endif ()
 
 	add_executable(CppSdl2_Test
-		src/main.cpp
 		src/speedtest.cpp
 		src/tests.cpp
 	)
