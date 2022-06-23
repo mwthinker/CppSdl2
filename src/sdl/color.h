@@ -66,8 +66,7 @@ namespace sdl {
 			return static_cast<float>(alphaByte()) / 255.f;
 		}
 
-		operator ImVec4() const noexcept
-		{
+		constexpr operator ImVec4() const noexcept {
 			return {red(), green(), blue(), alpha()};
 		}
 
