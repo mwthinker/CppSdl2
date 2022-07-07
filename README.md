@@ -1,4 +1,4 @@
-# CppSdl2
+# sdl::CppSdl2 [![CI build](https://github.com/mwthinker/CppSdl2/actions/workflows/ci.yml/badge.svg)](https://github.com/mwthinker/CppSdl2/actions/workflows/ci.yml)
 A C++ wrapper around SDL2 (Simple Direct Media Layer) and OpenGl. Uses cmake.
 
 ## Vcpkg and CMake
