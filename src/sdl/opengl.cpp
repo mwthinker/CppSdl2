@@ -6,7 +6,8 @@ namespace sdl {
 
 	namespace {
 
-		static const char* errorString(GLenum error) {
+#if _DEBUG
+		const char* errorString(GLenum error) {
 			switch (error) {
 				case GL_INVALID_ENUM:
 					return "GL_INVALID_ENUM";
@@ -27,6 +28,8 @@ namespace sdl {
 			}
 			return "Unknown GL error code";
 		}
+#endif
+
 	}
 
 #if __cpp_lib_source_location

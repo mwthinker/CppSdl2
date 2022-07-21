@@ -10,6 +10,7 @@
 
 namespace sdl {
 
+#if _DEBUG
 	inline void assertValidDrawMode(GLenum mode) {
 		bool warning =
 			GL_TRIANGLES == mode ||
@@ -27,6 +28,7 @@ namespace sdl {
 			GL_TRIANGLES_ADJACENCY == mode;
 		assert(warning);
 	}
+#endif
 
 	template<typename T>
 	concept VertexType = std::is_standard_layout_v<T>;
@@ -91,7 +93,9 @@ namespace sdl {
 			, index_{index}
 			, size_{size} {
 
+#if _DEBUG
 			assertValidDrawMode(mode);
+#endif
 			assert(index_ >= 0 && size_ >= 0);
 		}
 

@@ -18,7 +18,9 @@ namespace sdl {
 		{
 			std::apply([](auto&&... caps) {
 				((glEnable(caps)), ...);
+#if _DEBUG
 				((assert(isValid(caps))), ...);
+#endif
 			}, caps_);
 		}
 
