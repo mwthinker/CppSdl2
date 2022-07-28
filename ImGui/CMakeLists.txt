@@ -56,7 +56,7 @@ target_include_directories(ImGui
 
 target_link_libraries(ImGui
 	PUBLIC
-		SDL2::SDL2 SDL2::SDL2main SDL2::SDL2
+		SDL2::SDL2 SDL2::SDL2main
 		glad::glad
 		freetype
 		glm::glm
