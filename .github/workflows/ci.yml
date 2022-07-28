@@ -15,10 +15,18 @@ jobs:
           - os: ubuntu-22.04
             vcpkgCommitId: '4826ede84084395b0f87476e48ff6d4070eba0e4'
             preset: 'unix'
+          - os: macos-12
+            vcpkgCommitId: '4826ede84084395b0f87476e48ff6d4070eba0e4'
+            preset: 'unix'
 
     steps:
       - name: Check out repository code
         uses: actions/checkout@v3
+
+      - name: Set C++/C compiler on macOs
+        shell: bash
+        run: echo "CC=gcc-11" >> $GITHUB_ENV; echo "CXX=g++-11" >> $GITHUB_ENV; cat "$GITHUB_ENV"
+        if: runner.os == 'macOs'
 
       - uses: friendlyanon/setup-vcpkg@v1
         with:
@@ -31,7 +39,7 @@ jobs:
 
       - name: Run CMake with manifest mode vcpkg
         shell: bash
-        run: cmake --preset=${{ matrix.preset }} -B build -DCppSdl2_Test=1 -DCppSdl2_Example=1
+        run: cmake --preset=${{ matrix.preset }} -B build -DCppSdl2_Test=1 -DCppSdl2_Example=1 -DCMAKE_VERBOSE_MAKEFILE=1
 
       - name: Compile binaries
         shell: bash
