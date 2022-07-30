@@ -57,9 +57,15 @@ find_package(glad CONFIG REQUIRED)
 find_package(freetype CONFIG REQUIRED)
 find_package(glm CONFIG REQUIRED)
 
+if (MSVC)
+	set(SDL_LIB SDL2::SDL2 SDL2::SDL2main)
+else ()
+	set(SDL_LIB SDL2::SDL2 SDL2::SDL2main SDL2::SDL2-static)
+endif ()
+
 target_link_libraries(ImGui
 	PUBLIC
-		SDL2::SDL2 SDL2::SDL2main
+		${SDL_LIB}
 		SDL2::SDL2_image
 		SDL2::SDL2_ttf
 		SDL2::SDL2_mixer
