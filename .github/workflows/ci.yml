@@ -41,6 +41,11 @@ jobs:
         shell: bash
         run: cmake --preset=${{ matrix.preset }} -B build -DCppSdl2_Test=1 -DCppSdl2_Example=1 -DCMAKE_VERBOSE_MAKEFILE=1
 
+      - name: Print log message on macOs
+        shell: bash
+        run: cat /Users/runner/work/CppSdl2/CppSdl2/vcpkg/buildtrees/sdl2/install-x64-osx-dbg-out.log
+        if: runner.os == 'macOs'
+
       - name: Compile binaries
         shell: bash
         run: cmake --build build
