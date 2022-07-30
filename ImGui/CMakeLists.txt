@@ -19,11 +19,6 @@ FetchContent_GetProperties(RemoteImGui
 		RemoteImGui_SOURCE_DIR
 )
 
-find_package(SDL2 CONFIG REQUIRED)
-find_package(glad CONFIG REQUIRED)
-find_package(freetype CONFIG REQUIRED)
-find_package(glm CONFIG REQUIRED)
-
 set(IMGUI_USER_CONFIG ${CMAKE_CURRENT_SOURCE_DIR}/src/imconfig.h)
 
 add_library(ImGui
@@ -54,9 +49,20 @@ target_include_directories(ImGui
 		${RemoteImGui_SOURCE_DIR}/backends/
 )
 
+find_package(SDL2 CONFIG REQUIRED)
+find_package(SDL2-image CONFIG REQUIRED)
+find_package(SDL2-mixer CONFIG REQUIRED)
+find_package(SDL2-ttf CONFIG REQUIRED)
+find_package(glad CONFIG REQUIRED)
+find_package(freetype CONFIG REQUIRED)
+find_package(glm CONFIG REQUIRED)
+
 target_link_libraries(ImGui
 	PUBLIC
 		SDL2::SDL2 SDL2::SDL2main
+		SDL2::SDL2_image
+		SDL2::SDL2_ttf
+		SDL2::SDL2_mixer
 		glad::glad
 		freetype
 		glm::glm

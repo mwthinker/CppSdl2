@@ -7,10 +7,10 @@
 	"description": "A C++ wrapper around SDL2 (Simple Direct Media Layer) and OpenGL (> v2.1).",
 	"license": "MIT",
 	"dependencies": [
+		"sdl2",
 		"sdl2-image",
 		"sdl2-mixer",
 		"sdl2-ttf",
-		"sdl2",
 		"glad",
 		"spdlog",
 		"glm",

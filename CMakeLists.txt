@@ -6,13 +6,6 @@ project(CppSdl2
 		CXX
 )
 
-find_package(glad CONFIG REQUIRED)
-find_package(SDL2 CONFIG REQUIRED)
-find_package(SDL2-image CONFIG REQUIRED)
-find_package(SDL2-mixer CONFIG REQUIRED)
-find_package(SDL2-ttf CONFIG REQUIRED)
-find_package(spdlog CONFIG REQUIRED)
-
 add_library(CppSdl2 
 	src/sdl/batch.h
 	src/sdl/color.cpp
@@ -86,12 +79,11 @@ target_include_directories(CppSdl2
 		"$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src>"
 )
 
+find_package(spdlog CONFIG REQUIRED)
+
 target_link_libraries(CppSdl2
 	PUBLIC
 		ImGui
-		SDL2::SDL2_image
-		SDL2::SDL2_ttf
-		SDL2::SDL2_mixer
 		spdlog::spdlog spdlog::spdlog_header_only
 )
 
