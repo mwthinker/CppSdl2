@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.21)
+cmake_minimum_required(VERSION 3.24)
 project(CppSdl2
 	DESCRIPTION
 		"A C++-Wrapper of SDL2 and OpenGL"
@@ -53,6 +53,7 @@ add_library(CppSdl2
 	src/sdl/window.cpp
 	src/sdl/window.h
 	vcpkg.json
+	CMakePresets.json
 )
 
 add_subdirectory(ImGui)

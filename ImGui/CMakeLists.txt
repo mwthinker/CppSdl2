@@ -51,8 +51,8 @@ target_include_directories(ImGui
 
 find_package(SDL2 CONFIG REQUIRED)
 find_package(SDL2-image CONFIG REQUIRED)
-find_package(SDL2-mixer CONFIG REQUIRED)
-find_package(SDL2-ttf CONFIG REQUIRED)
+find_package(SDL2_mixer CONFIG REQUIRED)
+find_package(SDL2_ttf CONFIG REQUIRED)
 find_package(glad CONFIG REQUIRED)
 find_package(freetype CONFIG REQUIRED)
 find_package(glm CONFIG REQUIRED)
@@ -67,8 +67,8 @@ target_link_libraries(ImGui
 	PUBLIC
 		${SDL_LIB}
 		SDL2::SDL2_image
-		SDL2::SDL2_ttf
-		SDL2::SDL2_mixer
+		$<IF:$<TARGET_EXISTS:SDL2_ttf::SDL2_ttf>,SDL2_ttf::SDL2_ttf,SDL2_ttf::SDL2_ttf-static>
+		$<IF:$<TARGET_EXISTS:SDL2_mixer::SDL2_mixer>,SDL2_mixer::SDL2_mixer,SDL2_mixer::SDL2_mixer-static>
 		glad::glad
 		freetype
 		glm::glm
