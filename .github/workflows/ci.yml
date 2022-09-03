@@ -10,13 +10,13 @@ jobs:
       matrix:
         include:
           - os: windows-latest
-            vcpkgCommitId: 'de7091ee2447e7450a63331e4560762e394f568c'
+            vcpkgCommitId: '927006b24c3a28dfd8aa0ec5f8ce43098480a7f1'
             preset: 'windows'
           - os: ubuntu-22.04
-            vcpkgCommitId: 'de7091ee2447e7450a63331e4560762e394f568c'
+            vcpkgCommitId: '927006b24c3a28dfd8aa0ec5f8ce43098480a7f1'
             preset: 'unix'
           - os: macos-12
-            vcpkgCommitId: 'de7091ee2447e7450a63331e4560762e394f568c'
+            vcpkgCommitId: '927006b24c3a28dfd8aa0ec5f8ce43098480a7f1'
             preset: 'unix'
 
     steps:
@@ -31,6 +31,7 @@ jobs:
       - uses: friendlyanon/setup-vcpkg@v1
         with:
           committish: ${{ matrix.vcpkgCommitId }}
+          cache: false
 
       - name: GCC version on Linux
         shell: bash
