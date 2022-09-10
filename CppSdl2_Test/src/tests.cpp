@@ -1,33 +1,22 @@
-#include <catch2/catch_test_macros.hpp>
+#include <gtest/gtest.h>
 
-TEST_CASE("Testing math functions", "[functions][sin][cos][log][exp][pi]") {
-	INFO("Testing math functions");	
+class Test : public ::testing::Test {
+protected:
+
+	Test() {}
+
+	~Test() override {}
+
+	void SetUp() override {}
+
+	void TearDown() override {}
+};
+
+TEST_F(Test, someTest) {
+	// Given.
 	
-	SECTION("test math expressions containing functions") {
 
-	}
-}
-
-TEST_CASE("Testing math expressions", "[expressions]") {
-
-	SECTION("Expression is evaluated") {
-	
-	}
-
-	SECTION("Expression is evaluated with added constants") {
-		
-	}
-
-	SECTION("Expression is evaluated with added constants and functions") {
-		
-	}	
-
-}
-
-SCENARIO("Colors constants", "[Color]") {
-
-	GIVEN("Red color constant") {
-
-	}
-
+	// Then.
+	EXPECT_TRUE(true);
+	EXPECT_EQ(0, 0);
 }

@@ -5,24 +5,21 @@ project(CppSdl2_Test
 		CXX
 )
 
-find_package(Catch2 CONFIG)
+find_package(GTest CONFIG)
 
-if (Catch2_FOUND)
+if (GTest_FOUND)
 	if (MSVC)
 		set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /wd4275") # non - DLL-interface class 'class_1' used as base for DLL-interface class 'class_2'
 	endif ()
 
 	add_executable(CppSdl2_Test
-		src/speedtest.cpp
 		src/tests.cpp
 	)
 	
-	add_compile_definitions(CATCH_CONFIG_ENABLE_BENCHMARKING)
-
 	target_link_libraries(CppSdl2_Test
 		PRIVATE
 			CppSdl2
-			Catch2::Catch2 Catch2::Catch2WithMain
+			GTest::gtest GTest::gtest_main
 	)
 
 	set_target_properties(CppSdl2_Test
@@ -38,6 +35,9 @@ if (Catch2_FOUND)
 				"/permissive-"
 		)
 	endif ()
+
+	include(GoogleTest)
+	gtest_discover_tests(CppSdl2_Test)
 
 else ()
 	message(WARNING "Catch2 not found, CppSdl2_Test not created")

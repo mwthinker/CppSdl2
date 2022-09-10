@@ -14,6 +14,7 @@
 /cmake-build-debug/
 /vcpkg_installed/
 .vscode
+clang_build/
 
 #################
 ## Eclipse

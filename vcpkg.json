@@ -14,7 +14,7 @@
 		"glad",
 		"spdlog",
 		"glm",
-		"catch2",
+		"gtest",
 		"fmt",
 		"freetype"
 	]
