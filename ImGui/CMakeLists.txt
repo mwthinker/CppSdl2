@@ -60,7 +60,7 @@ find_package(glm CONFIG REQUIRED)
 if (MSVC)
 	set(SDL_LIB SDL2::SDL2 SDL2::SDL2main)
 else ()
-	set(SDL_LIB SDL2::SDL2 SDL2::SDL2main SDL2::SDL2-static)
+	set(SDL_LIB SDL2::SDL2-static SDL2::SDL2main)
 endif ()
 
 target_link_libraries(ImGui
