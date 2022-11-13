@@ -10,13 +10,13 @@ jobs:
       matrix:
         include:
           - os: windows-latest
-            vcpkgCommitId: '927006b24c3a28dfd8aa0ec5f8ce43098480a7f1'
+            vcpkgCommitId: '6f7ffeb18f99796233b958aaaf14ec7bd4fb64b2'
             preset: 'windows'
           - os: ubuntu-22.04
-            vcpkgCommitId: '927006b24c3a28dfd8aa0ec5f8ce43098480a7f1'
+            vcpkgCommitId: '6f7ffeb18f99796233b958aaaf14ec7bd4fb64b2'
             preset: 'unix'
           - os: macos-12
-            vcpkgCommitId: '927006b24c3a28dfd8aa0ec5f8ce43098480a7f1'
+            vcpkgCommitId: '6f7ffeb18f99796233b958aaaf14ec7bd4fb64b2'
             preset: 'unix'
 
     steps:
@@ -28,7 +28,7 @@ jobs:
         run: echo "CC=gcc-11" >> $GITHUB_ENV; echo "CXX=g++-11" >> $GITHUB_ENV; cat "$GITHUB_ENV"
         if: runner.os == 'macOs'
 
-      - uses: friendlyanon/setup-vcpkg@v1
+      - uses: friendlyanon/setup-vcpkg@v10
         with:
           committish: ${{ matrix.vcpkgCommitId }}
           cache: false
