@@ -28,7 +28,7 @@ namespace ImGui {
 
 	void Image(const sdl::TextureView& texture, const glm::vec2& size, sdl::Color tintCol = sdl::color::White, sdl::Color borderCol = {});
 
-	[[nodiscard]] bool ImageButton(const sdl::TextureView& texture, const glm::vec2& size);
+	[[nodiscard]] bool ImageButton(const char* id, const sdl::TextureView& texture, const glm::vec2& size);
 
 	void ImageBackground(const sdl::TextureView& texture);
 
