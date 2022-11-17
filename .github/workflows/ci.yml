@@ -10,42 +10,44 @@ jobs:
       matrix:
         include:
           - os: windows-latest
-            vcpkgCommitId: '6f7ffeb18f99796233b958aaaf14ec7bd4fb64b2'
+            vcpkgCommitId: '3776224fd28bd7e0c78617d73696753219e8d272'
             preset: 'windows'
           - os: ubuntu-22.04
-            vcpkgCommitId: '6f7ffeb18f99796233b958aaaf14ec7bd4fb64b2'
+            vcpkgCommitId: '3776224fd28bd7e0c78617d73696753219e8d272'
             preset: 'unix'
           - os: macos-12
-            vcpkgCommitId: '6f7ffeb18f99796233b958aaaf14ec7bd4fb64b2'
+            vcpkgCommitId: '3776224fd28bd7e0c78617d73696753219e8d272'
             preset: 'unix'
 
     steps:
       - name: Check out repository code
         uses: actions/checkout@v3
 
-      - name: Set C++/C compiler on macOs
+      - name: Set C++/C compiler on macOS
         shell: bash
         run: echo "CC=gcc-11" >> $GITHUB_ENV; echo "CXX=g++-11" >> $GITHUB_ENV; cat "$GITHUB_ENV"
-        if: runner.os == 'macOs'
+        if: runner.os == 'macOS'
 
       - uses: friendlyanon/setup-vcpkg@v1
         with:
           committish: ${{ matrix.vcpkgCommitId }}
           cache: false
 
-      - name: GCC version on Linux
+      - name: Tool versions
         shell: bash
-        run: g++ --version
-        if: runner.os == 'Linux'
+        run: |
+          g++ --version
+          make --version
+        if: runner.os == 'Linux' || runner.os == 'macOS'
 
       - name: Run CMake with manifest mode vcpkg
         shell: bash
         run: cmake --preset=${{ matrix.preset }} -B build -DCppSdl2_Test=1 -DCppSdl2_Example=1 -DCMAKE_VERBOSE_MAKEFILE=1
 
-      - name: Print log message on macOs
+      - name: Print log message on macOS
         shell: bash
         run: cat /Users/runner/work/CppSdl2/CppSdl2/vcpkg/buildtrees/sdl2/install-x64-osx-dbg-out.log
-        if: runner.os == 'macOs'
+        if: runner.os == 'macOS'
 
       - name: Compile binaries
         shell: bash
