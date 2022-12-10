@@ -66,7 +66,10 @@ namespace sdl {
 
 		SDL_Surface* createSurface(const std::string& text, TTF_Font* font, Color color) {
 			if (font != nullptr) {
-				return TTF_RenderUTF8_Blended_Wrapped(font, text.c_str(), color, 500);
+				SDL_Surface* argb = TTF_RenderUTF8_Blended(font, text.c_str(), color);
+				SDL_Surface* rgba = SDL_ConvertSurfaceFormat(argb, SDL_PIXELFORMAT_RGBA32, 0);
+				SDL_FreeSurface(argb);
+				return rgba;
 			}
 			return nullptr;
 		}

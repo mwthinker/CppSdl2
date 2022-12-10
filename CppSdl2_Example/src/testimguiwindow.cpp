@@ -34,10 +34,18 @@ void TestImGuiWindow::imGuiEventUpdate(const SDL_Event& windowEvent) {
 					break;
 				case SDL_WINDOWEVENT_CLOSE:
 					sdl::Window::quit();
+					break;
 			}
 			break;
 		case SDL_QUIT:
 			sdl::Window::quit();
+			break;
+		case SDL_KEYDOWN:
+			switch (windowEvent.key.keysym.sym) {
+				case SDLK_ESCAPE:
+					sdl::Window::quit();
+					break;
+			}
 			break;
 	}
 }

@@ -144,16 +144,16 @@ namespace sdl {
 		
 		int width_{DefaultWidth};
 		int height_{DefaultHeight};
-		int x_{SDL_WINDOWPOS_UNDEFINED};
-		int y_{SDL_WINDOWPOS_UNDEFINED};
-		int minWidth_{-1};
-		int minHeight_{-1};
-		int maxWidth_{-1};
-		int maxHeight_{-1};
+		int x_ = SDL_WINDOWPOS_UNDEFINED;
+		int y_ = SDL_WINDOWPOS_UNDEFINED;
+		int minWidth_ = -1;
+		int minHeight_ = -1;
+		int maxWidth_ = -1;
+		int maxHeight_ = -1;
 		
 		std::chrono::nanoseconds sleepingTime_{};
-		int majorVersionGl_{DefaultMajorVersionGl};
-		int minorVersionGl_{DefaultMinorVersionGl};
+		int majorVersionGl_ = DefaultMajorVersionGl;
+		int minorVersionGl_ = DefaultMinorVersionGl;
 		
 		GLbitfield glBitfield_{GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT};
 		Color clearColor_;

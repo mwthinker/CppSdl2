@@ -68,7 +68,7 @@ namespace {
 }
 
 TestWindow::TestWindow(const sdl::Sprite& sprite)
-	: Window{2, 1}
+	: Window{3, 3}
 	, sprite_{sprite} {
 	
 	sdl::Window::setSize(512, 512);
@@ -85,7 +85,7 @@ void TestWindow::update(const sdl::DeltaTime& deltaTime) {
 	sprite_.bind();
 	shader_->setModelMatrix(Mat44(1));
 	shader_->setProjectionMatrix(Mat44(1));
-	batch_->draw();	
+	batch_->draw();
 
 	text_.bind();
 	batch2_->draw();
@@ -233,7 +233,7 @@ void TestWindow::removeGamepad(SDL_JoystickID instanceId) {
 void TestWindow::initPreLoop() {
 	setLoopSleepingTime(std::chrono::milliseconds{10});
 	sdl::Font font{"Ubuntu-B.ttf", 60};
-	shader_ = std::make_shared<TestShader>("testShader2_2_1.ver.glsl", "testShader2_2_1.fra.glsl");
+	shader_ = std::make_shared<TestShader>("testShader_330.ver.glsl", "testShader_330.fra.glsl");
 	batch_ = std::make_shared<BatchTriangles>(shader_, GL_DYNAMIC_DRAW);
 	shader_->useProgram();
 	glClearColor(0, 0, 0, 1);
@@ -244,7 +244,7 @@ void TestWindow::initPreLoop() {
 	batch_->uploadToGraphicCard();
 	
 	batch2_ = std::make_shared<BatchTriangles>(shader_, GL_DYNAMIC_DRAW);
-	text_ = sdl::Sprite{"Testing", font};
+	text_ = sdl::Sprite{"HOHO", font};
 	batch2_->init();
 	batch2_->addRectangle(0, 0, 1, 1, text_);
 	batch2_->uploadToGraphicCard();
