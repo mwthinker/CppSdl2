@@ -42,6 +42,8 @@ namespace sdl {
 		// Return the target specified.
 		GLenum getTarget() const noexcept;
 
+		GLuint getId() const noexcept;
+
 	private:
 		GLuint vboId_ = 0;
 		GLsizeiptr size_ = 0;
@@ -55,6 +57,10 @@ namespace sdl {
 	
 	inline GLenum VertexBufferObject::getTarget() const noexcept {
 		return target_;
+	}
+
+	inline GLuint VertexBufferObject::getId() const noexcept {
+		return vboId_;
 	}
 
 }
