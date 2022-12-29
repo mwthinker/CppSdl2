@@ -11,7 +11,7 @@ namespace sdl {
 		}
 
 		constexpr GLenum isValidDataBufferUsage(GLenum usage) {
-			return GL_STATIC_DRAW == usage || GL_DYNAMIC_DRAW == usage || GL_STREAM_DRAW == usage;
+			return GL_STATIC_DRAW == usage || GL_DYNAMIC_DRAW == usage || GL_STREAM_DRAW == usage || GL_STREAM_READ;
 		}
 
 	}
