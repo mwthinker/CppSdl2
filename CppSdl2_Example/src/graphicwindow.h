@@ -58,8 +58,8 @@ private:
 	}
 
 	void update(const sdl::DeltaTime& deltaTime) override {
-		sdl::GlEnableScoped scoped{GL_BLEND, GL_LINE_SMOOTH};
-		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		sdl::GlEnableScoped scoped{gl::GL_BLEND, gl::GL_LINE_SMOOTH};
+		gl::glBlendFunc(gl::GL_SRC_ALPHA, gl::GL_ONE_MINUS_SRC_ALPHA);
 
 		sprite_.bind();
 		graphic_.upload(shader_);
@@ -115,7 +115,7 @@ private:
 	}
 
 	void resize(int w, int h) {
-		glViewport(0, 0, w, h);
+		gl::glViewport(0, 0, w, h);
 	}
 
 	sdl::Shader shader_;

@@ -77,8 +77,8 @@ TestWindow::TestWindow(const sdl::Sprite& sprite)
 }
 
 void TestWindow::update(const sdl::DeltaTime& deltaTime) {
-	glEnable(GL_BLEND);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	gl::glEnable(gl::GL_BLEND);
+	gl::glBlendFunc(gl::GL_SRC_ALPHA, gl::GL_ONE_MINUS_SRC_ALPHA);
 
 	// Update model matrix.
 	shader_->useProgram();
@@ -90,7 +90,7 @@ void TestWindow::update(const sdl::DeltaTime& deltaTime) {
 	text_.bind();
 	batch2_->draw();
 
-	glDisable(GL_BLEND);
+	gl::glDisable(gl::GL_BLEND);
 	sdl::assertGlError();
 }
 
@@ -212,7 +212,7 @@ void TestWindow::eventUpdate(const SDL_Event& windowEvent) {
 }
 
 void TestWindow::resize(int w, int h) {
-	glViewport(0, 0, w, h);
+	gl::glViewport(0, 0, w, h);
 	//shader_->setProjectionMatrixU(mw::getOrthoProjectionMatrix44<GLfloat>(0, (GLfloat) w, 0, (GLfloat) h));
 	//shader_->setProjectionMatrixU(mw::getOrthoProjectionMatrix44<GLfloat>(0, (GLfloat) w, 0, (GLfloat) h));
 	//shader_->setProjectionMatrix(glm::ortho(-0.5f * sprite_.getWidth(), 0.5f * sprite_.getHeight(), -0.5f * sprite_.getHeight(), 0.5f * sprite_.getHeight()));
@@ -234,16 +234,16 @@ void TestWindow::initPreLoop() {
 	setLoopSleepingTime(std::chrono::milliseconds{10});
 	sdl::Font font{"Ubuntu-B.ttf", 60};
 	shader_ = std::make_shared<TestShader>("testShader_330.ver.glsl", "testShader_330.fra.glsl");
-	batch_ = std::make_shared<BatchTriangles>(shader_, GL_DYNAMIC_DRAW);
+	batch_ = std::make_shared<BatchTriangles>(shader_, gl::GL_DYNAMIC_DRAW);
 	shader_->useProgram();
-	glClearColor(0, 0, 0, 1);
+	gl::glClearColor(0, 0, 0, 1);
 	resize(getWidth(), getHeight());
 	
 	batch_->init();
 	batch_->addRectangle(-1.f, -1.f, 2.f, 2.f, sprite_);
 	batch_->uploadToGraphicCard();
 	
-	batch2_ = std::make_shared<BatchTriangles>(shader_, GL_DYNAMIC_DRAW);
+	batch2_ = std::make_shared<BatchTriangles>(shader_, gl::GL_DYNAMIC_DRAW);
 	text_ = sdl::Sprite{"HOHO", font};
 	batch2_->init();
 	batch2_->addRectangle(0, 0, 1, 1, text_);

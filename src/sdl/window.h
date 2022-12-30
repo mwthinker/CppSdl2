@@ -96,9 +96,9 @@ namespace sdl {
 
 		void setGlClearColor(Color color) noexcept;
 
-		void setGlClear(GLbitfield glBitfield) noexcept;
+		void setGlClear(gl::ClearBufferMask glBitfield) noexcept;
 
-		GLbitfield getGlClear() const noexcept;
+		gl::ClearBufferMask getGlClear() const noexcept;
 		
 		void setLoopSleepingTime(const std::chrono::nanoseconds& delay) noexcept;
 		
@@ -155,7 +155,7 @@ namespace sdl {
 		int majorVersionGl_ = DefaultMajorVersionGl;
 		int minorVersionGl_ = DefaultMinorVersionGl;
 		
-		GLbitfield glBitfield_{GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT};
+		gl::ClearBufferMask glBitfield_{gl::GL_COLOR_BUFFER_BIT | gl::GL_DEPTH_BUFFER_BIT | gl::GL_STENCIL_BUFFER_BIT};
 		Color clearColor_;
 		
 		bool alwaysOnTop_{false};
@@ -190,11 +190,11 @@ namespace sdl {
 		clearColor_ = color;
 	}
 
-	inline void Window::setGlClear(GLbitfield glBitfield) noexcept {
+	inline void Window::setGlClear(gl::ClearBufferMask glBitfield) noexcept {
 		glBitfield_ = glBitfield;
 	}
 
-	inline GLbitfield Window::getGlClear() const noexcept {
+	inline gl::ClearBufferMask Window::getGlClear() const noexcept {
 		return glBitfield_;
 	}
 

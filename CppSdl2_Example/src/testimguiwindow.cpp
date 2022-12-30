@@ -8,11 +8,11 @@ namespace {
 
 	[[maybe_unused]] void test() {
 		sdl::BatchView<TestShader::Vertex> batchData;
-		sdl::Batch<TestShader::Vertex> batch{GL_DYNAMIC_DRAW};
+		sdl::Batch<TestShader::Vertex> batch{gl::GL_DYNAMIC_DRAW};
 		
 		batch.startBatchView();
 
-		auto batchView = batch.getBatchView(GL_TRIANGLES);
+		auto batchView = batch.getBatchView(gl::GL_TRIANGLES);
 		batch.draw(batchView);
 	}
 
@@ -58,11 +58,11 @@ void TestImGuiWindow::imGuiUpdate(const sdl::DeltaTime& deltaTime) {
 }
 
 void TestImGuiWindow::imGuiPreUpdate(const sdl::DeltaTime& deltaTime) {
-	glEnable(GL_BLEND);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	gl::glEnable(gl::GL_BLEND);
+	gl::glBlendFunc(gl::GL_SRC_ALPHA, gl::GL_ONE_MINUS_SRC_ALPHA);
 	batch_->draw();
 	batchIndexes_->draw();
-	glDisable(GL_BLEND);
+	gl::glDisable(gl::GL_BLEND);
 }
 
 void TestImGuiWindow::initPreLoop() {
@@ -77,7 +77,7 @@ void TestImGuiWindow::initPreLoop() {
 }
 
 void TestImGuiWindow::initBatchTriangles() {
-	batch_ = std::make_shared<BatchTriangles>(shader_, GL_STATIC_DRAW);
+	batch_ = std::make_shared<BatchTriangles>(shader_, gl::GL_STATIC_DRAW);
 	batch_->addRectangle(0.1f, 0.4f, 0.2f, 0.2f);
 	batch_->addTriangle({0, 0}, {0.3f, 0}, {0.3f, 0.3f});
 	batch_->addCircle(-0.5f, 0.5f, 0.3f, 40);
@@ -90,7 +90,7 @@ void TestImGuiWindow::initBatchTriangles() {
 }
 
 void TestImGuiWindow::initBatchTrianglesIndexes() {
-	batchIndexes_ = std::make_shared<BatchTrianglesIndexes>(shader_, GL_STATIC_DRAW);
+	batchIndexes_ = std::make_shared<BatchTrianglesIndexes>(shader_, gl::GL_STATIC_DRAW);
 	batchIndexes_->addRectangle(-0.8f, -0.3f, 0.2f, 0.4f);
 	batchIndexes_->addTriangle({0, 0}, {-0.3f, 0}, {-0.3f, -0.3f});
 	batchIndexes_->addRectangle({0.8f, -0.7f}, {0.9f, -0.8f}, {0.8f, 0.8f}, {0.6f, 0.7f});

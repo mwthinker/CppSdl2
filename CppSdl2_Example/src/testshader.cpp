@@ -27,29 +27,29 @@ void TestShader::useProgram() {
 void TestShader::setVertexAttribPointer() const {
 	size_t size = 0;
 
-	glEnableVertexAttribArray(aPosIndex_);
-	glVertexAttribPointer(aPosIndex_, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid*) size);
+	gl::glEnableVertexAttribArray(aPosIndex_);
+	gl::glVertexAttribPointer(aPosIndex_, 2, gl::GL_FLOAT, gl::GL_FALSE, sizeof(Vertex), (gl::GLvoid*) size);
 	size += sizeof(Vertex::pos_);
 
-	glEnableVertexAttribArray(aTexIndex_);
-	glVertexAttribPointer(aTexIndex_, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid*) size);
+	gl::glEnableVertexAttribArray(aTexIndex_);
+	gl::glVertexAttribPointer(aTexIndex_, 2, gl::GL_FLOAT, gl::GL_FALSE, sizeof(Vertex), (gl::GLvoid*) size);
 	size += sizeof(Vertex::tex_);
 
-	glEnableVertexAttribArray(aColorIndex_);
-	glVertexAttribPointer(aColorIndex_, 4, GL_UNSIGNED_BYTE, GL_TRUE, sizeof(Vertex), (GLvoid*) size);
+	gl::glEnableVertexAttribArray(aColorIndex_);
+	gl::glVertexAttribPointer(aColorIndex_, 4, gl::GL_UNSIGNED_BYTE, gl::GL_TRUE, sizeof(Vertex), (gl::GLvoid*) size);
 	size += sizeof(Vertex::color_);
 
-	glEnableVertexAttribArray(aTextureIndex_);
-	glVertexAttribPointer(aTextureIndex_, 1, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid*) size);
+	gl::glEnableVertexAttribArray(aTextureIndex_);
+	gl::glVertexAttribPointer(aTextureIndex_, 1, gl::GL_FLOAT, gl::GL_FALSE, sizeof(Vertex), (gl::GLvoid*) size);
 	sdl::assertGlError();
 }
 
 void TestShader::setProjectionMatrix(const Mat44& matrix) {
 	shader_.useProgram();
-	glUniformMatrix4fv(uProjIndex_, 1, false, glm::value_ptr(matrix));
+	gl::glUniformMatrix4fv(uProjIndex_, 1, false, glm::value_ptr(matrix));
 }
 
 void TestShader::setModelMatrix(const Mat44& matrix) {
 	shader_.useProgram();
-	glUniformMatrix4fv(uModelIndex_, 1, false, glm::value_ptr(matrix));
+	gl::glUniformMatrix4fv(uModelIndex_, 1, false, glm::value_ptr(matrix));
 }

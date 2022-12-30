@@ -31,7 +31,7 @@ namespace sdl {
 	}
 
 	void TextureView::bind() {
-		glBindTexture(GL_TEXTURE_2D, texture_);
+		gl::glBindTexture(gl::GL_TEXTURE_2D, texture_);
 	}
 
 }

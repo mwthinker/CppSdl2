@@ -116,7 +116,7 @@ namespace sdl {
 	private:
 		struct BatchData {
 			BatchView batchView;
-			GLuint texture;
+			gl::GLuint texture;
 			int matrixIndex;
 		};
 
@@ -130,7 +130,7 @@ namespace sdl {
 		void draw(sdl::Shader& shader, const BatchData& batchData);
 
 		std::vector<MatrixPair> matrixes_;
-		Batch batch_{GL_DYNAMIC_DRAW};
+		Batch batch_{gl::GL_DYNAMIC_DRAW};
 		std::vector<BatchData> batches_;
 		sdl::VertexArrayObject vao_;
 		int currentMatrixIndex_ = 0;
@@ -145,7 +145,7 @@ namespace sdl {
 	void Graphic::addPolygon(std::input_iterator auto begin, std::input_iterator auto end, Color color) {
 		batch_.startBatchView();
 		sdl::graphic::addPolygon(batch_, begin, end, color);
-		add(batch_.getBatchView(GL_LINES));
+		add(batch_.getBatchView(gl::GL_LINES));
 	}
 
 	inline void Graphic::addPixelLine(std::initializer_list<glm::vec2> points, Color color) {
@@ -166,7 +166,7 @@ namespace sdl {
 			batch_.pushBackIndex(i);
 		}
 
-		add(batch_.getBatchView(GL_LINES));
+		add(batch_.getBatchView(gl::GL_LINES));
 	}
 
 	inline const glm::mat4& Graphic::getMatrix() const {

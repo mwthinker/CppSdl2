@@ -1,7 +1,9 @@
 #ifndef CPPSDL2_SDL_OPENGL_H
 #define CPPSDL2_SDL_OPENGL_H
 
-#include <glad/glad.h>
+#include <globjects/globjects.h>
+#include <glbinding/gl/gl.h>
+
 #include <tuple>
 #if __cpp_lib_source_location // TODO! Remove when clang and GCC has support.
 #include <source_location>
@@ -10,12 +12,11 @@
 namespace sdl {
 		
 	template <typename... Caps>
-	requires std::conjunction_v<std::is_same<int, Caps>...> || std::conjunction_v<std::is_same<GLenum, Caps>...>
+	requires std::conjunction_v<std::is_same<int, Caps>...> || std::conjunction_v<std::is_same<gl::GLenum, Caps>...>
 	class GlEnableScoped {
 	public:
 		explicit GlEnableScoped(Caps... caps)
-			: caps_{caps...}
-		{
+			: caps_{caps...} {
 			std::apply([](auto&&... caps) {
 				((glEnable(caps)), ...);
 #if _DEBUG
@@ -25,33 +26,31 @@ namespace sdl {
 		}
 
 		~GlEnableScoped() {
-			std::apply([](auto&&... caps) {((glDisable(caps)), ...); }, caps_);
+			std::apply([](auto&&... caps) {((gl::glDisable(caps)), ...); }, caps_);
 		}
 
 	private:
 		// Check if value is valid (missing some values) https://www.khronos.org/registry/OpenGL-Refpages/gl4/html/glEnable.xhtml.
-		static bool isValid(GLenum value) {
+		static bool isValid(gl::GLenum value) {
 			return
-				value == GL_ALPHA_TEST ||
-				value == GL_BLEND ||
-				value == GL_CULL_FACE ||
-#ifdef GL_DEBUG_OUTPUT
-				value == GL_DEBUG_OUTPUT ||
-#endif
-				value == GL_DEPTH_CLAMP ||
-				value == GL_DEPTH_TEST ||
-				value == GL_DITHER ||
-				value == GL_FRAMEBUFFER_SRGB ||
-				value == GL_LINE_SMOOTH ||
-				value == GL_MULTISAMPLE ||
-				value == GL_POLYGON_OFFSET_FILL ||
-				value == GL_POLYGON_OFFSET_LINE ||
-				value == GL_POLYGON_OFFSET_POINT ||
-				value == GL_POLYGON_SMOOTH ||
-				value == GL_SCISSOR_TEST ||
-				value == GL_STENCIL_TEST ||
-				value == GL_TEXTURE_CUBE_MAP_SEAMLESS ||
-				value == GL_PROGRAM_POINT_SIZE;
+				value == gl::GLenum::GL_ALPHA_TEST ||
+				value == gl::GLenum::GL_BLEND ||
+				value == gl::GLenum::GL_CULL_FACE ||
+				value == gl::GLenum::GL_DEBUG_OUTPUT ||
+				value == gl::GLenum::GL_DEPTH_CLAMP ||
+				value == gl::GLenum::GL_DEPTH_TEST ||
+				value == gl::GLenum::GL_DITHER ||
+				value == gl::GLenum::GL_FRAMEBUFFER_SRGB ||
+				value == gl::GLenum::GL_LINE_SMOOTH ||
+				value == gl::GLenum::GL_MULTISAMPLE ||
+				value == gl::GLenum::GL_POLYGON_OFFSET_FILL ||
+				value == gl::GLenum::GL_POLYGON_OFFSET_LINE ||
+				value == gl::GLenum::GL_POLYGON_OFFSET_POINT ||
+				value == gl::GLenum::GL_POLYGON_SMOOTH ||
+				value == gl::GLenum::GL_SCISSOR_TEST ||
+				value == gl::GLenum::GL_STENCIL_TEST ||
+				value == gl::GLenum::GL_TEXTURE_CUBE_MAP_SEAMLESS ||
+				value == gl::GLenum::GL_PROGRAM_POINT_SIZE;
 		}
 
 		std::tuple<Caps...> caps_;

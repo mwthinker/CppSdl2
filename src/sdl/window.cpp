@@ -3,7 +3,7 @@
 #include "sprite.h"
 
 #include <spdlog/spdlog.h>
-
+#include <glbinding/glbinding.h>
 #include <SDL_image.h>
 
 #include <thread>
@@ -13,19 +13,6 @@
 
 namespace sdl {
 
-	namespace {
-		
-		void initGlad() {
-			if (gladLoadGLLoader((GLADloadproc) SDL_GL_GetProcAddress)) {
-				spdlog::info("[sdl::Window] gladLoadGLLoader succeeded");
-			} else {
-				spdlog::error("[sdl::Window] gladLoadGLLoader failed, something is seriously wrong");
-				throw std::exception{};
-			}
-		}
-
-	}
-
 	Window::Window() {
 		spdlog::info("[sdl::Window] Creating Window");
 	}
@@ -34,7 +21,7 @@ namespace sdl {
 		: majorVersionGl_{majorVersionGl}
 		, minorVersionGl_{minorVersionGl} {
 		
-		assert(majorVersionGl > 0 && minorVersionGl > 0);
+		assert(majorVersionGl >= 3 && minorVersionGl >= 3);
 		spdlog::info("[sdl::Window] Creating Window");
 	}
 
@@ -49,12 +36,14 @@ namespace sdl {
 			spdlog::warn("[sdl::Window] Unable to set VSync: ", SDL_GetError());
 		}
 		
-		initGlad();
+		glbinding::initialize([](const char* name) {
+			return reinterpret_cast<glbinding::ProcAddress>(SDL_GL_GetProcAddress(name));
+		});
 
 		spdlog::info("[sdl::Window] Setup OpenGl version: {}.{}", majorVersionGl_, minorVersionGl_);
-		if (char* version = (char*) glGetString(GL_VERSION)) {
+		if (char* version = (char*) gl::glGetString(gl::GL_VERSION)) {
 			spdlog::info("[sdl::Window] GL_VERSION: {}", version);
-			spdlog::info("[sdl::Window] GL_SHADING_LANGUAGE_VERSION: {}", (char*) glGetString(GL_SHADING_LANGUAGE_VERSION));
+			spdlog::info("[sdl::Window] GL_SHADING_LANGUAGE_VERSION: {}", (char*) gl::glGetString(gl::GL_SHADING_LANGUAGE_VERSION));
 		} else {
 			spdlog::error("[sdl::Window] Unknown OpenGL version loadad!");
 			throw std::exception{};
@@ -147,8 +136,8 @@ namespace sdl {
 		spdlog::info("[sdl::Window] Loop starting");
 		auto time = Clock::now();
 		while (!quit_) {
-			glClearColor(clearColor_.red(), clearColor_.green(), clearColor_.blue(), clearColor_.alpha());
-			glClear(glBitfield_);
+			gl::glClearColor(clearColor_.red(), clearColor_.green(), clearColor_.blue(), clearColor_.alpha());
+			gl::glClear(glBitfield_);
 				
 			SDL_Event eventSDL;
 			while (SDL_PollEvent(&eventSDL)) {

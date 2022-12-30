@@ -7,24 +7,22 @@ namespace sdl {
 	namespace {
 
 #if _DEBUG
-		const char* errorString(GLenum error) {
+		const char* errorString(gl::GLenum error) {
 			switch (error) {
-				case GL_INVALID_ENUM:
+				case gl::GL_INVALID_ENUM:
 					return "GL_INVALID_ENUM";
-				case GL_INVALID_VALUE:
+				case gl::GL_INVALID_VALUE:
 					return "GL_INVALID_VALUE";
-				case GL_INVALID_OPERATION:
+				case gl::GL_INVALID_OPERATION:
 					return "GL_INVALID_OPERATION";
-				case GL_STACK_UNDERFLOW:
+				case gl::GL_STACK_UNDERFLOW:
 					return "GL_STACK_UNDERFLOW";
-				case GL_OUT_OF_MEMORY:
+				case gl::GL_OUT_OF_MEMORY:
 					return "GL_OUT_OF_MEMORY";
-				case GL_INVALID_FRAMEBUFFER_OPERATION:
+				case gl::GL_INVALID_FRAMEBUFFER_OPERATION:
 					return "GL_INVALID_FRAMEBUFFER_OPERATION";
-#ifdef GL_CONTEXT_LOST
-				case GL_CONTEXT_LOST:
+				case gl::GL_CONTEXT_LOST:
 					return "GL_CONTEXT_LOST";
-#endif 
 			}
 			return "Unknown GL error code";
 		}
@@ -39,10 +37,14 @@ namespace sdl {
 		auto line = location.line();
 		auto functionName = location.function_name();
 
-		while (GLenum error = glGetError()) {
+		
+		/* MW
+		while (gl::GLenum error = gl::glGetError())
+		{
 			spdlog::warn("[sdl::OpenGl] File: {}, Line: {}, Function: {}, Error: {}={}", 
 				fileName, line, functionName, error, errorString(error));
 		}
+		*/
 #endif
 	}
 #endif

@@ -28,7 +28,7 @@ namespace sdl {
 		void setTextureId(int textureId);
 
 	private:
-		Shader(const GLchar* vShade, const GLchar* fShader);
+		Shader(const gl::GLchar* vShade, const gl::GLchar* fShader);
 
 		sdl::ShaderProgram shader_;
 		

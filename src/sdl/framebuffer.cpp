@@ -6,7 +6,7 @@ namespace sdl {
 
 	FrameBuffer::~FrameBuffer() {
 		if (frameBuffer_ != 0) {
-			glDeleteFramebuffers(1, &frameBuffer_);
+			gl::glDeleteFramebuffers(1, &frameBuffer_);
 		}
 	}
 	
@@ -17,7 +17,7 @@ namespace sdl {
 
 	FrameBuffer& FrameBuffer::operator=(FrameBuffer&& other) noexcept {
 		if (frameBuffer_ != 0) {
-			glDeleteFramebuffers(1, &frameBuffer_);
+			gl::glDeleteFramebuffers(1, &frameBuffer_);
 		}
 		frameBuffer_ = std::exchange(other.frameBuffer_, 0);
 		return *this;
@@ -25,7 +25,7 @@ namespace sdl {
 
 	void FrameBuffer::bind() {
 		if (frameBuffer_ != 0) {
-			glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer_);
+			gl::glBindFramebuffer(gl::GL_FRAMEBUFFER, frameBuffer_);
 			assertGlError();
 		} else {
 			spdlog::debug("[sdl::FrameBuffer] Must be generated first");
@@ -37,13 +37,13 @@ namespace sdl {
 	}
 
 	void FrameBuffer::bindDefault() {
-		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+		gl::glBindFramebuffer(gl::GL_FRAMEBUFFER, 0);
 		assertGlError();
 	}
 
 	void FrameBuffer::generate() {
 		if (frameBuffer_ == 0) {
-			glGenFramebuffers(1, &frameBuffer_);
+			gl::glGenFramebuffers(1, &frameBuffer_);
 			assertGlError();
 		} else {
 			spdlog::warn("[sdl::FrameBuffer] tried to create, but texture already exists");

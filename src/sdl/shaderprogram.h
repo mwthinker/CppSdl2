@@ -64,10 +64,10 @@ namespace sdl {
 
 		void bindAllAttributes();
 
-		std::map<std::string, GLuint> attributes_;
-		mutable std::map<std::string, GLuint> uniforms_;
+		std::map<std::string, gl::GLuint> attributes_;
+		mutable std::map<std::string, gl::GLuint> uniforms_;
 		
-		GLuint programObjectId_ = 0;
+		gl::GLuint programObjectId_ = 0;
 	};
 
 }

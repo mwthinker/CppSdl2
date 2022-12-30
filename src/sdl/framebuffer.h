@@ -30,12 +30,12 @@ namespace sdl {
 		
 		friend bool operator!=(const FrameBuffer& left, const FrameBuffer& right) noexcept;
 
-		operator GLuint() const noexcept {
+		operator gl::GLuint() const noexcept {
 			return frameBuffer_;
 		}
 
 	private:
-		GLuint frameBuffer_ = 0;
+		gl::GLuint frameBuffer_ = 0;
 	};
 
 	inline bool operator==(const FrameBuffer& left, const FrameBuffer& right) noexcept {

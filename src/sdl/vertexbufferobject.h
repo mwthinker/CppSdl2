@@ -19,14 +19,14 @@ namespace sdl {
 		VertexBufferObject& operator=(VertexBufferObject&& other) noexcept;
 
 		// Generates an id or use the current one. Bind the buffer data to the graphic card. The buffer is then unbind.
-		void bufferData(GLsizeiptr size, const GLvoid* data, GLenum usage);
+		void bufferData(gl::GLsizeiptr size, const gl::GLvoid* data, gl::GLenum usage);
 
 		// Replaces the data in the buffer. The current buffer is binded.
 		// Will replace data if the buffer exists on the graphic card.
-		void bufferSubData(GLsizeiptr offset, GLsizeiptr size, const GLvoid* data);
+		void bufferSubData(gl::GLsizeiptr offset, gl::GLsizeiptr size, const gl::GLvoid* data);
 
 		// Bind the current vertex buffer.
-		void bind(GLenum target);
+		void bind(gl::GLenum target);
 
 		bool isGenerated() const noexcept;
 
@@ -37,29 +37,29 @@ namespace sdl {
 		void unbind();
 
 		// Return the size in bytes for the current data.
-		GLsizeiptr getSize() const noexcept;
+		gl::GLsizeiptr getSize() const noexcept;
 
 		// Return the target specified.
-		GLenum getTarget() const noexcept;
+		gl::GLenum getTarget() const noexcept;
 
-		GLuint getId() const noexcept;
+		gl::GLuint getId() const noexcept;
 
 	private:
-		GLuint vboId_ = 0;
-		GLsizeiptr size_ = 0;
-		GLenum target_ = 0;
-		GLenum usage_ = 0;
+		gl::GLuint vboId_ = 0;
+		gl::GLsizeiptr size_ = 0;
+		gl::GLenum target_ = gl::GL_ARRAY_BUFFER;
+		gl::GLenum usage_ = gl::GL_STATIC_DRAW;
 	};
 
-	inline GLsizeiptr VertexBufferObject::getSize() const noexcept {
+	inline gl::GLsizeiptr VertexBufferObject::getSize() const noexcept {
 		return size_;
 	}
 	
-	inline GLenum VertexBufferObject::getTarget() const noexcept {
+	inline gl::GLenum VertexBufferObject::getTarget() const noexcept {
 		return target_;
 	}
 
-	inline GLuint VertexBufferObject::getId() const noexcept {
+	inline gl::GLuint VertexBufferObject::getId() const noexcept {
 		return vboId_;
 	}
 

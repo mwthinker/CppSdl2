@@ -53,9 +53,8 @@ find_package(SDL2 CONFIG REQUIRED)
 find_package(SDL2_image CONFIG REQUIRED)
 find_package(SDL2_mixer CONFIG REQUIRED)
 find_package(SDL2_ttf CONFIG REQUIRED)
-find_package(glad CONFIG REQUIRED)
 find_package(freetype CONFIG REQUIRED)
-find_package(glm CONFIG REQUIRED)
+find_package(globjects CONFIG REQUIRED)
 
 target_link_libraries(ImGui
 	PUBLIC
@@ -64,9 +63,8 @@ target_link_libraries(ImGui
 		$<IF:$<TARGET_EXISTS:SDL2_image::SDL2_image>,SDL2_image::SDL2_image,SDL2_image::SDL2_image-static>
 		$<IF:$<TARGET_EXISTS:SDL2_ttf::SDL2_ttf>,SDL2_ttf::SDL2_ttf,SDL2_ttf::SDL2_ttf-static>
 		$<IF:$<TARGET_EXISTS:SDL2_mixer::SDL2_mixer>,SDL2_mixer::SDL2_mixer,SDL2_mixer::SDL2_mixer-static>
-		glad::glad
 		freetype
-		glm::glm
+		globjects::globjects
 )
 
 target_compile_definitions(ImGui

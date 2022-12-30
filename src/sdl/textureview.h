@@ -51,14 +51,14 @@ namespace sdl {
 
 		void bind();
 
-		constexpr operator GLuint() const noexcept {
+		constexpr operator gl::GLuint() const noexcept {
 			return texture_;
 		}
 
 	private:
 		glm::vec2 pos_{0.f, 0.f};
 		glm::vec2 size_{1.f, 1.f};
-		GLuint texture_ = 0;
+		gl::GLuint texture_ = 0;
 	};
 
 }

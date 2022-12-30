@@ -10,25 +10,25 @@ namespace {
 
 	struct GlScopedState {
 		GlScopedState() {
-			glGetIntegerv(GL_TEXTURE_BINDING_2D, &texture);
-			glGetIntegerv(GL_ACTIVE_TEXTURE, &activeTexture);
-			glGetBooleanv(GL_PROGRAM_POINT_SIZE, &point);
+			gl::glGetIntegerv(gl::GL_TEXTURE_BINDING_2D, &texture);
+			gl::glGetIntegerv(gl::GL_ACTIVE_TEXTURE, &activeTexture);
+			gl::glGetBooleanv(gl::GL_PROGRAM_POINT_SIZE, &point);
 		}
 
 		~GlScopedState() {
-			glBindTexture(GL_TEXTURE_2D, texture);
-			glActiveTexture(activeTexture);
+			gl::glBindTexture(gl::GL_TEXTURE_2D, texture);
+			gl::glActiveTexture(activeTexture);
 
 			if (point) {
-				glEnable(GL_PROGRAM_POINT_SIZE);
+				gl::glEnable(gl::GL_PROGRAM_POINT_SIZE);
 			} else {
-				glDisable(GL_PROGRAM_POINT_SIZE);
+				gl::glDisable(gl::GL_PROGRAM_POINT_SIZE);
 			}
 		}
 
-		GLint texture;
-		GLint  activeTexture;
-		GLboolean point;
+		gl::GLint texture;
+		gl::GLenum activeTexture;
+		gl::GLboolean point;
 	};
 
 }
@@ -182,7 +182,7 @@ namespace sdl {
 		
 		GlScopedState currentState;
 
-		glActiveTexture(GL_TEXTURE1);
+		gl::glActiveTexture(gl::GL_TEXTURE1);
 
 		auto index = currentMatrixIndex_;
 		currentMatrixIndex_ = -1;
@@ -202,55 +202,55 @@ namespace sdl {
 		batch_.startAdding();
 		batch_.pushBack({point, {size, size}, color});
 		batch_.pushBackIndex(0);
-		add(batch_.getBatchView(GL_POINTS));
+		add(batch_.getBatchView(gl::GL_POINTS));
 	}
 
 	void Graphic::addLine(const glm::vec2& p1, const glm::vec2& p2, float width, Color color) {
 		batch_.startBatchView();
 		sdlg::addLine(batch_, p1, p2, width, color);
-		add(batch_.getBatchView(GL_TRIANGLES));
+		add(batch_.getBatchView(gl::GL_TRIANGLES));
 	}
 
 	void Graphic::addRectangle(const glm::vec2& pos, const glm::vec2& size, Color color) {
 		batch_.startBatchView();
 		sdlg::addRectangle(batch_, pos, size, color);
-		add(batch_.getBatchView(GL_TRIANGLES));
+		add(batch_.getBatchView(gl::GL_TRIANGLES));
 	}
 
 	void Graphic::addRectangleImage(const glm::vec2& pos, const glm::vec2& size, const sdl::TextureView& textureView, Color color) {
 		batch_.startBatchView();
 		sdlg::addRectangleImage(batch_, pos, size, textureView, color);
-		add(batch_.getBatchView(GL_TRIANGLES), textureView);
+		add(batch_.getBatchView(gl::GL_TRIANGLES), textureView);
 	}
 
 	void Graphic::addFilledHexagon(const glm::vec2& center, float radius, Color color, float startAngle) {
 		batch_.startBatchView();
 		addCircle(center, radius, color, 6, startAngle);
-		add(batch_.getBatchView(GL_TRIANGLES));
+		add(batch_.getBatchView(gl::GL_TRIANGLES));
 	}
 
 	void Graphic::addHexagonImage(const glm::vec2& center, float radius, const sdl::TextureView& textureView, float startAngle) {
 		batch_.startBatchView();
 		sdlg::addHexagonImage(batch_, center, radius, textureView, startAngle);
-		add(batch_.getBatchView(GL_TRIANGLES), textureView);
+		add(batch_.getBatchView(gl::GL_TRIANGLES), textureView);
 	}
 
 	void Graphic::addHexagon(const glm::vec2& center, float innerRadius, float outerRadius, Color color, float startAngle) {
 		batch_.startBatchView();
 		sdlg::addHexagon(batch_, center, innerRadius, outerRadius, color, startAngle);
-		add(batch_.getBatchView(GL_TRIANGLES));
+		add(batch_.getBatchView(gl::GL_TRIANGLES));
 	}
 
 	void Graphic::addCircle(const glm::vec2& center, float radius, Color color, const int iterations, float startAngle) {
 		batch_.startBatchView();
 		sdlg::addCircle(batch_, center, radius, color, iterations, startAngle);
-		add(batch_.getBatchView(GL_TRIANGLES));
+		add(batch_.getBatchView(gl::GL_TRIANGLES));
 	}
 
 	void Graphic::addCircleOutline(const glm::vec2& center, float radius, float width, Color color, const int iterations, float startAngle) {
 		batch_.startBatchView();
 		sdlg::addCircleOutline(batch_, center, radius, width, color, iterations, startAngle);
-		add(batch_.getBatchView(GL_TRIANGLES));
+		add(batch_.getBatchView(gl::GL_TRIANGLES));
 	}
 
 	void Graphic::bind(sdl::Shader& shader) {
@@ -268,7 +268,7 @@ namespace sdl {
 	void Graphic::draw(sdl::Shader& shader, const BatchData& batchData) {
 		if (const auto& texture = batchData.texture; texture) {
 			shader.setTextureId(1);
-			glBindTexture(GL_TEXTURE_2D, texture);
+			gl::glBindTexture(gl::GL_TEXTURE_2D, texture);
 		} else {
 			shader.setTextureId(-1);
 		}

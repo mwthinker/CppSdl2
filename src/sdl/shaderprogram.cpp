@@ -15,43 +15,43 @@ namespace sdl {
 		};
 
 		template <LogError Type>
-		void logError(GLuint objectId, const char* shaderString, const char* errorHeader) {
-			GLint infoLen = 0;
+		void logError(gl::GLuint objectId, const char* shaderString, const char* errorHeader) {
+			gl::GLint infoLen = 0;
 			if constexpr (Type == LogError::ProgramError) {
-				glGetProgramiv(objectId, GL_INFO_LOG_LENGTH, &infoLen);
+				gl::glGetProgramiv(objectId, gl::GL_INFO_LOG_LENGTH, &infoLen);
 			} else {
-				glGetShaderiv(objectId, GL_INFO_LOG_LENGTH, &infoLen);
+				gl::glGetShaderiv(objectId, gl::GL_INFO_LOG_LENGTH, &infoLen);
 			}
 			if (infoLen > 1) {
 				char message[256]; // A arbitrary value big enough to contain message.
-				GLsizei size = 0;
+				gl::GLsizei size = 0;
 				if constexpr (Type == LogError::ProgramError) {
-					glGetProgramInfoLog(objectId, sizeof(message), &size, message);
+					gl::glGetProgramInfoLog(objectId, sizeof(message), &size, message);
 				} else {
-					glGetShaderInfoLog(objectId, sizeof(message), &size, message);
+					gl::glGetShaderInfoLog(objectId, sizeof(message), &size, message);
 				}
 				spdlog::error("[sdl::ShaderProgram] {}, {}: {}", shaderString, errorHeader, std::string_view(message, size));
 			}
 		}
 
-		GLuint loadShader(GLuint program, GLenum type, const GLchar* shaderSrc) {
+		gl::GLuint loadShader(gl::GLuint program, gl::GLenum type, const gl::GLchar* shaderSrc) {
 			auto shader= glCreateShader(type);
 			if (shader == 0) {
 				spdlog::error("[sdl::ShaderProgram] Failed to create shader: ", shaderSrc);
 				return 0;
 			}
-			glShaderSource(shader, 1, &shaderSrc, nullptr);
+			gl::glShaderSource(shader, 1, &shaderSrc, nullptr);
 			assertGlError();
-			glCompileShader(shader);
+			gl::glCompileShader(shader);
 
-			GLint compileStatus;
-			glGetShaderiv(shader, GL_COMPILE_STATUS, &compileStatus);
-			if (compileStatus == GL_FALSE) {
+			gl::GLint compileStatus;
+			gl::glGetShaderiv(shader, gl::GL_COMPILE_STATUS, &compileStatus);
+			if (compileStatus == gl::GL_FALSE) {
 				logError<LogError::ShaderError>(shader, shaderSrc, "Failed to compile shader: ");
 				return 0;
 			}
 			assertGlError();
-			glAttachShader(program, shader);
+			gl::glAttachShader(program, shader);
 			assertGlError();
 			return shader;
 		}
@@ -76,7 +76,7 @@ namespace sdl {
 
 	ShaderProgram& ShaderProgram::operator=(ShaderProgram&& other) noexcept {
 		if (programObjectId_ != 0) {
-			glDeleteProgram(programObjectId_);
+			gl::glDeleteProgram(programObjectId_);
 			assertGlError();
 		}
 		
@@ -88,7 +88,7 @@ namespace sdl {
 
 	ShaderProgram::~ShaderProgram() {
 		if (programObjectId_ != 0) {
-			glDeleteProgram(programObjectId_);
+			gl::glDeleteProgram(programObjectId_);
 			assertGlError();
 		}
 	}
@@ -122,7 +122,7 @@ namespace sdl {
 			return it->second;
 		}
 
-		auto loc = glGetUniformLocation(programObjectId_, uniform.c_str());
+		auto loc = gl::glGetUniformLocation(programObjectId_, uniform.c_str());
 		assertGlError();
 		if (loc != -1) {
 			uniforms_[uniform] = loc;
@@ -144,7 +144,7 @@ namespace sdl {
 			return false;
 		}
 		
-		programObjectId_ = glCreateProgram();
+		programObjectId_ = gl::glCreateProgram();
 		assertGlError();
 			
 		if (programObjectId_ == 0) {
@@ -152,13 +152,13 @@ namespace sdl {
 			return false;
 		}
 
-		if (0 == loadShader(programObjectId_, GL_VERTEX_SHADER, vShader.c_str())) {
+		if (0 == loadShader(programObjectId_, gl::GL_VERTEX_SHADER, vShader.c_str())) {
 			return false;
 		}
-		if (!gShader.empty() && 0 == loadShader(programObjectId_, GL_GEOMETRY_SHADER, gShader.c_str())) {
+		if (!gShader.empty() && 0 == loadShader(programObjectId_, gl::GL_GEOMETRY_SHADER, gShader.c_str())) {
 			return false;
 		}
-		if (0 == loadShader(programObjectId_, GL_FRAGMENT_SHADER, fShader.c_str())) {
+		if (0 == loadShader(programObjectId_, gl::GL_FRAGMENT_SHADER, fShader.c_str())) {
             return false;
 		}
 
@@ -178,7 +178,7 @@ namespace sdl {
 
 	void ShaderProgram::useProgram() {
 		if (programObjectId_ != 0) {
-			glUseProgram(programObjectId_);
+			gl::glUseProgram(programObjectId_);
 			assertGlError();
 		} else {
 			spdlog::warn("[sdl::ShaderProgram] Failed to use program, program is not compiled");
@@ -186,12 +186,12 @@ namespace sdl {
 	}
 	
 	bool ShaderProgram::linkProgram() {
-		glLinkProgram(programObjectId_);
-		GLint linked;
-		glGetProgramiv(programObjectId_, GL_LINK_STATUS, &linked);
-		if (linked == GL_FALSE) {
+		gl::glLinkProgram(programObjectId_);
+		gl::GLint linked;
+		gl::glGetProgramiv(programObjectId_, gl::GL_LINK_STATUS, &linked);
+		if (linked == gl::GL_FALSE) {
 			logError<LogError::ProgramError>(programObjectId_, "", "Error linking program");
-			glDeleteProgram(programObjectId_);
+			gl::glDeleteProgram(programObjectId_);
 			return false;
 		}
 		return true;
@@ -200,7 +200,7 @@ namespace sdl {
 	void ShaderProgram::bindAllAttributes() {
 		int index = 0;
 		for (auto& [name, location] : attributes_) {
-			glBindAttribLocation(programObjectId_, index, name.c_str());
+			gl::glBindAttribLocation(programObjectId_, index, name.c_str());
 			assertGlError();
 			location = index++;
 		}

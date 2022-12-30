@@ -42,14 +42,14 @@ namespace sdl {
 		
 		friend bool operator!=(const Texture& left, const Texture& right) noexcept;
 
-		operator GLuint() const noexcept {
+		operator gl::GLuint() const noexcept {
 			return texture_;
 		}
 
 	private:
-		static GLenum surfaceFormat(SDL_Surface* surface);
+		static gl::GLenum surfaceFormat(SDL_Surface* surface);
 
-		GLuint texture_{};
+		gl::GLuint texture_{};
 	};
 
 	inline bool operator==(const Texture& left, const Texture& right) noexcept {
@@ -62,8 +62,8 @@ namespace sdl {
 
 	inline void Texture::texImage(const Surface& surface) {
 		texImage(surface, []() {
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+			gl::glTexParameteri(gl::GL_TEXTURE_2D, gl::GL_TEXTURE_MIN_FILTER, gl::GL_LINEAR);
+			gl::glTexParameteri(gl::GL_TEXTURE_2D, gl::GL_TEXTURE_MAG_FILTER, gl::GL_LINEAR);
 		});
 	}
 
@@ -84,14 +84,14 @@ namespace sdl {
 			return;
 		}
 
-		glBindTexture(GL_TEXTURE_2D, texture_);
+		gl::glBindTexture(gl::GL_TEXTURE_2D, texture_);
 		assertGlError();
 		filter();
-		glTexImage2D(GL_TEXTURE_2D, 0, format,
+		gl::glTexImage2D(gl::GL_TEXTURE_2D, 0, format,
 			surface.surface_->w, surface.surface_->h,
 			0,
 			format,
-			GL_UNSIGNED_BYTE,
+			gl::GL_UNSIGNED_BYTE,
 			surface.surface_->pixels
 		);
 		assertGlError();

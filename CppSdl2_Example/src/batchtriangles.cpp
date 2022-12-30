@@ -5,7 +5,7 @@
 
 namespace {
 
-	const auto PI = glm::pi<GLfloat>();
+	const auto PI = glm::pi<gl::GLfloat>();
 
 	inline Vec2 getHexCorner(Vec2 center, float size, int nbr) {
 		auto angleDeg = 60 * nbr - 30;
@@ -21,7 +21,7 @@ namespace {
 
 }
 
-BatchTriangles::BatchTriangles(std::shared_ptr<TestShader> shader, GLenum usage)
+BatchTriangles::BatchTriangles(std::shared_ptr<TestShader> shader, gl::GLenum usage)
 	: shader_{std::move(shader)}
 	, batch_{usage} {
 
@@ -116,5 +116,5 @@ void BatchTriangles::init() {
 void BatchTriangles::draw() {
 	shader_->useProgram();
 	vao_.bind();
-	batch_.draw(GL_TRIANGLES);
+	batch_.draw(gl::GL_TRIANGLES);
 }

@@ -8,7 +8,7 @@ namespace sdl {
 
 	Texture::~Texture() {
 		if (texture_ != 0) {
-			glDeleteTextures(1, &texture_);
+			gl::glDeleteTextures(1, &texture_);
 		}
 	}
 
@@ -19,7 +19,7 @@ namespace sdl {
 
 	Texture& Texture::operator=(Texture&& texture) noexcept {
 		if (texture_ != 0) {
-			glDeleteTextures(1, &texture_);
+			gl::glDeleteTextures(1, &texture_);
 		}
 		texture_ = std::exchange(texture.texture_, 0);
 		return *this;
@@ -27,7 +27,7 @@ namespace sdl {
 
 	void Texture::bind() {
 		if (texture_ != 0) {
-			glBindTexture(GL_TEXTURE_2D, texture_);
+			gl::glBindTexture(gl::GL_TEXTURE_2D, texture_);
 			assertGlError();
 		} else {
 			spdlog::debug("[sdl::Texture] Must be generated first");
@@ -36,12 +36,12 @@ namespace sdl {
 
 	void Texture::texSubImage(const Surface& surface, const Rect& dst) {
 		if (isValid() && surface.isLoaded()) {
-			glBindTexture(GL_TEXTURE_2D, texture_);
-			glTexSubImage2D(GL_TEXTURE_2D, 0,
+			gl::glBindTexture(gl::GL_TEXTURE_2D, texture_);
+			glTexSubImage2D(gl::GL_TEXTURE_2D, 0,
 				dst.x, dst.y,
 				dst.w, dst.h,
 				surfaceFormat(surface.surface_),
-				GL_UNSIGNED_BYTE,
+				gl::GL_UNSIGNED_BYTE,
 				surface.surface_->pixels);
 			assertGlError();
 		} else {
@@ -51,7 +51,7 @@ namespace sdl {
 
 	void Texture::generate() {
 		if (texture_ == 0) {
-			glGenTextures(1, &texture_);
+			gl::glGenTextures(1, &texture_);
 			assertGlError();
 		} else {
 			spdlog::warn("[sdl::Texture] tried to create, but texture already exists");
@@ -62,16 +62,16 @@ namespace sdl {
 		return texture_ != 0;
 	}
 
-	GLenum Texture::surfaceFormat(SDL_Surface* surface) {
+	gl::GLenum Texture::surfaceFormat(SDL_Surface* surface) {
 		switch (surface->format->BytesPerPixel) {
 			case 1:
-				return GL_RED;
+				return gl::GL_RED;
 			case 3:
-				return GL_RGB;
+				return gl::GL_RGB;
 			case 4:
-				return GL_RGBA;
+				return gl::GL_RGBA;
 		}
-		return 0;
+		return gl::GL_RED;
 	}
 
 }

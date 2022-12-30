@@ -24,11 +24,11 @@ public:
 	public:
 		Vertex() = default;
 
-		Vertex(GLfloat x, GLfloat y)
+		Vertex(gl::GLfloat x, gl::GLfloat y)
 			: pos_{x, y} {
 		}
 
-		Vertex(GLfloat x, GLfloat y, GLfloat xTex, GLfloat yTex)
+		Vertex(gl::GLfloat x, gl::GLfloat y, gl::GLfloat xTex, gl::GLfloat yTex)
 			: pos_{x, y}
 			, tex_{xTex, yTex}
 			, texture_{1.f} {
@@ -37,7 +37,7 @@ public:
 		Vec2 pos_{};
 		Vec2 tex_{};
 		sdl::Color color_{sdl::color::White};
-		GLfloat texture_{};
+		gl::GLfloat texture_{};
 	};
 
 private:
