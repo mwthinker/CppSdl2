@@ -28,7 +28,6 @@ namespace sdl {
 	void Texture::bind() {
 		if (texture_ != 0) {
 			gl::glBindTexture(gl::GL_TEXTURE_2D, texture_);
-			assertGlError();
 		} else {
 			spdlog::debug("[sdl::Texture] Must be generated first");
 		}
@@ -43,7 +42,6 @@ namespace sdl {
 				surfaceFormat(surface.surface_),
 				gl::GL_UNSIGNED_BYTE,
 				surface.surface_->pixels);
-			assertGlError();
 		} else {
 			spdlog::warn("[sdl::Texture] texSubImage failed");
 		}
@@ -52,7 +50,6 @@ namespace sdl {
 	void Texture::generate() {
 		if (texture_ == 0) {
 			gl::glGenTextures(1, &texture_);
-			assertGlError();
 		} else {
 			spdlog::warn("[sdl::Texture] tried to create, but texture already exists");
 		}

@@ -54,7 +54,6 @@ private:
 		});
 
 		sprite_.bind();
-		sdl::assertGlError();
 	}
 
 	void update(const sdl::DeltaTime& deltaTime) override {

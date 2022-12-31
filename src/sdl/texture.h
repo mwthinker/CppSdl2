@@ -85,7 +85,6 @@ namespace sdl {
 		}
 
 		gl::glBindTexture(gl::GL_TEXTURE_2D, texture_);
-		assertGlError();
 		filter();
 		gl::glTexImage2D(gl::GL_TEXTURE_2D, 0, format,
 			surface.surface_->w, surface.surface_->h,
@@ -94,7 +93,6 @@ namespace sdl {
 			gl::GL_UNSIGNED_BYTE,
 			surface.surface_->pixels
 		);
-		assertGlError();
 	}
 
 }

@@ -91,7 +91,6 @@ void TestWindow::update(const sdl::DeltaTime& deltaTime) {
 	batch2_->draw();
 
 	gl::glDisable(gl::GL_BLEND);
-	sdl::assertGlError();
 }
 
 void TestWindow::eventUpdate(const SDL_Event& windowEvent) {

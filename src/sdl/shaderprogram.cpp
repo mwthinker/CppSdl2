@@ -41,7 +41,6 @@ namespace sdl {
 				return 0;
 			}
 			gl::glShaderSource(shader, 1, &shaderSrc, nullptr);
-			assertGlError();
 			gl::glCompileShader(shader);
 
 			gl::GLint compileStatus;
@@ -50,9 +49,7 @@ namespace sdl {
 				logError<LogError::ShaderError>(shader, shaderSrc, "Failed to compile shader: ");
 				return 0;
 			}
-			assertGlError();
 			gl::glAttachShader(program, shader);
-			assertGlError();
 			return shader;
 		}
 
@@ -77,7 +74,6 @@ namespace sdl {
 	ShaderProgram& ShaderProgram::operator=(ShaderProgram&& other) noexcept {
 		if (programObjectId_ != 0) {
 			gl::glDeleteProgram(programObjectId_);
-			assertGlError();
 		}
 		
 		attributes_ = std::move(other.attributes_);
@@ -89,7 +85,6 @@ namespace sdl {
 	ShaderProgram::~ShaderProgram() {
 		if (programObjectId_ != 0) {
 			gl::glDeleteProgram(programObjectId_);
-			assertGlError();
 		}
 	}
 
@@ -123,7 +118,6 @@ namespace sdl {
 		}
 
 		auto loc = gl::glGetUniformLocation(programObjectId_, uniform.c_str());
-		assertGlError();
 		if (loc != -1) {
 			uniforms_[uniform] = loc;
 		}
@@ -145,7 +139,6 @@ namespace sdl {
 		}
 		
 		programObjectId_ = gl::glCreateProgram();
-		assertGlError();
 			
 		if (programObjectId_ == 0) {
 			spdlog::error("[sdl::ShaderProgram] Failed to create program");
@@ -179,7 +172,6 @@ namespace sdl {
 	void ShaderProgram::useProgram() {
 		if (programObjectId_ != 0) {
 			gl::glUseProgram(programObjectId_);
-			assertGlError();
 		} else {
 			spdlog::warn("[sdl::ShaderProgram] Failed to use program, program is not compiled");
 		}
@@ -201,7 +193,6 @@ namespace sdl {
 		int index = 0;
 		for (auto& [name, location] : attributes_) {
 			gl::glBindAttribLocation(programObjectId_, index, name.c_str());
-			assertGlError();
 			location = index++;
 		}
 	}

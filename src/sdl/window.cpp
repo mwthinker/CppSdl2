@@ -4,6 +4,9 @@
 
 #include <spdlog/spdlog.h>
 #include <glbinding/glbinding.h>
+#include <glbinding/FunctionCall.h>
+#include <glbinding/AbstractFunction.h>
+#include <glbinding/gl/enum.h>
 #include <SDL_image.h>
 
 #include <thread>
@@ -12,6 +15,34 @@
 #include <stdexcept>
 
 namespace sdl {
+
+	namespace {
+
+		const char* errorString(gl::GLenum error) {
+			switch (error) {
+				case gl::GL_NO_ERROR:                          return "GL_NO_ERROR";
+				case gl::GL_INVALID_ENUM:                      return "GL_INVALID_ENUM";
+				case gl::GL_INVALID_VALUE:                     return "GL_INVALID_VALUE";
+				case gl::GL_INVALID_OPERATION:                 return "GL_INVALID_OPERATION";
+				case gl::GL_STACK_OVERFLOW:                    return "GL_STACK_OVERFLOW";
+				case gl::GL_STACK_UNDERFLOW:                   return "GL_STACK_UNDERFLOW";
+				case gl::GL_OUT_OF_MEMORY:                     return "GL_OUT_OF_MEMORY";
+				case gl::GL_INVALID_FRAMEBUFFER_OPERATION:     return "GL_INVALID_FRAMEBUFFER_OPERATION";
+				case gl::GL_TABLE_TOO_LARGE:                   return "GL_TABLE_TOO_LARGE";
+			}
+			return "Unknown GL error code";
+		}
+
+		void enableOpengGlDebug() {
+			glbinding::setCallbackMaskExcept(glbinding::CallbackMask::After, {"glGetError"});
+			glbinding::setAfterCallback([](const glbinding::FunctionCall& call) {
+				const auto error = gl::glGetError();
+				if (error != gl::GL_NO_ERROR) {
+					spdlog::warn("{}={} {}", errorString(error), static_cast<int>(error), call.function->name());
+				}
+			});
+		}
+	}
 
 	Window::Window() {
 		spdlog::info("[sdl::Window] Creating Window");
@@ -48,6 +79,8 @@ namespace sdl {
 			spdlog::error("[sdl::Window] Unknown OpenGL version loadad!");
 			throw std::exception{};
 		}
+
+		enableOpengGlDebug();
 	}
 
 	Window::~Window() {
@@ -138,7 +171,7 @@ namespace sdl {
 		while (!quit_) {
 			gl::glClearColor(clearColor_.red(), clearColor_.green(), clearColor_.blue(), clearColor_.alpha());
 			gl::glClear(glBitfield_);
-				
+			
 			SDL_Event eventSDL;
 			while (SDL_PollEvent(&eventSDL)) {
 				eventUpdate(eventSDL);

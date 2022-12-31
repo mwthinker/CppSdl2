@@ -54,7 +54,7 @@ find_package(SDL2_image CONFIG REQUIRED)
 find_package(SDL2_mixer CONFIG REQUIRED)
 find_package(SDL2_ttf CONFIG REQUIRED)
 find_package(freetype CONFIG REQUIRED)
-find_package(globjects CONFIG REQUIRED)
+find_package(glbinding CONFIG REQUIRED)
 
 target_link_libraries(ImGui
 	PUBLIC
@@ -64,7 +64,7 @@ target_link_libraries(ImGui
 		$<IF:$<TARGET_EXISTS:SDL2_ttf::SDL2_ttf>,SDL2_ttf::SDL2_ttf,SDL2_ttf::SDL2_ttf-static>
 		$<IF:$<TARGET_EXISTS:SDL2_mixer::SDL2_mixer>,SDL2_mixer::SDL2_mixer,SDL2_mixer::SDL2_mixer-static>
 		freetype
-		globjects::globjects
+		glbinding::glbinding glbinding::glbinding-aux
 )
 
 target_compile_definitions(ImGui

@@ -26,7 +26,6 @@ namespace sdl {
 	void FrameBuffer::bind() {
 		if (frameBuffer_ != 0) {
 			gl::glBindFramebuffer(gl::GL_FRAMEBUFFER, frameBuffer_);
-			assertGlError();
 		} else {
 			spdlog::debug("[sdl::FrameBuffer] Must be generated first");
 		}
@@ -38,13 +37,11 @@ namespace sdl {
 
 	void FrameBuffer::bindDefault() {
 		gl::glBindFramebuffer(gl::GL_FRAMEBUFFER, 0);
-		assertGlError();
 	}
 
 	void FrameBuffer::generate() {
 		if (frameBuffer_ == 0) {
 			gl::glGenFramebuffers(1, &frameBuffer_);
-			assertGlError();
 		} else {
 			spdlog::warn("[sdl::FrameBuffer] tried to create, but texture already exists");
 		}

@@ -19,7 +19,6 @@ namespace sdl {
 	VertexBufferObject::~VertexBufferObject() {
 		if (vboId_ != 0) {
 			gl::glDeleteBuffers(1, &vboId_);
-			assertGlError();
 		}
 	}
 
@@ -33,7 +32,6 @@ namespace sdl {
 	VertexBufferObject& VertexBufferObject::operator=(VertexBufferObject&& other) noexcept {
 		if (vboId_ != 0) {
 			gl::glDeleteBuffers(1, &vboId_);
-			assertGlError();
 		}
 		vboId_ = std::exchange(other.vboId_, 0);
 		size_ = other.size_;
@@ -49,7 +47,6 @@ namespace sdl {
 		usage_ = usage;
 
         glBufferData(target_, size, data, usage);
-		assertGlError();
 	}
 
 	void VertexBufferObject::bufferSubData(gl::GLsizeiptr offset, gl::GLsizeiptr size, const gl::GLvoid* data) {
@@ -59,7 +56,6 @@ namespace sdl {
 			} else {
 				bufferData(size, data, usage_);
 			}
-			assertGlError();
 		} else {
 			spdlog::warn("[sdl::VertexBufferObject] Calling bindSubData failed, must call bindData first");
 		}
@@ -72,7 +68,6 @@ namespace sdl {
     void VertexBufferObject::generate() {
         if (vboId_ == 0) {
 			gl::glGenBuffers(1, &vboId_);
-			assertGlError();
 		} else {
 			spdlog::warn("[sdl::VertexBufferObject] Calling generate failed, generate has already been called");
 		}
@@ -84,7 +79,6 @@ namespace sdl {
 		if (vboId_ != 0) {
 			target_ = target;
 			gl::glBindBuffer(target_, vboId_);
-			assertGlError();
 		} else {
 			spdlog::warn("[sdl::VertexBufferObject] bind failed, generate must be called first");
 		}
@@ -92,7 +86,6 @@ namespace sdl {
 
 	void VertexBufferObject::unbind() {
 		gl::glBindBuffer(target_, 0);
-		assertGlError();
 	}
 
 }

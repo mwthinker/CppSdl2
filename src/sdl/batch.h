@@ -260,7 +260,6 @@ namespace sdl {
 			}
 
 			glDrawArrays(batchView.mode_, batchView.index_, batchView.size_);
-			assertGlError();
 		} else if (!vbo_.isGenerated()) {
 			spdlog::error("[sdl::Batch] Vertex data failed to draw, no vbo binded, i.e. Batch::uploadToGraphicCard never called");
 		}
@@ -675,7 +674,6 @@ namespace sdl {
 			
 			assert(batchView.isIndexSizeValid());
 			glDrawElements(batchView.mode_, batchView.size_, gl::GL_UNSIGNED_INT, reinterpret_cast<void*>(batchView.index_ * sizeof(gl::GLint)));
-			assertGlError();
 		} else if (!vbo_.isGenerated()) {
 			spdlog::error("[sdl::Batch] Vertex data failed to draw, no vbo binded, i.e. Batch::uploadToGraphicCard never called");
 		}

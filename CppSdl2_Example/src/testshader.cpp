@@ -41,7 +41,6 @@ void TestShader::setVertexAttribPointer() const {
 
 	gl::glEnableVertexAttribArray(aTextureIndex_);
 	gl::glVertexAttribPointer(aTextureIndex_, 1, gl::GL_FLOAT, gl::GL_FALSE, sizeof(Vertex), (gl::GLvoid*) size);
-	sdl::assertGlError();
 }
 
 void TestShader::setProjectionMatrix(const Mat44& matrix) {

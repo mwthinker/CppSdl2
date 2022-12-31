@@ -17,6 +17,6 @@
 		"gtest",
 		"fmt",
 		"freetype",
-		"globjects"
+		"glbinding"
 	]
 }

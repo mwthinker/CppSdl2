@@ -94,15 +94,12 @@ void main() {
 		if (shader_.isLinked()) {
 			gl::glEnableVertexAttribArray(aPos_);
 			gl::glVertexAttribPointer(aPos_, sizeof(Vertex::pos) / sizeof(gl::GLfloat) , gl::GL_FLOAT, gl::GL_FALSE, sizeof(Vertex), (gl::GLvoid*) offsetof(Vertex, pos));
-			sdl::assertGlError();
 
 			gl::glEnableVertexAttribArray(aTex_);
 			gl::glVertexAttribPointer(aTex_, sizeof(Vertex::tex) / sizeof(gl::GLfloat), gl::GL_FLOAT, gl::GL_FALSE, sizeof(Vertex), (gl::GLvoid*) offsetof(Vertex, tex));
-			sdl::assertGlError();
 
 			gl::glEnableVertexAttribArray(aColor_);
 			gl::glVertexAttribPointer(aColor_, 4, gl::GL_UNSIGNED_BYTE, gl::GL_TRUE, sizeof(Vertex), (gl::GLvoid*) offsetof(Vertex, color));
-			sdl::assertGlError();
 		} else {
 			spdlog::warn("[sdl::Shader] setVertexAttribPointer failed, shader not linked");
 		}
