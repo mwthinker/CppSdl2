@@ -16,6 +16,14 @@ namespace sdl {
 	using Clock = std::chrono::high_resolution_clock;
 	using DeltaTime = std::chrono::high_resolution_clock::duration;
 
+	struct Position {
+		int x, y;
+	};
+
+	struct Size {
+		int width, height;
+	};
+
 	// Create a window which handle all user input. The graphic is rendered using OpenGL.
 	class Window {
 	public:
@@ -42,15 +50,15 @@ namespace sdl {
 
 		bool isFullScreen() const;
 
-		std::pair<int, int> getSize() const;
+		Size getSize() const;
 
-		std::pair<int, int> getMinSize() const;
+		Size getMinSize() const;
 
-		std::pair<int, int> getMaxSize() const;
+		Size getMaxSize() const;
 
-		std::pair<int, int> getDrawableSize() const;
+		Size getDrawableSize() const;
 
-		std::pair<int, int> getWindowPosition() const;
+		Position getWindowPosition() const;
 
 		// Return the current windows width in pixels.
 		int getWidth() const noexcept;

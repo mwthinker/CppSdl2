@@ -281,47 +281,47 @@ namespace sdl {
 		}
 	}
 
-	std::pair<int, int> Window::getSize() const {
+	Size Window::getSize() const {
 		if (window_) {
-			std::pair<int, int> pair;
-			SDL_GetWindowSize(window_, &pair.first, &pair.second);
-			return pair;
+			Size size;
+			SDL_GetWindowSize(window_, &size.width, &size.height);
+			return size;
 		}
 		return {width_, height_};;
 	}
 
-	std::pair<int, int> Window::getMinSize() const {
+	Size Window::getMinSize() const {
 		if (window_) {
-			std::pair<int, int> pair;
-			SDL_GetWindowMinimumSize(window_, &pair.first, &pair.second);
-			return pair;
+			Size size;
+			SDL_GetWindowMinimumSize(window_, &size.width, &size.height);
+			return size;
 		}
 		return {minWidth_, minHeight_};;
 	}
 
-	std::pair<int, int> Window::getMaxSize() const {
+	Size Window::getMaxSize() const {
 		if (window_) {
-			std::pair<int, int> pair;
-			SDL_GetWindowMaximumSize(window_, &pair.first, &pair.second);
-			return pair;
+			Size size;
+			SDL_GetWindowMaximumSize(window_, &size.width, &size.height);
+			return size;
 		}
 		return {maxWidth_, maxHeight_};;
 	}
 
-	std::pair<int, int> Window::getDrawableSize() const {
+	Size Window::getDrawableSize() const {
 		if (window_) {
-			std::pair<int, int> pair;
-			SDL_GL_GetDrawableSize(window_, &pair.first, &pair.second);
-			return pair;
+			Size size;
+			SDL_GL_GetDrawableSize(window_, &size.width, &size.height);
+			return size;
 		}
 		return {width_, height_};;
 	}
 
-	std::pair<int, int> Window::getWindowPosition() const {
+	Position Window::getWindowPosition() const {
 		if (window_) {
-			std::pair<int, int> pair;
-			SDL_GetWindowPosition(window_, &pair.first, &pair.second);
-			return pair;
+			Position position;
+			SDL_GetWindowPosition(window_, &position.x, &position.y);
+			return position;
 		}
 		return {x_, y_};
 	}
@@ -368,11 +368,11 @@ namespace sdl {
 	}
 
 	int Window::getWidth() const noexcept {
-		return getSize().first;
+		return getSize().width;
 	}
 
 	int Window::getHeight() const noexcept {
-		return getSize().second;
+		return getSize().height;
 	}
 
 	void Window::setFullScreen(bool fullScreen) {
