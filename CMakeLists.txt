@@ -57,6 +57,13 @@ add_library(CppSdl2
 )
 
 add_subdirectory(ImGui)
+set_property(GLOBAL PROPERTY USE_FOLDERS On)
+set_target_properties(
+	ImGui
+
+	PROPERTIES FOLDER
+		ExternalDependencies
+)
 
 if (MSVC)
 	target_compile_options(CppSdl2
