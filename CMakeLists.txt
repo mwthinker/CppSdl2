@@ -26,7 +26,6 @@ add_library(CppSdl2
 	src/sdl/initsdl.h
 	src/sdl/music.cpp
 	src/sdl/music.h
-	src/sdl/opengl.cpp
 	src/sdl/opengl.h
 	src/sdl/rect.h
 	src/sdl/shader.cpp

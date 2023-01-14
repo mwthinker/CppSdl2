@@ -10,13 +10,10 @@ jobs:
       matrix:
         include:
           - os: windows-latest
-            vcpkgCommitId: '3776224fd28bd7e0c78617d73696753219e8d272'
+            vcpkgCommitId: '472ed329f5492e133028dd12a3b4758b0b676d00'
             preset: 'windows'
           - os: ubuntu-22.04
-            vcpkgCommitId: '3776224fd28bd7e0c78617d73696753219e8d272'
-            preset: 'unix'
-          - os: macos-12
-            vcpkgCommitId: '3776224fd28bd7e0c78617d73696753219e8d272'
+            vcpkgCommitId: '472ed329f5492e133028dd12a3b4758b0b676d00'
             preset: 'unix'
 
     steps:
