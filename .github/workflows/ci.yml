@@ -10,10 +10,8 @@ jobs:
       matrix:
         include:
           - os: windows-latest
-            vcpkgCommitId: '472ed329f5492e133028dd12a3b4758b0b676d00'
             preset: 'windows'
           - os: ubuntu-22.04
-            vcpkgCommitId: '472ed329f5492e133028dd12a3b4758b0b676d00'
             preset: 'unix'
 
     steps:
@@ -22,13 +20,12 @@ jobs:
 
       - name: Set C++/C compiler on macOS
         shell: bash
-        run: echo "CC=gcc-11" >> $GITHUB_ENV; echo "CXX=g++-11" >> $GITHUB_ENV; cat "$GITHUB_ENV"
+        run: echo "CC=gcc-11" >> $GITHUB_ENV; echo "CXX=g++-11" >> $GITHUB_ENV;
         if: runner.os == 'macOS'
 
-      - uses: friendlyanon/setup-vcpkg@v1
-        with:
-          committish: ${{ matrix.vcpkgCommitId }}
-          cache: false
+      - name: Set C++ VCPKG_ROOT
+        shell: bash
+        run: echo VCPKG_ROOT="$VCPKG_INSTALLATION_ROOT" >> "$GITHUB_ENV"; cat "$GITHUB_ENV"
 
       - name: Tool versions
         shell: bash
