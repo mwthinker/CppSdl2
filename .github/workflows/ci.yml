@@ -1,5 +1,9 @@
 name: CI
-on: [push, workflow_dispatch]
+on: 
+  push:
+  workflow_dispatch:
+  schedule:
+    - cron: 45 19 * * 4 # 19:45 every thursday
 
 jobs:
   job:
