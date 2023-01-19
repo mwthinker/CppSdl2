@@ -3,7 +3,7 @@ on:
   push:
   workflow_dispatch:
   schedule:
-    - cron: 45 19 * * 4 # 19:45 every thursday
+    - cron: 55 19 * * 4 # 19:55 every thursday
 
 jobs:
   job:
@@ -52,5 +52,5 @@ jobs:
       - name: Compile binaries
         shell: bash
         run: |
-          cmake --build_debug build
-          cmake --build_release build
+          cmake --build build_debug
+          cmake --build build_release
