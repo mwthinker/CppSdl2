@@ -11,7 +11,7 @@ jobs:
         include:
           - os: windows-latest
             preset: 'windows'
-          - os: ubuntu-22.04
+          - os: ubuntu-latest
             preset: 'unix'
 
     steps:
@@ -34,9 +34,11 @@ jobs:
           make --version
         if: runner.os == 'Linux' || runner.os == 'macOS'
 
-      - name: Run CMake with manifest mode vcpkg
+      - name: Run CMake
         shell: bash
-        run: cmake --preset=${{ matrix.preset }} -B build -DCppSdl2_Test=1 -DCppSdl2_Example=1 -DCMAKE_VERBOSE_MAKEFILE=1
+        run: |
+          cmake --preset=${{ matrix.preset }} -B build_debug -DCppSdl2_Test=1 -DCppSdl2_Example=1 -DCMAKE_VERBOSE_MAKEFILE=1 -DCMAKE_BUILD_TYPE=Debug
+          cmake --preset=${{ matrix.preset }} -B build_release -DCppSdl2_Test=1 -DCppSdl2_Example=1 -DCMAKE_VERBOSE_MAKEFILE=1 -DCMAKE_BUILD_TYPE=Release
 
       - name: Print log message on macOS
         shell: bash
@@ -45,4 +47,6 @@ jobs:
 
       - name: Compile binaries
         shell: bash
-        run: cmake --build build
+        run: |
+          cmake --build_debug build
+          cmake --build_release build
