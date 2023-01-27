@@ -205,6 +205,42 @@ namespace ImGui {
 		ImGui::EndGroup();
 	}
 
+	bool Table(const char* str_id, int columns_count, ImGuiTableFlags flags, const ImVec2& outer_size, float inner_width, std::invocable auto&& t) {
+		bool success = ImGui::BeginTable(str_id, columns_count, flags, outer_size, inner_width);
+		if (success) {
+			t();
+			ImGui::EndTable();
+		}
+		return success;
+	}
+
+	bool Table(const char* str_id, int columns_count, ImGuiTableFlags flags, const ImVec2& outer_size, std::invocable auto&& t) {
+		bool success = ImGui::BeginTable(str_id, columns_count, flags, outer_size);
+		if (success) {
+			t();
+			ImGui::EndTable();
+		}
+		return success;
+	}
+
+	bool Table(const char* str_id, int columns_count, ImGuiTableFlags flags, std::invocable auto&& t) {
+		bool success = ImGui::BeginTable(str_id, columns_count, flags);
+		if (success) {
+			t();
+			ImGui::EndTable();
+		}
+		return success;
+	}
+
+	bool Table(const char* str_id, int columns_count, std::invocable auto&& t) {
+		bool success = ImGui::BeginTable(str_id, columns_count);
+		if (success) {
+			t();
+			ImGui::EndTable();
+		}
+		return success;
+	}
+
 }
 
 #endif
