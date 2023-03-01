@@ -3,7 +3,7 @@ project(ImGui
 		"ImGui Docking branch: https://github.com/ocornut/imgui"
 	LANGUAGES
 		CXX
-	VERSION 1.89.2
+	VERSION 1.89.3
 )
 
 include(FetchContent)
@@ -11,7 +11,7 @@ FetchContent_Declare(RemoteImGui
 	GIT_REPOSITORY
 		https://github.com/ocornut/imgui.git
 	GIT_TAG
-		d822c65317ba881798bed8fce9ffba267d27dada
+		192196711a7d0d7c2d60454d42654cf090498a74
 )
 FetchContent_MakeAvailable(RemoteImGui)
 FetchContent_GetProperties(RemoteImGui
@@ -36,8 +36,8 @@ add_library(ImGui
 		
 	${RemoteImGui_SOURCE_DIR}/backends/imgui_impl_opengl3.h
 	${RemoteImGui_SOURCE_DIR}/backends/imgui_impl_opengl3.cpp
-	${RemoteImGui_SOURCE_DIR}/backends/imgui_impl_sdl.h
-	${RemoteImGui_SOURCE_DIR}/backends/imgui_impl_sdl.cpp
+	${RemoteImGui_SOURCE_DIR}/backends/imgui_impl_sdl2.h
+	${RemoteImGui_SOURCE_DIR}/backends/imgui_impl_sdl2.cpp
 	${IMGUI_USER_CONFIG}
 	${CMAKE_CURRENT_SOURCE_DIR}/src/imgui_user.h
 )

@@ -11,8 +11,6 @@
 
 namespace sdl {
 
-	class Surface;
-
 	class Texture {
 	public:
 		friend class TextureAtlas;
