@@ -67,7 +67,7 @@ void TestImGuiWindow::imGuiPreUpdate(const sdl::DeltaTime& deltaTime) {
 
 void TestImGuiWindow::initPreLoop() {
 	ImGuiWindow::initPreLoop();
-    shader_ = std::make_shared<TestShader>("testShader2_330.ver.glsl", "testShader2_330.fra.glsl");
+    shader_ = std::make_shared<TestShader>("testShader_330.ver.glsl", "testShader_330.fra.glsl");
 	shader_->setModelMatrix(Mat44{1});
 	shader_->setProjectionMatrix(Mat44{1});
 	
