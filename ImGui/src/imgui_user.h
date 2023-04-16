@@ -1,6 +1,8 @@
 #ifndef CPPSDL2_IMGUI_USER_H
 #define CPPSDL2_IMGUI_USER_H
 
+#include "misc/cpp/imgui_stdlib.h"
+
 #include <concepts>
 
 namespace ImGui {
