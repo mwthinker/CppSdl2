@@ -7,6 +7,17 @@
 
 namespace ImGui {
 
+	// Used default by MainWindow
+	constexpr ImGuiWindowFlags MainWindowFlags
+		= ImGuiWindowFlags_NoTitleBar
+		| ImGuiWindowFlags_NoResize
+		| ImGuiWindowFlags_NoBringToFrontOnFocus
+		| ImGuiWindowFlags_NoMove
+		| ImGuiWindowFlags_NoDocking
+		| ImGuiWindowFlags_NoScrollbar
+		| ImGuiWindowFlags_NoBackground
+		| ImGuiWindowFlags_NoScrollWithMouse;
+
 	bool Window(const char* name, bool* p_open, ImGuiWindowFlags flags, std::invocable auto&& t) {
 		bool success = ImGui::Begin(name, p_open, flags);
 		if (success) {
@@ -34,7 +45,7 @@ namespace ImGui {
 		return success;
 	}
 
-	bool MainWindow(const char* name, std::invocable auto&& t) {
+	bool MainWindow(const char* name, ImGuiWindowFlags flags, std::invocable auto&& t) {
 		const auto& viewPort = *ImGui::GetMainViewport();
 		ImGui::SetNextWindowPos(viewPort.Pos);
 		ImGui::SetNextWindowSize(viewPort.Size);
@@ -54,10 +65,14 @@ namespace ImGui {
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.f);
 		ImGui::PushStyleColor(ImGuiCol_WindowBg, {0, 0, 0, 0});
 
-		bool result = ImGui::Window("Main", nullptr, ImguiNoWindow, t);
+		bool result = ImGui::Window("Main", nullptr, flags, t);
 		ImGui::PopStyleColor();
 		ImGui::PopStyleVar(3);
 		return result;
+	}
+
+	bool MainWindow(const char* name, std::invocable auto&& t) {
+		return MainWindow(name, MainWindowFlags, t);
 	}
 
 	bool ChildWindow(const char* name, const ImVec2& size, bool border, ImGuiWindowFlags flags, std::invocable auto&& t) {
