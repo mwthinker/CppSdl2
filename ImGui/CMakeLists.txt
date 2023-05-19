@@ -19,6 +19,12 @@ FetchContent_GetProperties(RemoteImGui
 		RemoteImGui_SOURCE_DIR
 )
 
+if (MSVC_VERSION GREATER_EQUAL 1936)
+    set(natstepFilterFile "${RemoteImGui_SOURCE_DIR}/misc/debuggers/imgui.natstepfilter")
+else ()
+	set(natstepFilterFile "")
+endif ()
+
 set(IMGUI_USER_CONFIG ${CMAKE_CURRENT_SOURCE_DIR}/src/imconfig.h)
 
 add_library(ImGui
@@ -41,7 +47,7 @@ add_library(ImGui
 	${RemoteImGui_SOURCE_DIR}/backends/imgui_impl_sdl2.h
 	${RemoteImGui_SOURCE_DIR}/backends/imgui_impl_sdl2.cpp
 	${RemoteImGui_SOURCE_DIR}/misc/debuggers/imgui.natvis
-	${RemoteImGui_SOURCE_DIR}/misc/debuggers/imgui.natstepfilter
+	${natstepFilterFile}
 	${IMGUI_USER_CONFIG}
 	${CMAKE_CURRENT_SOURCE_DIR}/src/imgui_user.h
 )

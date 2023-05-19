@@ -6,6 +6,12 @@ project(CppSdl2
 		CXX
 )
 
+if (MSVC_VERSION GREATER_EQUAL 1936)
+    set(natstepFilterFile "cppsdl2.natstepfilter")
+else ()
+	set(natstepFilterFile "")
+endif ()
+
 add_library(CppSdl2 
 	src/sdl/batch.h
 	src/sdl/color.cpp
@@ -53,7 +59,7 @@ add_library(CppSdl2
 	src/sdl/window.h
 	vcpkg.json
 	CMakePresets.json
-	cppsdl2.natstepfilter
+	${natstepFilterFile}
 )
 
 add_subdirectory(ImGui)
@@ -108,7 +114,10 @@ if (CppSdl2_Example)
 	add_subdirectory(CppSdl2_Example)
 endif ()
 
-message(STATUS "CppSdl2_Test is available to add: -DCppSdl2_Test=1")
+message(STATUS "MSVC_TOOLSET_VERSION: ${MSVC_VERSION}")
+
+
+
 option(CppSdl2_Test "Add CppSdl2_Test to project." OFF)
 if (CppSdl2_Test)
 	add_subdirectory(CppSdl2_Test)
