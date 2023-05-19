@@ -53,6 +53,7 @@ add_library(CppSdl2
 	src/sdl/window.h
 	vcpkg.json
 	CMakePresets.json
+	cppsdl2.natstepfilter
 )
 
 add_subdirectory(ImGui)

@@ -41,6 +41,7 @@ add_library(ImGui
 	${RemoteImGui_SOURCE_DIR}/backends/imgui_impl_sdl2.h
 	${RemoteImGui_SOURCE_DIR}/backends/imgui_impl_sdl2.cpp
 	${RemoteImGui_SOURCE_DIR}/misc/debuggers/imgui.natvis
+	${RemoteImGui_SOURCE_DIR}/misc/debuggers/imgui.natstepfilter
 	${IMGUI_USER_CONFIG}
 	${CMAKE_CURRENT_SOURCE_DIR}/src/imgui_user.h
 )

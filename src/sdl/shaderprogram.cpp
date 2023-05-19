@@ -45,7 +45,7 @@ namespace sdl {
 
 			gl::GLint compileStatus;
 			gl::glGetShaderiv(shader, gl::GL_COMPILE_STATUS, &compileStatus);
-			if (compileStatus == gl::GL_FALSE) {
+			if (!compileStatus) {
 				logError<LogError::ShaderError>(shader, shaderSrc, "Failed to compile shader: ");
 				return 0;
 			}
@@ -181,7 +181,7 @@ namespace sdl {
 		gl::glLinkProgram(programObjectId_);
 		gl::GLint linked;
 		gl::glGetProgramiv(programObjectId_, gl::GL_LINK_STATUS, &linked);
-		if (linked == gl::GL_FALSE) {
+		if (!linked) {
 			logError<LogError::ProgramError>(programObjectId_, "", "Error linking program");
 			gl::glDeleteProgram(programObjectId_);
 			return false;
