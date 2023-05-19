@@ -1,0 +1,15 @@
+<StepFilter xmlns="http://schemas.microsoft.com/vstudio/debugger/natstepfilter/2010">
+
+    <!-- Disable step into glm functions -->
+    <Function>
+        <Name>glm::.*</Name>
+        <Action>NoStepInto</Action>
+    </Function>
+
+    <!-- Disable step into some CppSdl2 functions -->
+    <Function>
+      <Name>sdl::Color::.*</Name>
+      <Action>NoStepInto</Action>
+    </Function>
+
+</StepFilter>
