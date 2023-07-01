@@ -50,22 +50,12 @@ namespace ImGui {
 		ImGui::SetNextWindowPos(viewPort.Pos);
 		ImGui::SetNextWindowSize(viewPort.Size);
 
-		constexpr ImGuiWindowFlags ImguiNoWindow
-			= ImGuiWindowFlags_NoTitleBar
-			| ImGuiWindowFlags_NoResize
-			| ImGuiWindowFlags_NoBringToFrontOnFocus
-			| ImGuiWindowFlags_NoMove
-			| ImGuiWindowFlags_NoDocking
-			| ImGuiWindowFlags_NoScrollbar
-			| ImGuiWindowFlags_NoBackground
-			| ImGuiWindowFlags_NoScrollWithMouse;
-
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, {0, 0});
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.f);
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.f);
 		ImGui::PushStyleColor(ImGuiCol_WindowBg, {0, 0, 0, 0});
 
-		bool result = ImGui::Window("Main", nullptr, flags, t);
+		bool result = ImGui::Window(name, nullptr, flags, t);
 		ImGui::PopStyleColor();
 		ImGui::PopStyleVar(3);
 		return result;
