@@ -3,7 +3,7 @@ project(ImGui
 		"ImGui Docking branch: https://github.com/ocornut/imgui"
 	LANGUAGES
 		CXX
-	VERSION 1.89.6
+	VERSION 1.89.7
 )
 
 include(FetchContent)
@@ -11,7 +11,7 @@ FetchContent_Declare(RemoteImGui
 	GIT_REPOSITORY
 		https://github.com/ocornut/imgui.git
 	GIT_TAG
-		823a1385a269d923d35b82b2f470f3ae1fa8b5a3
+		dc3e531ff28450bff73fde0163b1d076b6bb5605
 )
 FetchContent_MakeAvailable(RemoteImGui)
 FetchContent_GetProperties(RemoteImGui
@@ -20,7 +20,7 @@ FetchContent_GetProperties(RemoteImGui
 )
 
 if (MSVC_VERSION GREATER_EQUAL 1936)
-    set(natstepFilterFile "${RemoteImGui_SOURCE_DIR}/misc/debuggers/imgui.natstepfilter")
+	set(natstepFilterFile "${RemoteImGui_SOURCE_DIR}/misc/debuggers/imgui.natstepfilter")
 else ()
 	set(natstepFilterFile "")
 endif ()
