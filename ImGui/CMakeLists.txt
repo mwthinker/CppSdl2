@@ -84,6 +84,7 @@ target_compile_definitions(ImGui
 		IMGUI_INCLUDE_IMGUI_USER_H
 		IMGUI_ENABLE_FREETYPE
 		IMGUI_USER_CONFIG=\"${IMGUI_USER_CONFIG}\"
+		IMGUI_DEFINE_MATH_OPERATORS
 )
 
 set_target_properties(ImGui
