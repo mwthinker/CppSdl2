@@ -79,10 +79,10 @@ namespace sdl {
 
 				return GameController{controller, SDL_JoystickGetDeviceGUID(index)};
 			} else {
-				spdlog::error("[sdl::GameController] Could not open gamecontroller: {}", SDL_GetError());
+				spdlog::error("[sdl::GameController] Could not open game controller: {}", SDL_GetError());
 			}
 		} else {
-			spdlog::error("[sdl::GameController] Game Controller mapping is not avvailable.");
+			spdlog::error("[sdl::GameController] Game Controller mapping is not available.");
 		}
 		return GameController{};
 	}
