@@ -7,6 +7,11 @@
 
 namespace sdl {
 
+	std::string guidToString(const SDL_JoystickGUID& guid);
+
+	bool operator==(const SDL_JoystickGUID& guid1, const SDL_JoystickGUID& guid2);
+	bool operator!=(const SDL_JoystickGUID& guid1, const SDL_JoystickGUID& guid2);
+
 	class GameController {
 	public:
 		static void loadGameControllerMappings(const std::string& file);
@@ -31,9 +36,10 @@ namespace sdl {
 
 		const char* getName() const;
 
-		// Get the underlaying pointer. Use with care.
+		/// @brief Get the underlaying pointer (use with care!). Can be null.
+		/// @return SDL_GameController pointer
 		SDL_GameController* getSdlGameController() const;
-		
+
 		bool getButtonState(SDL_GameControllerButton button) const;
 
 		// Value ranging from -1 and 1. Trigger however range from 0 to 1.
@@ -41,12 +47,22 @@ namespace sdl {
 
 		bool isAttached() const;
 
+		/// @brief Get the unique ID for the game controller for the time it is connected to the system,
+		/// and is never reused for the lifetime of the application. If the joystick is
+		///	disconnected and reconnected, it will get a new ID.
+		/// 
+		/// @return unique id for the game controller.
 		SDL_JoystickID getInstanceId() const;
 
+		/// @brief Get the stable unique GUID for the game controller
+		/// @return GUID
+		const SDL_JoystickGUID& getGuid() const;
+
 	private:
-		explicit GameController(SDL_GameController* gameController) noexcept;
+		GameController(SDL_GameController* gameController, const SDL_JoystickGUID& guid) noexcept;
 
 		SDL_GameController* gameController_ = nullptr;
+		SDL_JoystickGUID guid_{};
 	};
 
 	inline SDL_GameController* GameController::getSdlGameController() const {

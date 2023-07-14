@@ -3,21 +3,39 @@
 #include <spdlog/spdlog.h>
 #include <SDL.h>
 
-namespace sdl {	
+#include <cstring>
 
-	GameController::GameController(SDL_GameController* gameController) noexcept
-		: gameController_{gameController} {
+namespace sdl {
+
+	std::string guidToString(const SDL_JoystickGUID& guid) {
+		std::string str(33, '0'); // SDL_JoystickGetGUIDString requires size >= 33
+		SDL_JoystickGetGUIDString(guid, str.data(), static_cast<int>(str.size()));
+		return str;
+	}
+
+	bool operator==(const SDL_JoystickGUID& guid1, const SDL_JoystickGUID& guid2) {
+		return std::memcmp(guid1.data, guid2.data, sizeof(SDL_JoystickGUID::data)) == 0;
+	}
+	bool operator!=(const SDL_JoystickGUID& guid1, const SDL_JoystickGUID& guid2) {
+		return !(guid1 == guid2);
+	}
+
+	GameController::GameController(SDL_GameController* gameController, const SDL_JoystickGUID& guid) noexcept
+		: gameController_{gameController}
+		, guid_{guid} {
 	}
 
 	GameController::GameController(GameController&& other) noexcept
-		: gameController_{std::exchange(other.gameController_, nullptr)} {
+		: gameController_{std::exchange(other.gameController_, nullptr)}
+		, guid_{std::exchange(other.guid_, {})} {
 	}
 
 	GameController& GameController::operator=(GameController&& other) noexcept {
 		if (gameController_ != nullptr) {
 			SDL_GameControllerClose(gameController_);
 		}
-		gameController_ = std::exchange(other.gameController_,  nullptr);
+		gameController_ = std::exchange(other.gameController_, nullptr);
+		guid_ = std::exchange(other.guid_, {});
 		return *this;
 	}
 
@@ -55,11 +73,11 @@ namespace sdl {
 
 	GameController GameController::addController(int index) {
 		if (SDL_IsGameController(index)) {
-			
+
 			if (auto controller = SDL_GameControllerOpen(index);
 				controller != nullptr) {
-				
-				return GameController{controller};
+
+				return GameController{controller, SDL_JoystickGetDeviceGUID(index)};
 			} else {
 				spdlog::error("[sdl::GameController] Could not open gamecontroller: {}", SDL_GetError());
 			}
@@ -71,6 +89,10 @@ namespace sdl {
 
 	void GameController::removeController(GameController&& gameController) {
 		SDL_GameControllerClose(gameController.getSdlGameController());
+	}
+
+	const SDL_JoystickGUID& GameController::GameController::getGuid() const {
+		return guid_;
 	}
 
 }
