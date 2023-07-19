@@ -54,6 +54,10 @@ namespace sdl {
 		
 		assert(majorVersionGl >= 3 && minorVersionGl >= 3);
 		spdlog::info("[sdl::Window] Creating Window");
+		
+		SDL_version sdlVersion;
+		SDL_GetVersion(&sdlVersion);
+		spdlog::info("[sdl::Window] SDL Version: {}.{}.{}", sdlVersion.major, sdlVersion.minor, sdlVersion.patch);
 	}
 
 	void Window::setupOpenGlContext() {

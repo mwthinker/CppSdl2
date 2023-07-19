@@ -7,62 +7,61 @@
 #include <sdl/gamecontroller.h>
 #include <sdl/framebuffer.h>
 
-#include <iostream>
+#include <fmt/core.h>
 
 namespace {
 
 	void printGameControllerButton(Uint8 button) {
 		switch (button) {
 			case SDL_CONTROLLER_BUTTON_A:
-				std::cout << "SDL_CONTROLLER_BUTTON_A";
+				fmt::println("SDL_CONTROLLER_BUTTON_A");
 				break;
 			case SDL_CONTROLLER_BUTTON_B:
-				std::cout << "SDL_CONTROLLER_BUTTON_B";
+				fmt::println("SDL_CONTROLLER_BUTTON_B");
 				break;
 			case SDL_CONTROLLER_BUTTON_X:
-				std::cout << "SDL_CONTROLLER_BUTTON_X";
+				fmt::println("SDL_CONTROLLER_BUTTON_X");
 				break;
 			case SDL_CONTROLLER_BUTTON_Y:
-				std::cout << "SDL_CONTROLLER_BUTTON_Y";
+				fmt::println("SDL_CONTROLLER_BUTTON_Y");
 				break;
 			case SDL_CONTROLLER_BUTTON_BACK:
-				std::cout << "SDL_CONTROLLER_BUTTON_BACK";
+				fmt::println("SDL_CONTROLLER_BUTTON_BACK");
 				break;
 			case SDL_CONTROLLER_BUTTON_GUIDE:
-				std::cout << "SDL_CONTROLLER_BUTTON_GUIDE";
+				fmt::println("SDL_CONTROLLER_BUTTON_GUIDE");
 				break;
 			case SDL_CONTROLLER_BUTTON_START:
-				std::cout << "SDL_CONTROLLER_BUTTON_START";
+				fmt::println("SDL_CONTROLLER_BUTTON_START");
 				break;
 			case SDL_CONTROLLER_BUTTON_LEFTSTICK:
-				std::cout << "SDL_CONTROLLER_BUTTON_LEFTSTICK";
+				fmt::println("SDL_CONTROLLER_BUTTON_LEFTSTICK");
 				break;
 			case SDL_CONTROLLER_BUTTON_RIGHTSTICK:
-				std::cout << "SDL_CONTROLLER_BUTTON_RIGHTSTICK";
+				fmt::println("SDL_CONTROLLER_BUTTON_RIGHTSTICK");
 				break;
 			case SDL_CONTROLLER_BUTTON_LEFTSHOULDER:
-				std::cout << "SDL_CONTROLLER_BUTTON_LEFTSHOULDER";
+				fmt::println("SDL_CONTROLLER_BUTTON_LEFTSHOULDER");
 				break;
 			case SDL_CONTROLLER_BUTTON_RIGHTSHOULDER:
-				std::cout << "SDL_CONTROLLER_BUTTON_RIGHTSHOULDER";
+				fmt::println("SDL_CONTROLLER_BUTTON_RIGHTSHOULDER");
 				break;
 			case SDL_CONTROLLER_BUTTON_DPAD_UP:
-				std::cout << "SDL_CONTROLLER_BUTTON_DPAD_UP";
+				fmt::println("SDL_CONTROLLER_BUTTON_DPAD_UP");
 				break;
 			case SDL_CONTROLLER_BUTTON_DPAD_DOWN:
-				std::cout << "SDL_CONTROLLER_BUTTON_DPAD_DOWN";
+				fmt::println("SDL_CONTROLLER_BUTTON_DPAD_DOWN");
 				break;
 			case SDL_CONTROLLER_BUTTON_DPAD_LEFT:
-				std::cout << "SDL_CONTROLLER_BUTTON_DPAD_LEFT";
+				fmt::println("SDL_CONTROLLER_BUTTON_DPAD_LEFT");
 				break;
 			case SDL_CONTROLLER_BUTTON_DPAD_RIGHT:
-				std::cout << "SDL_CONTROLLER_BUTTON_DPAD_RIGHT";
+				fmt::println("SDL_CONTROLLER_BUTTON_DPAD_RIGHT");
 				break;
 			case SDL_CONTROLLER_BUTTON_MAX:
-				std::cout << "SDL_CONTROLLER_BUTTON_MAX";
+				fmt::println("SDL_CONTROLLER_BUTTON_MAX");
 				break;
 		}
-		std::cout << "\n";
 	}
 
 }
@@ -98,11 +97,10 @@ void TestWindow::eventUpdate(const SDL_Event& windowEvent) {
 		case SDL_QUIT:
 			quit();
 			break;
-		case SDL_MOUSEWHEEL:
-		{
+		case SDL_MOUSEWHEEL: {
 			auto add = windowEvent.wheel.y * 5;
 			auto [w, h] = getSize();
-			std::cout << windowEvent.wheel.which << " add = " << add << "\n";
+			fmt::println("{} add = {}", windowEvent.wheel.which, add);
 			setSize(add + w, add + h);
 			break;
 		}
@@ -114,11 +112,11 @@ void TestWindow::eventUpdate(const SDL_Event& windowEvent) {
 					}
 					break;
 				case SDL_WINDOWEVENT_SIZE_CHANGED:
-					std::cout << "SDL_WINDOWEVENT_SIZE_CHANGED" << std::endl;
+					fmt::println("SDL_WINDOWEVENT_SIZE_CHANGED");
 					resize(windowEvent.window.data1, windowEvent.window.data2);
 					break;
 				case SDL_WINDOWEVENT_RESIZED:
-					std::cout << "SDL_WINDOWEVENT_RESIZED" << std::endl;
+					fmt::println("SDL_WINDOWEVENT_RESIZED");
 					break;
 				case SDL_WINDOWEVENT_FOCUS_GAINED:
 					if (windowEvent.window.windowID == getId()) {
@@ -136,7 +134,7 @@ void TestWindow::eventUpdate(const SDL_Event& windowEvent) {
 			switch (windowEvent.key.keysym.sym) {
 				case SDLK_c:
 					for (auto& gamepad : gameControllers_) {
-						std::cout << gamepad.getName() << "\n";
+						fmt::println("{}", gamepad.getName());
 					}
 					break;
 				case SDLK_SPACE:
@@ -159,34 +157,41 @@ void TestWindow::eventUpdate(const SDL_Event& windowEvent) {
 					setFullScreen(!isFullScreen());
 				}
 			}
-			std::cout << "DOWN" << std::endl;
+			fmt::println("DOWN");
 			break;
 		case SDL_MOUSEBUTTONUP:
-			std::cout << "UP" << std::endl;
+			fmt::println("UP");
 			break;
 		case SDL_CONTROLLERDEVICEADDED:
-			std::cout << "SDL_CONTROLLERDEVICEADDED" << std::endl;
-			std::cout << "ControllerEvent:" << ++controllerEvent_ << std::endl;
-			std::cout << "Timestamp: " << windowEvent.cdevice.timestamp << std::endl;
-			std::cout << "Type: " << windowEvent.cdevice.type << std::endl;
-			std::cout << "Which: " << windowEvent.cdevice.which << std::endl;
+			fmt::println("\nSDL_CONTROLLERDEVICEADDED");
+			fmt::println("ControllerEvent: {}", ++controllerEvent_);
+			fmt::println("Timestamp: {}", windowEvent.cdevice.timestamp);
+			fmt::println("Type: {}", windowEvent.cdevice.type);
+			fmt::println("Which (Joystick index): {}", windowEvent.cdevice.which);
 			gameControllers_.push_back(sdl::GameController::addController(windowEvent.cdevice.which));
 			break;
+		case SDL_CONTROLLERDEVICEREMAPPED:
+			fmt::println("SDL_CONTROLLERDEVICEREMOVED");
+			fmt::println("ControllerEvent: {}", ++controllerEvent_);
+			fmt::println("Timestamp: {}", windowEvent.cdevice.timestamp);
+			fmt::println("Type: {}", windowEvent.cdevice.type);
+			fmt::println("Which (InstanceId): {}", windowEvent.cdevice.which);
+			break;
 		case SDL_CONTROLLERDEVICEREMOVED:
-			std::cout << "SDL_CONTROLLERDEVICEREMOVED" << std::endl;
-			std::cout << "ControllerEvent:" << ++controllerEvent_ << std::endl;
-			std::cout << "Timestamp: " << windowEvent.cdevice.timestamp << std::endl;
-			std::cout << "Type: " << windowEvent.cdevice.type << std::endl;
-			std::cout << "Which: " << windowEvent.cdevice.which << std::endl;
+			fmt::println("\nSDL_CONTROLLERDEVICEREMOVED");
+			fmt::println("ControllerEvent: {}", ++controllerEvent_);
+			fmt::println("Timestamp: {}", windowEvent.cdevice.timestamp);
+			fmt::println("Type: {}", windowEvent.cdevice.type);
+			fmt::println("Which (InstanceId): {}", windowEvent.cdevice.which);
 			removeGamepad(windowEvent.cdevice.which);
 			break;
 		case SDL_CONTROLLERBUTTONDOWN:
 			printGameControllerButton(windowEvent.cbutton.button);
-			std::cout << "SDL_CONTROLLERBUTTONDOWN" << std::endl;
-			std::cout << "ControllerEvent:" << ++controllerEvent_ << std::endl;
-			std::cout << "Timestamp: " << windowEvent.cbutton.timestamp << std::endl;
-			std::cout << "Type: " << windowEvent.cbutton.type << std::endl;
-			std::cout << "Which: " << windowEvent.cbutton.which << std::endl;
+			fmt::println("SDL_CONTROLLERBUTTONDOWN");
+			fmt::println("ControllerEvent: {}", ++controllerEvent_);
+			fmt::println("Timestamp: {}", windowEvent.cbutton.timestamp);
+			fmt::println("Type: {}", windowEvent.cbutton.type);
+			fmt::println("Which: {}", windowEvent.cbutton.which);
 			break;
 		case SDL_CONTROLLERBUTTONUP:
 			break;
@@ -194,15 +199,13 @@ void TestWindow::eventUpdate(const SDL_Event& windowEvent) {
 			switch (windowEvent.caxis.axis) {
 				case SDL_CONTROLLER_AXIS_TRIGGERLEFT:
 					if (windowEvent.caxis.value > 15000) {
-						std::cout << "SDL_CONTROLLER_AXIS_TRIGGERLEFT" << std::endl;
+						fmt::println("SDL_CONTROLLER_AXIS_TRIGGERLEFT");
 					}
 					break;
 				case SDL_CONTROLLER_AXIS_TRIGGERRIGHT:
 					if (windowEvent.caxis.value > 15000) {
-						std::cout << "SDL_CONTROLLER_AXIS_TRIGGERRIGHT" << std::endl;
+						fmt::println("SDL_CONTROLLER_AXIS_TRIGGERRIGHT");
 					}
-					break;
-				default:
 					break;
 			}
 
@@ -219,13 +222,14 @@ void TestWindow::resize(int w, int h) {
 
 void TestWindow::removeGamepad(SDL_JoystickID instanceId) {
 	auto it = std::find_if(gameControllers_.begin(), gameControllers_.end(), [instanceId](const sdl::GameController& gameController) {
-		return gameController == instanceId;
+		return gameController.getInstanceId() == instanceId;
 	});
+
 	if (it != gameControllers_.end()) {
 		gameControllers_.erase(it);
-		std::cout << "Gamepad removed: " << instanceId << "\n";
+		spdlog::info("Gamepad removed: {}", instanceId);
 	} else {
-		std::cout << "Gamepad faild to be removed: " << instanceId << "\n";
+		spdlog::warn("Gamepad failed to be removed: {}", instanceId);
 	}
 }
 

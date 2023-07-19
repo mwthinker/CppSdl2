@@ -10,10 +10,10 @@
 #include <sdl/initsdl.h>
 
 #include <spdlog/spdlog.h>
-#include "spdlog/sinks/stdout_color_sinks.h"
-#include "spdlog/sinks/basic_file_sink.h"
+#include <spdlog/sinks/stdout_color_sinks.h>
+#include <spdlog/sinks/basic_file_sink.h>
+#include <fmt/core.h>
 
-#include <iostream>
 #include <cassert>
 #include <sstream>
 
@@ -122,19 +122,19 @@ void testImGuiWindow() {
 }
 
 void showHelp(const std::string& programName) {
-	std::cout << "Usage: " << programName << "\n";	
-	std::cout << "\t" << programName << " -1  " << "\n";
-	std::cout << "\t" << programName << " -2  " << "\n";
-	std::cout << "\t" << programName << " -3  " << "\n";
-	std::cout << "\t" << programName << " -4  " << "\n";
-	std::cout << "\n";
-	std::cout << "Options:\n";
-	std::cout << "\t" << "-h --help                show this help" << "\n";
-	std::cout << "\t" << "-1                       testPrintColors" << "\n";
-	std::cout << "\t" << "-2                       testLoadTextureAtlas" << "\n";
-	std::cout << "\t" << "-3                       testLoadTextureAtlas2" << "\n";
-	std::cout << "\t" << "-4                       testBatchWindow" << "\n";
-	std::cout << "\t" << "-5                       testImGuiWindow" << "\n";
+	fmt::println("Usage: {}", programName);
+	fmt::println("\t{} -1 ", programName);
+	fmt::println("\t{} -2 ", programName);
+	fmt::println("\t{} -3 ", programName);
+	fmt::println("\t{} -4 ", programName);
+	fmt::println("");
+	fmt::println("Options:");
+	fmt::println("\t-h --help                show this help");
+	fmt::println("\t-1                       testPrintColors");
+	fmt::println("\t-2                       testLoadTextureAtlas");
+	fmt::println("\t-3                       testLoadTextureAtlas2");
+	fmt::println("\t-4                       testBatchWindow");
+	fmt::println("\t-5                       testImGuiWindow");
 }
 
 void runAll() {
@@ -166,7 +166,7 @@ void initLogger() {
 		// or you can even set multi_sink logger as default logger
 		spdlog::set_default_logger(std::make_shared<spdlog::logger>("multi_sink", spdlog::sinks_init_list({console_sink, file_sink})));
 	} catch (const spdlog::spdlog_ex& ex) {
-		std::cout << "Log initialization failed: " << ex.what() << std::endl;
+		fmt::println("Log initialization failed: {}", ex.what());
 	}
 }
 
@@ -196,7 +196,7 @@ int main(int argc, char** argv) {
 			testImGuiWindow();
 			return 0;
 		} else {
-			std::cout << "Incorrect argument " << code << "\n";
+			fmt::println("Incorrect argument {}", code);
 		}
 	} else {
 		runAll();
