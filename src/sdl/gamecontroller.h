@@ -1,16 +1,16 @@
 #ifndef CPPSDL2_SDL_GAMECONTROLLER_H
 #define CPPSDL2_SDL_GAMECONTROLLER_H
 
+#include <SDL.h>
+
 #include <string>
 
-#include <SDL.h>
+bool operator==(const SDL_JoystickGUID& guid1, const SDL_JoystickGUID& guid2);
+bool operator!=(const SDL_JoystickGUID& guid1, const SDL_JoystickGUID& guid2);
 
 namespace sdl {
 
 	std::string guidToString(const SDL_JoystickGUID& guid);
-
-	bool operator==(const SDL_JoystickGUID& guid1, const SDL_JoystickGUID& guid2);
-	bool operator!=(const SDL_JoystickGUID& guid1, const SDL_JoystickGUID& guid2);
 
 	class GameController {
 	public:
@@ -28,11 +28,6 @@ namespace sdl {
 
 		GameController(const GameController&) = delete;
 		GameController& operator=(const GameController&) = delete;
-
-		friend bool operator==(const GameController& gameController, SDL_JoystickID joystickId);
-		friend bool operator==(SDL_JoystickID joystickId, const GameController& gameController);
-		friend bool operator!=(const GameController& gameController, SDL_JoystickID joystickId);
-		friend bool operator!=(SDL_JoystickID joystickId, const GameController& gameController);
 
 		const char* getName() const;
 
@@ -60,6 +55,8 @@ namespace sdl {
 
 	private:
 		GameController(SDL_GameController* gameController, const SDL_JoystickGUID& guid) noexcept;
+
+		void close();
 
 		SDL_GameController* gameController_ = nullptr;
 		SDL_JoystickGUID guid_{};

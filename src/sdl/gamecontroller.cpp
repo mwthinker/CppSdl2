@@ -5,19 +5,19 @@
 
 #include <cstring>
 
+bool operator==(const SDL_JoystickGUID& guid1, const SDL_JoystickGUID& guid2) {
+	return std::memcmp(guid1.data, guid2.data, sizeof(SDL_JoystickGUID::data)) == 0;
+}
+bool operator!=(const SDL_JoystickGUID& guid1, const SDL_JoystickGUID& guid2) {
+	return !(guid1 == guid2);
+}
+
 namespace sdl {
 
 	std::string guidToString(const SDL_JoystickGUID& guid) {
 		std::string str(33, '0'); // SDL_JoystickGetGUIDString requires size >= 33
 		SDL_JoystickGetGUIDString(guid, str.data(), static_cast<int>(str.size()));
 		return str;
-	}
-
-	bool operator==(const SDL_JoystickGUID& guid1, const SDL_JoystickGUID& guid2) {
-		return std::memcmp(guid1.data, guid2.data, sizeof(SDL_JoystickGUID::data)) == 0;
-	}
-	bool operator!=(const SDL_JoystickGUID& guid1, const SDL_JoystickGUID& guid2) {
-		return !(guid1 == guid2);
 	}
 
 	GameController::GameController(SDL_GameController* gameController, const SDL_JoystickGUID& guid) noexcept
@@ -45,22 +45,6 @@ namespace sdl {
 		}
 	}
 
-	bool operator==(const GameController& gameController, SDL_JoystickID joystickId) {
-		return joystickId == (gameController.gameController_ != nullptr ? gameController.getInstanceId() : 0);
-	}
-
-	bool operator==(SDL_JoystickID joystickId, const GameController& gameController) {
-		return gameController == joystickId;
-	}
-
-	bool operator!=(const GameController& gameController, SDL_JoystickID joystickId) {
-		return !(gameController == joystickId);
-	}
-
-	bool operator!=(SDL_JoystickID joystickId, const GameController& gameController) {
-		return !(gameController == joystickId);
-	}
-
 	const char* GameController::getName() const {
 		return SDL_GameControllerName(gameController_);
 	}
@@ -74,8 +58,7 @@ namespace sdl {
 	GameController GameController::addController(int index) {
 		if (SDL_IsGameController(index)) {
 
-			if (auto controller = SDL_GameControllerOpen(index);
-				controller != nullptr) {
+			if (auto controller = SDL_GameControllerOpen(index); controller != nullptr) {
 
 				return GameController{controller, SDL_JoystickGetDeviceGUID(index)};
 			} else {
@@ -88,11 +71,19 @@ namespace sdl {
 	}
 
 	void GameController::removeController(GameController&& gameController) {
-		SDL_GameControllerClose(gameController.getSdlGameController());
+		gameController.close();
 	}
 
 	const SDL_JoystickGUID& GameController::GameController::getGuid() const {
 		return guid_;
+	}
+
+	void GameController::close() {
+		if (gameController_ != nullptr) {
+			SDL_GameControllerClose(gameController_);
+			gameController_ = nullptr;
+			guid_ = {};
+		}
 	}
 
 }
