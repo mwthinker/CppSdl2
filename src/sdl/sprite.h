@@ -17,10 +17,12 @@ namespace sdl {
 
 	class Sprite {
 	public:
-		// Create an empty sprite.
+		/// @brief Create an empty sprite.
 		Sprite() = default;
 
-		// Load an image from file.
+		/// @brief Load an image from file.
+		/// @param image filename to the image
+		/// @param filter used by OpenGL when displaying the sprite
 		explicit Sprite(const std::string& image, std::function<void()>&& filter = []() {
 			gl::glTexParameteri(gl::GL_TEXTURE_2D, gl::GL_TEXTURE_MIN_FILTER, gl::GL_LINEAR);
 			gl::glTexParameteri(gl::GL_TEXTURE_2D, gl::GL_TEXTURE_MAG_FILTER, gl::GL_LINEAR);
@@ -38,8 +40,11 @@ namespace sdl {
 			gl::glTexParameteri(gl::GL_TEXTURE_2D, gl::GL_TEXTURE_MAG_FILTER, gl::GL_LINEAR);
 		});
 
-		// Set a texture to the sprite. The sprite represents the square of the texture,
-		// defined by (x,y) in the lower left postion with (dx,dy) = (width,height).
+		/// @brief Set a texture to the sprite. The sprite represents the square of the texture,
+		/// defined by (x,y) in the lower left postion with (dx,dy) = (width,height).
+		/// @param surface is the image data the sprite contains
+		/// @param rect is the area to be part of the sprite
+		/// @param filter used by OpenGL when displaying the sprite
 		Sprite(Surface&& surface, const Rect& rect, std::function<void()>&& filter = []() {
 			gl::glTexParameteri(gl::GL_TEXTURE_2D, gl::GL_TEXTURE_MIN_FILTER, gl::GL_LINEAR);
 			gl::glTexParameteri(gl::GL_TEXTURE_2D, gl::GL_TEXTURE_MAG_FILTER, gl::GL_LINEAR);
@@ -57,10 +62,12 @@ namespace sdl {
 
 		TextureView getTextureView() const;
 
-		// Return the lower left x position of the image drawn.
+		/// @brief Return the lower left x position of the image drawn.
+		/// @return the lower left x coordinate
 		float getX() const noexcept;
 
-		// Return the lower left y position of the image drawn.
+		/// @brief Return the lower left y position of the image drawn.
+		/// @return the lower left y coordinate
 		float getY() const noexcept;
 
 		glm::vec2 getPosition() const noexcept;

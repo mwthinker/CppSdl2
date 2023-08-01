@@ -188,6 +188,7 @@ namespace ImGui {
 		ImGui::EndTooltip();
 	}
 
+	/// @brief Corresponds to ImGui::BeginCombo (Combo is already used by ImGui)
 	bool ComboScoped(const char* label, const char* preview_value, ImGuiComboFlags flags, std::invocable auto&& t) {
 		bool success = ImGui::BeginCombo(label, preview_value, flags);
 		if (success) {
@@ -197,11 +198,39 @@ namespace ImGui {
 		return success;
 	}
 
+	/// @brief Corresponds to ImGui::BeginCombo (Combo is already used by ImGui)
 	bool ComboScoped(const char* label, const char* preview_value, std::invocable auto&& t) {
 		bool success = ImGui::BeginCombo(label, preview_value);
 		if (success) {
 			t();
 			ImGui::EndCombo();
+		}
+		return success;
+	}
+
+	bool PopupContextItem(std::invocable auto&& t) {
+		bool success = ImGui::BeginPopupContextItem();
+		if (success) {
+			t();
+			ImGui::EndPopup();
+		}
+		return success;
+	}
+
+	bool PopupContextItem(const char* str_id, std::invocable auto&& t) {
+		bool success = ImGui::BeginPopupContextItem(str_id);
+		if (success) {
+			t();
+			ImGui::EndPopup();
+		}
+		return success;
+	}
+
+	bool PopupContextItem(const char* str_id, ImGuiPopupFlags popup_flags, std::invocable auto&& t) {
+		bool success = ImGui::BeginPopupContextItem(str_id, popup_flags);
+		if (success) {
+			t();
+			ImGui::EndPopup();
 		}
 		return success;
 	}

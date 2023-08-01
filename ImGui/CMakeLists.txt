@@ -3,7 +3,7 @@ project(ImGui
 		"ImGui Docking branch: https://github.com/ocornut/imgui"
 	LANGUAGES
 		CXX
-	VERSION 1.89.7
+	VERSION 1.89.8
 )
 
 include(FetchContent)
@@ -11,7 +11,7 @@ FetchContent_Declare(RemoteImGui
 	GIT_REPOSITORY
 		https://github.com/ocornut/imgui.git
 	GIT_TAG
-		dc3e531ff28450bff73fde0163b1d076b6bb5605
+		f8704cd085c4347f835c21dc12a3951924143872
 )
 FetchContent_MakeAvailable(RemoteImGui)
 FetchContent_GetProperties(RemoteImGui
@@ -85,6 +85,7 @@ target_compile_definitions(ImGui
 		IMGUI_ENABLE_FREETYPE
 		IMGUI_USER_CONFIG=\"${IMGUI_USER_CONFIG}\"
 		IMGUI_DEFINE_MATH_OPERATORS
+		IMGUI_ENABLE_FREETYPE_LUNASVG
 )
 
 set_target_properties(ImGui
