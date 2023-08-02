@@ -3,6 +3,7 @@
 
 #include "opengl.h"
 #include "color.h"
+#include "rect.h"
 
 #include <SDL.h>
 
@@ -15,14 +16,6 @@ namespace sdl {
 
 	using Clock = std::chrono::high_resolution_clock;
 	using DeltaTime = std::chrono::high_resolution_clock::duration;
-
-	struct Position {
-		int x, y;
-	};
-
-	struct Size {
-		int width, height;
-	};
 
 	// Create a window which handle all user input. The graphic is rendered using OpenGL.
 	class Window {

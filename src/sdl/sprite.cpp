@@ -138,7 +138,7 @@ namespace sdl {
 		return textureHeight_;
 	}
 
-	std::pair<int, int> Sprite::getTextureSize() const noexcept {
+	Size Sprite::getTextureSize() const noexcept {
 		return {textureWidth_, textureHeight_};
 	}
 

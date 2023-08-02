@@ -82,7 +82,7 @@ namespace sdl {
 
 		int getTextureHeight() const noexcept;
 
-		std::pair<int, int> getTextureSize() const noexcept;
+		Size getTextureSize() const noexcept;
 
 		bool isValid() const noexcept;
 

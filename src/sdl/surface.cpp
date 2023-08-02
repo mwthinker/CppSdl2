@@ -4,6 +4,7 @@
 #include <spdlog/spdlog.h>
 
 #include <cassert>
+#include <tuple>
 
 namespace sdl {
 
@@ -123,7 +124,7 @@ namespace sdl {
 		return surface_ != nullptr;
 	}
 
-	std::pair<int, int> Surface::getSize() const noexcept {
+	Size Surface::getSize() const noexcept {
 		if (surface_ == nullptr) {
 			return {0, 0};
 		}

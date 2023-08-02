@@ -7,6 +7,14 @@ namespace sdl {
 
 	using Rect = SDL_Rect;
 
+	struct Position {
+		int x, y;
+	};
+
+	struct Size {
+		int width, height;
+	};
+
 }
 
 #endif

@@ -8,7 +8,6 @@
 #include <SDL_ttf.h>
 
 #include <string>
-#include <tuple>
 
 namespace sdl {
 		
@@ -38,7 +37,7 @@ namespace sdl {
 
 		bool isLoaded() const noexcept;
 
-		std::pair<int, int> getSize() const noexcept;
+		Size getSize() const noexcept;
 
 		int getWidth() const noexcept;
 
