@@ -65,7 +65,12 @@ find_package(SDL2_mixer CONFIG REQUIRED)
 find_package(SDL2_ttf CONFIG REQUIRED)
 find_package(freetype CONFIG REQUIRED)
 find_package(glbinding CONFIG REQUIRED)
-find_package(unofficial-lunasvg CONFIG REQUIRED)
+
+# Compile error in GCC 2923-09-13
+# find_package(unofficial-lunasvg CONFIG REQUIRED)
+# Link to unofficial::lunasvg::lunasvg
+# vcpkg "lunasvg"
+# IMGUI_ENABLE_FREETYPE_LUNASVG
 
 target_link_libraries(ImGui
 	PUBLIC
@@ -75,7 +80,6 @@ target_link_libraries(ImGui
 		$<IF:$<TARGET_EXISTS:SDL2_ttf::SDL2_ttf>,SDL2_ttf::SDL2_ttf,SDL2_ttf::SDL2_ttf-static>
 		$<IF:$<TARGET_EXISTS:SDL2_mixer::SDL2_mixer>,SDL2_mixer::SDL2_mixer,SDL2_mixer::SDL2_mixer-static>
 		freetype
-		unofficial::lunasvg::lunasvg
 		glbinding::glbinding glbinding::glbinding-aux
 )
 
@@ -87,7 +91,6 @@ target_compile_definitions(ImGui
 		IMGUI_ENABLE_FREETYPE
 		IMGUI_USER_CONFIG=\"${IMGUI_USER_CONFIG}\"
 		IMGUI_DEFINE_MATH_OPERATORS
-		IMGUI_ENABLE_FREETYPE_LUNASVG
 )
 
 set_target_properties(ImGui

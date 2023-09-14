@@ -16,7 +16,6 @@
 		"gtest",
 		"fmt",
 		"freetype",
-		"glbinding",
-		"lunasvg"
+		"glbinding"
 	]
 }
