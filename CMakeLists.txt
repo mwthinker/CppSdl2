@@ -116,8 +116,6 @@ endif ()
 
 message(STATUS "MSVC_TOOLSET_VERSION: ${MSVC_VERSION}")
 
-
-
 option(CppSdl2_Test "Add CppSdl2_Test to project." OFF)
 if (CppSdl2_Test)
 	add_subdirectory(CppSdl2_Test)
