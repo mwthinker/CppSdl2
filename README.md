@@ -1,4 +1,4 @@
-# sdl::CppSdl2 [![CI build](https://github.com/mwthinker/CppSdl2/actions/workflows/ci.yml/badge.svg)](https://github.com/mwthinker/CppSdl2/actions/workflows/ci.yml)
+# sdl::CppSdl2 [![CI build](https://github.com/mwthinker/CppSdl2/actions/workflows/ci.yml/badge.svg)](https://github.com/mwthinker/CppSdl2/actions/workflows/ci.yml) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 A C++ wrapper around SDL2 (Simple Direct Media Layer) and OpenGl. Uses cmake.
 
 ## Developer environment
