@@ -65,6 +65,7 @@ find_package(SDL2_mixer CONFIG REQUIRED)
 find_package(SDL2_ttf CONFIG REQUIRED)
 find_package(freetype CONFIG REQUIRED)
 find_package(glbinding CONFIG REQUIRED)
+find_package(glm CONFIG REQUIRED)
 
 # Compile error in GCC 2923-09-13
 # find_package(unofficial-lunasvg CONFIG REQUIRED)
@@ -81,6 +82,7 @@ target_link_libraries(ImGui
 		$<IF:$<TARGET_EXISTS:SDL2_mixer::SDL2_mixer>,SDL2_mixer::SDL2_mixer,SDL2_mixer::SDL2_mixer-static>
 		freetype
 		glbinding::glbinding glbinding::glbinding-aux
+		glm::glm
 )
 
 target_compile_definitions(ImGui
@@ -91,6 +93,7 @@ target_compile_definitions(ImGui
 		IMGUI_ENABLE_FREETYPE
 		IMGUI_USER_CONFIG=\"${IMGUI_USER_CONFIG}\"
 		IMGUI_DEFINE_MATH_OPERATORS
+		GLM_ENABLE_EXPERIMENTAL
 )
 
 set_target_properties(ImGui
