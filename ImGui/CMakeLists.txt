@@ -3,7 +3,7 @@ project(ImGui
 		"ImGui Docking branch: https://github.com/ocornut/imgui"
 	LANGUAGES
 		CXX
-	VERSION 1.90.2
+	VERSION 1.90.4
 )
 
 include(FetchContent)
@@ -11,19 +11,13 @@ FetchContent_Declare(RemoteImGui
 	GIT_REPOSITORY
 		https://github.com/ocornut/imgui.git
 	GIT_TAG
-		8490a262c45a27dc5acbc0ef68f81ed4ba784cf1
+		c6aa051629753f0ef0d26bf775a8b6a92aa213b2
 )
 FetchContent_MakeAvailable(RemoteImGui)
 FetchContent_GetProperties(RemoteImGui
 	SOURCE_DIR
 		RemoteImGui_SOURCE_DIR
 )
-
-if (MSVC_VERSION GREATER_EQUAL 1936)
-	set(natstepFilterFile "${RemoteImGui_SOURCE_DIR}/misc/debuggers/imgui.natstepfilter")
-else ()
-	set(natstepFilterFile "")
-endif ()
 
 set(IMGUI_USER_CONFIG ${CMAKE_CURRENT_SOURCE_DIR}/src/imconfig.h)
 
@@ -47,7 +41,7 @@ add_library(ImGui
 	${RemoteImGui_SOURCE_DIR}/backends/imgui_impl_sdl2.h
 	${RemoteImGui_SOURCE_DIR}/backends/imgui_impl_sdl2.cpp
 	${RemoteImGui_SOURCE_DIR}/misc/debuggers/imgui.natvis
-	${natstepFilterFile}
+	${RemoteImGui_SOURCE_DIR}/misc/debuggers/imgui.natstepfilter
 	${IMGUI_USER_CONFIG}
 	${CMAKE_CURRENT_SOURCE_DIR}/src/imgui_user.h
 )
