@@ -3,7 +3,7 @@ project(ImGui
 		"ImGui Docking branch: https://github.com/ocornut/imgui"
 	LANGUAGES
 		CXX
-	VERSION 1.90.6 
+	VERSION 1.90.7
 )
 
 include(FetchContent)
@@ -11,7 +11,7 @@ FetchContent_Declare(RemoteImGui
 	GIT_REPOSITORY
 		https://github.com/ocornut/imgui.git
 	GIT_TAG
-		e391fe2e66eb1c96b1624ae8444dc64c23146ef4
+		2db79d0868f7b02d26f7557a72504a0b6f844937
 )
 FetchContent_MakeAvailable(RemoteImGui)
 FetchContent_GetProperties(RemoteImGui
@@ -60,6 +60,7 @@ find_package(SDL2_ttf CONFIG REQUIRED)
 find_package(freetype CONFIG REQUIRED)
 find_package(glbinding CONFIG REQUIRED)
 find_package(glm CONFIG REQUIRED)
+find_package(fmt CONFIG REQUIRED)
 
 # Compile error in GCC 2923-09-13
 # find_package(unofficial-lunasvg CONFIG REQUIRED)
@@ -77,6 +78,7 @@ target_link_libraries(ImGui
 		freetype
 		glbinding::glbinding glbinding::glbinding-aux
 		glm::glm
+		fmt::fmt
 )
 
 target_compile_definitions(ImGui
