@@ -3,7 +3,7 @@ project(ImGui
 		"ImGui Docking branch: https://github.com/ocornut/imgui"
 	LANGUAGES
 		CXX
-	VERSION 1.90.8
+	VERSION 1.90.9
 )
 
 include(FetchContent)
@@ -11,7 +11,7 @@ FetchContent_Declare(RemoteImGui
 	GIT_REPOSITORY
 		https://github.com/ocornut/imgui.git
 	GIT_TAG
-		6d948ab47ecf984239af01434f3ed03808dbf188
+		3369cbd2776d7567ac198b1a3017a4fa2d547cc3
 )
 FetchContent_MakeAvailable(RemoteImGui)
 FetchContent_GetProperties(RemoteImGui
@@ -62,7 +62,7 @@ find_package(glbinding CONFIG REQUIRED)
 find_package(glm CONFIG REQUIRED)
 find_package(fmt CONFIG REQUIRED)
 
-# Compile error in GCC 2923-09-13
+# Compile error in GCC 2023-09-13
 # find_package(unofficial-lunasvg CONFIG REQUIRED)
 # Link to unofficial::lunasvg::lunasvg
 # vcpkg "lunasvg"
@@ -94,7 +94,7 @@ target_compile_definitions(ImGui
 
 set_target_properties(ImGui
 	PROPERTIES
-		CXX_STANDARD 20
+		CXX_STANDARD 23
 		CXX_STANDARD_REQUIRED YES
 		CXX_EXTENSIONS NO
 )

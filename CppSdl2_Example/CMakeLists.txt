@@ -41,7 +41,7 @@ target_link_libraries(CppSdl2_Example
 
 set_target_properties(CppSdl2_Example
 	PROPERTIES
-		CXX_STANDARD 20
+		CXX_STANDARD 23
 		CXX_STANDARD_REQUIRED YES
 		CXX_EXTENSIONS NO
 )
