@@ -92,7 +92,7 @@ find_package(spdlog CONFIG REQUIRED)
 target_link_libraries(CppSdl2
 	PUBLIC
 		ImGui
-		spdlog::spdlog spdlog::spdlog_header_only
+		spdlog::spdlog_header_only
 )
 
 set_target_properties(CppSdl2
