@@ -3,7 +3,7 @@ project(ImGui
 		"ImGui Docking branch: https://github.com/ocornut/imgui"
 	LANGUAGES
 		CXX
-	VERSION 1.91.0
+	VERSION 1.91.1
 )
 
 include(FetchContent)
@@ -11,7 +11,7 @@ FetchContent_Declare(RemoteImGui
 	GIT_REPOSITORY
 		https://github.com/ocornut/imgui.git
 	GIT_TAG
-		139e99ca37a3e127c87690202faec005cd892d36
+		f63c95a076a401721ceaf21f30d4f12e8c40cb2c
 )
 FetchContent_MakeAvailable(RemoteImGui)
 FetchContent_GetProperties(RemoteImGui
@@ -76,7 +76,7 @@ target_link_libraries(ImGui
 		$<IF:$<TARGET_EXISTS:SDL2_ttf::SDL2_ttf>,SDL2_ttf::SDL2_ttf,SDL2_ttf::SDL2_ttf-static>
 		$<IF:$<TARGET_EXISTS:SDL2_mixer::SDL2_mixer>,SDL2_mixer::SDL2_mixer,SDL2_mixer::SDL2_mixer-static>
 		freetype
-		glbinding::glbinding glbinding::glbinding-aux
+		glbinding::glbinding
 		glm::glm
 		fmt::fmt
 )
