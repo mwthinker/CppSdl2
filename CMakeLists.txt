@@ -6,7 +6,7 @@ project(CppSdl2
 		CXX
 )
 
-add_library(CppSdl2 
+add_library(CppSdl2
 	src/sdl/batch.h
 	src/sdl/color.cpp
 	src/sdl/color.h
@@ -55,6 +55,7 @@ add_library(CppSdl2
 	CMakePresets.json
 	cppsdl2.natstepfilter
 )
+add_library(CppSdl2::CppSdl2 ALIAS CppSdl2)
 
 add_subdirectory(ImGui)
 set_property(GLOBAL PROPERTY USE_FOLDERS On)
