@@ -26,7 +26,9 @@ namespace ImGui {
 
 	void Hexagon(const sdl::TextureView& texture, float size, bool flat = true);
 
-	void Image(const sdl::TextureView& texture, const glm::vec2& size, sdl::Color tintCol = sdl::color::White, sdl::Color borderCol = {});
+	void Image(const sdl::TextureView& texture, const glm::vec2& size);
+
+	void ImageWithBg(const sdl::TextureView& texture, const glm::vec2& size, sdl::Color tintCol = sdl::color::White, sdl::Color borderCol = {});
 
 	[[nodiscard]] bool ImageButton(const char* id, const sdl::TextureView& texture, const glm::vec2& size);
 
