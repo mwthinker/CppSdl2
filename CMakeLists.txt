@@ -1,9 +1,10 @@
-cmake_minimum_required(VERSION 3.24)
+cmake_minimum_required(VERSION 3.29)
 project(CppSdl2
 	DESCRIPTION
 		"A C++-Wrapper of SDL2 and OpenGL"
 	LANGUAGES
 		CXX
+	VERSION 0.1.1
 )
 
 add_library(CppSdl2
@@ -129,4 +130,22 @@ install(TARGETS CppSdl2
 install(DIRECTORY src/
 	DESTINATION include
 	FILES_MATCHING PATTERN "*.h"
+)
+
+# Export the package configuration
+install(EXPORT CppSdl2Targets
+	FILE CppSdl2Targets.cmake
+	NAMESPACE CppSdl2::
+	DESTINATION share/cppsdl2
+)
+
+# Install the package configuration file
+include(CMakePackageConfigHelpers)
+write_basic_package_version_file(
+	${CMAKE_CURRENT_BINARY_DIR}/CppSdl2ConfigVersion.cmake
+	VERSION ${PROJECT_VERSION}
+	COMPATIBILITY AnyNewerVersion
+)
+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/CppSdl2ConfigVersion.cmake
+	DESTINATION share/cppsdl2
 )
