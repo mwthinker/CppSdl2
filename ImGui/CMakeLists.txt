@@ -45,6 +45,7 @@ add_library(ImGui
 	${IMGUI_USER_CONFIG}
 	${CMAKE_CURRENT_SOURCE_DIR}/src/imgui_user.h
 )
+add_library(CppSdl2::ImGui ALIAS ImGui)
 
 target_include_directories(ImGui
 	PUBLIC
@@ -97,4 +98,26 @@ set_target_properties(ImGui
 		CXX_STANDARD 23
 		CXX_STANDARD_REQUIRED YES
 		CXX_EXTENSIONS NO
+)
+
+install(TARGETS ImGui
+	EXPORT ImGuiTargets
+	LIBRARY DESTINATION lib
+	ARCHIVE DESTINATION lib
+	RUNTIME DESTINATION bin
+	INCLUDES DESTINATION include
+)
+
+install(FILES
+    ${RemoteImGui_SOURCE_DIR}/imgui.h
+    ${RemoteImGui_SOURCE_DIR}/imgui_internal.h
+    ${RemoteImGui_SOURCE_DIR}/imstb_rectpack.h
+    ${RemoteImGui_SOURCE_DIR}/imstb_textedit.h
+    ${RemoteImGui_SOURCE_DIR}/misc/cpp/imgui_stdlib.h
+    ${RemoteImGui_SOURCE_DIR}/misc/freetype/imgui_freetype.h
+    ${RemoteImGui_SOURCE_DIR}/backends/imgui_impl_opengl3.h
+    ${RemoteImGui_SOURCE_DIR}/backends/imgui_impl_sdl2.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/imconfig.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/imgui_user.h
+    DESTINATION include
 )

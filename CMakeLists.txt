@@ -92,7 +92,7 @@ find_package(spdlog CONFIG REQUIRED)
 
 target_link_libraries(CppSdl2
 	PUBLIC
-		ImGui
+		CppSdl2::ImGui
 		spdlog::spdlog_header_only
 )
 
@@ -127,6 +127,6 @@ install(TARGETS CppSdl2
 )
 
 install(DIRECTORY src/
-    DESTINATION include
-    FILES_MATCHING PATTERN "*.h"
+	DESTINATION include
+	FILES_MATCHING PATTERN "*.h"
 )
