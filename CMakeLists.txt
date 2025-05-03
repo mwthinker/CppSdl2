@@ -136,7 +136,7 @@ install(DIRECTORY src/
 install(EXPORT CppSdl2Targets
 	FILE CppSdl2Targets.cmake
 	NAMESPACE CppSdl2::
-	DESTINATION share/cppsdl2
+	DESTINATION share/cmake/CppSdl2
 )
 
 # Install the package configuration file
@@ -147,5 +147,5 @@ write_basic_package_version_file(
 	COMPATIBILITY AnyNewerVersion
 )
 install(FILES ${CMAKE_CURRENT_BINARY_DIR}/CppSdl2ConfigVersion.cmake
-	DESTINATION share/cppsdl2
+	DESTINATION share/CppSdl2
 )

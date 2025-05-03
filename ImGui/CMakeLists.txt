@@ -125,5 +125,5 @@ install(FILES
 install(EXPORT ImGuiTargets
 	FILE ImGuiTargets.cmake
 	NAMESPACE CppSdl2::
-	DESTINATION share/cppsdl2
+	DESTINATION share/cmake/CppSdl2
 )
