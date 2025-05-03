@@ -115,3 +115,18 @@ option(CppSdl2_Test "Add CppSdl2_Test to project." OFF)
 if (CppSdl2_Test)
 	add_subdirectory(CppSdl2_Test)
 endif ()
+
+# -------------------------------------------------------------------------
+# Install
+install(TARGETS CppSdl2
+	EXPORT CppSdl2Targets
+	LIBRARY DESTINATION lib
+	ARCHIVE DESTINATION lib
+	RUNTIME DESTINATION bin
+	INCLUDES DESTINATION include
+)
+
+install(DIRECTORY src/
+    DESTINATION include
+    FILES_MATCHING PATTERN "*.h"
+)
