@@ -21,7 +21,7 @@ FetchContent_GetProperties(RemoteImGui
 
 set(IMGUI_USER_CONFIG ${CMAKE_CURRENT_SOURCE_DIR}/src/imconfig.h)
 
-add_library(ImGui
+add_library(ImGui STATIC
 	${RemoteImGui_SOURCE_DIR}/imgui.cpp
 	${RemoteImGui_SOURCE_DIR}/imgui.h
 	${RemoteImGui_SOURCE_DIR}/imgui_demo.cpp
