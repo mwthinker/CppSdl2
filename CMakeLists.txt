@@ -149,3 +149,5 @@ write_basic_package_version_file(
 install(FILES ${CMAKE_CURRENT_BINARY_DIR}/CppSdl2ConfigVersion.cmake
 	DESTINATION share/cmake/CppSdl2
 )
+
+install(FILES LICENSE.txt DESTINATION share/doc/CppSdl2)
