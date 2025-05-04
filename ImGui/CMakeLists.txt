@@ -102,7 +102,7 @@ set_target_properties(ImGui
 )
 
 install(TARGETS ImGui
-	EXPORT ImGuiTargets
+	EXPORT CppSdl2Targets
 	LIBRARY DESTINATION lib
 	ARCHIVE DESTINATION lib
 	RUNTIME DESTINATION bin
@@ -123,8 +123,8 @@ install(FILES
 	DESTINATION include
 )
 
-install(EXPORT ImGuiTargets
-	FILE ImGuiTargets.cmake
+install(EXPORT CppSdl2Targets
+	FILE CppSdl2Targets.cmake
 	NAMESPACE CppSdl2::
 	DESTINATION share/cmake/CppSdl2
 )
