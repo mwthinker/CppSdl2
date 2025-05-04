@@ -109,22 +109,20 @@ install(TARGETS ImGui
 	INCLUDES DESTINATION include
 )
 
-# Install specific directories and files from RemoteImGui_SOURCE_DIR
-install(DIRECTORY
-	${RemoteImGui_SOURCE_DIR}/misc
-	DESTINATION include/CppSdl2/Imgui/misc
-	FILES_MATCHING PATTERN "*.h"
-)
-
-# Install specific files from the backends directory
+# Install specific files from the misc directory
 install(FILES
-	${RemoteImGui_SOURCE_DIR}/backends/imgui_impl_opengl3.h
-	${RemoteImGui_SOURCE_DIR}/backends/imgui_impl_sdl2.h
-	DESTINATION include/CppSdl2/Imgui/backends
+	${RemoteImGui_SOURCE_DIR}/misc/freetype/imgui_freetype.h
+	DESTINATION include/CppSdl2/Imgui/misc/freetype
+)
+install(FILES
+	${RemoteImGui_SOURCE_DIR}/misc/cpp/imgui_stdlib.h
+	DESTINATION include/CppSdl2/Imgui/misc/cpp
 )
 
 # Install specific files from the root of RemoteImGui_SOURCE_DIR
 install(FILES
+	${RemoteImGui_SOURCE_DIR}/backends/imgui_impl_opengl3.h
+	${RemoteImGui_SOURCE_DIR}/backends/imgui_impl_sdl2.h
 	${RemoteImGui_SOURCE_DIR}/imgui.h
 	${RemoteImGui_SOURCE_DIR}/imgui_internal.h
 	${RemoteImGui_SOURCE_DIR}/imstb_rectpack.h
