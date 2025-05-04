@@ -86,7 +86,8 @@ target_compile_definitions(CppSdl2
 
 target_include_directories(CppSdl2
 	PUBLIC
-		"$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src>"
+		$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src>
+		$<INSTALL_INTERFACE:include>
 )
 
 find_package(spdlog CONFIG REQUIRED)
