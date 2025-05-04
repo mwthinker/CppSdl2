@@ -133,6 +133,8 @@ install(DIRECTORY src/
 	FILES_MATCHING PATTERN "*.h"
 )
 
+include(CMakePackageConfigHelpers)
+
 # Export the package configuration
 install(EXPORT CppSdl2Targets
 	FILE CppSdl2Targets.cmake
