@@ -52,7 +52,7 @@ target_include_directories(ImGui
 		$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src>
 		$<BUILD_INTERFACE:${RemoteImGui_SOURCE_DIR}>
 		$<BUILD_INTERFACE:${RemoteImGui_SOURCE_DIR}/backends>
-		$<INSTALL_INTERFACE:include>
+		$<INSTALL_INTERFACE:include/CppSdl2/Imgui>
 )
 
 find_package(SDL2 CONFIG REQUIRED)
@@ -89,7 +89,7 @@ target_compile_definitions(ImGui
 		IMGUI_DISABLE_OBSOLETE_FUNCTIONS
 		IMGUI_INCLUDE_IMGUI_USER_H
 		IMGUI_ENABLE_FREETYPE
-		IMGUI_USER_CONFIG=$<BUILD_INTERFACE:\"${CMAKE_CURRENT_SOURCE_DIR}/src/imconfig.h\">$<INSTALL_INTERFACE:\"include/imconfig.h\">
+		IMGUI_USER_CONFIG=$<BUILD_INTERFACE:\"${CMAKE_CURRENT_SOURCE_DIR}/src/imconfig.h\">$<INSTALL_INTERFACE:\"imconfig.h\">
 		IMGUI_DEFINE_MATH_OPERATORS
 		GLM_ENABLE_EXPERIMENTAL
 )
@@ -109,18 +109,29 @@ install(TARGETS ImGui
 	INCLUDES DESTINATION include
 )
 
+# Install specific directories and files from RemoteImGui_SOURCE_DIR
+install(DIRECTORY
+	${RemoteImGui_SOURCE_DIR}/misc
+	DESTINATION include/CppSdl2/Imgui/misc
+	FILES_MATCHING PATTERN "*.h"
+)
+
+# Install specific files from the backends directory
+install(FILES
+	${RemoteImGui_SOURCE_DIR}/backends/imgui_impl_opengl3.h
+	${RemoteImGui_SOURCE_DIR}/backends/imgui_impl_sdl2.h
+	DESTINATION include/CppSdl2/Imgui/backends
+)
+
+# Install specific files from the root of RemoteImGui_SOURCE_DIR
 install(FILES
 	${RemoteImGui_SOURCE_DIR}/imgui.h
 	${RemoteImGui_SOURCE_DIR}/imgui_internal.h
 	${RemoteImGui_SOURCE_DIR}/imstb_rectpack.h
 	${RemoteImGui_SOURCE_DIR}/imstb_textedit.h
-	${RemoteImGui_SOURCE_DIR}/misc/cpp/imgui_stdlib.h
-	${RemoteImGui_SOURCE_DIR}/misc/freetype/imgui_freetype.h
-	${RemoteImGui_SOURCE_DIR}/backends/imgui_impl_opengl3.h
-	${RemoteImGui_SOURCE_DIR}/backends/imgui_impl_sdl2.h
 	${CMAKE_CURRENT_SOURCE_DIR}/src/imconfig.h
 	${CMAKE_CURRENT_SOURCE_DIR}/src/imgui_user.h
-	DESTINATION include
+	DESTINATION include/CppSdl2/Imgui
 )
 
 install(EXPORT CppSdl2Targets

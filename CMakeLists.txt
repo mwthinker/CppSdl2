@@ -87,7 +87,7 @@ target_compile_definitions(CppSdl2
 target_include_directories(CppSdl2
 	PUBLIC
 		$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src>
-		$<INSTALL_INTERFACE:include>
+		$<INSTALL_INTERFACE:include/CppSdl2>
 )
 
 find_package(spdlog CONFIG REQUIRED)
@@ -128,8 +128,8 @@ install(TARGETS CppSdl2
 	INCLUDES DESTINATION include
 )
 
-install(DIRECTORY src/
-	DESTINATION include
+install(DIRECTORY src/sdl/
+	DESTINATION include/CppSdl2/sdl
 	FILES_MATCHING PATTERN "*.h"
 )
 
@@ -144,14 +144,14 @@ install(EXPORT CppSdl2Targets
 
 # Generate the package configuration file
 configure_package_config_file(
-    ${CMAKE_CURRENT_SOURCE_DIR}/CppSdl2Config.cmake.in
-    ${CMAKE_CURRENT_BINARY_DIR}/CppSdl2Config.cmake
-    INSTALL_DESTINATION share/cmake/CppSdl2
+	${CMAKE_CURRENT_SOURCE_DIR}/CppSdl2Config.cmake.in
+	${CMAKE_CURRENT_BINARY_DIR}/CppSdl2Config.cmake
+	INSTALL_DESTINATION share/cmake/CppSdl2
 )
 
 # Install the generated package configuration file
 install(FILES ${CMAKE_CURRENT_BINARY_DIR}/CppSdl2Config.cmake
-    DESTINATION share/cmake/CppSdl2
+	DESTINATION share/cmake/CppSdl2
 )
 
 # Install the package configuration file
