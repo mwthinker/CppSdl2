@@ -140,6 +140,18 @@ install(EXPORT CppSdl2Targets
 	DESTINATION share/cmake/CppSdl2
 )
 
+# Generate the package configuration file
+configure_package_config_file(
+    ${CMAKE_CURRENT_SOURCE_DIR}/CppSdl2Config.cmake.in
+    ${CMAKE_CURRENT_BINARY_DIR}/CppSdl2Config.cmake
+    INSTALL_DESTINATION share/cmake/CppSdl2
+)
+
+# Install the generated package configuration file
+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/CppSdl2Config.cmake
+    DESTINATION share/cmake/CppSdl2
+)
+
 # Install the package configuration file
 include(CMakePackageConfigHelpers)
 write_basic_package_version_file(
