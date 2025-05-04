@@ -7,7 +7,7 @@ project(CppSdl2
 	VERSION 0.1.1
 )
 
-add_library(CppSdl2
+add_library(CppSdl2 STATIC
 	src/sdl/batch.h
 	src/sdl/color.cpp
 	src/sdl/color.h
@@ -103,7 +103,6 @@ set_target_properties(CppSdl2
 		CXX_STANDARD 23
 		CXX_STANDARD_REQUIRED YES
 		CXX_EXTENSIONS NO
-		ENABLE_EXPORTS YES
 )
 
 message(STATUS "CppSdl2_Example is available to add: -DCppSdl2_Example=1")
