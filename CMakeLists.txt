@@ -147,5 +147,5 @@ write_basic_package_version_file(
 	COMPATIBILITY AnyNewerVersion
 )
 install(FILES ${CMAKE_CURRENT_BINARY_DIR}/CppSdl2ConfigVersion.cmake
-	DESTINATION share/CppSdl2
+	DESTINATION share/cmake/CppSdl2
 )
