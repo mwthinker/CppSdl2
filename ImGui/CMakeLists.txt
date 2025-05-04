@@ -35,7 +35,7 @@ add_library(ImGui STATIC
 	${RemoteImGui_SOURCE_DIR}/misc/cpp/imgui_stdlib.h
 	${RemoteImGui_SOURCE_DIR}/misc/freetype/imgui_freetype.cpp
 	${RemoteImGui_SOURCE_DIR}/misc/freetype/imgui_freetype.h
-		
+
 	${RemoteImGui_SOURCE_DIR}/backends/imgui_impl_opengl3.h
 	${RemoteImGui_SOURCE_DIR}/backends/imgui_impl_opengl3.cpp
 	${RemoteImGui_SOURCE_DIR}/backends/imgui_impl_sdl2.h
@@ -89,7 +89,7 @@ target_compile_definitions(ImGui
 		IMGUI_DISABLE_OBSOLETE_FUNCTIONS
 		IMGUI_INCLUDE_IMGUI_USER_H
 		IMGUI_ENABLE_FREETYPE
-		IMGUI_USER_CONFIG=\"${IMGUI_USER_CONFIG}\"
+		IMGUI_USER_CONFIG=$<BUILD_INTERFACE:\"${CMAKE_CURRENT_SOURCE_DIR}/src/imconfig.h\">$<INSTALL_INTERFACE:\"include/imconfig.h\">
 		IMGUI_DEFINE_MATH_OPERATORS
 		GLM_ENABLE_EXPERIMENTAL
 )
