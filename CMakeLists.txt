@@ -132,6 +132,10 @@ install(DIRECTORY src/sdl/
 	DESTINATION include/CppSdl2/sdl
 	FILES_MATCHING PATTERN "*.h"
 )
+install(FILES
+	${CMAKE_CURRENT_SOURCE_DIR}/src/cppsdl2.natstepfilter
+	DESTINATION include/CppSdl2
+)
 
 include(CMakePackageConfigHelpers)
 
