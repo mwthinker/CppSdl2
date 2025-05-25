@@ -4,7 +4,7 @@ project(CppSdl2
 		"A C++-Wrapper of SDL2 and OpenGL"
 	LANGUAGES
 		CXX
-	VERSION 0.1.1
+	VERSION 0.1.2
 )
 
 add_library(CppSdl2 STATIC
@@ -87,7 +87,7 @@ target_compile_definitions(CppSdl2
 target_include_directories(CppSdl2
 	PUBLIC
 		$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src>
-		$<INSTALL_INTERFACE:include/CppSdl2>
+		$<INSTALL_INTERFACE:include/cppsdl2>
 )
 
 find_package(spdlog CONFIG REQUIRED)
@@ -125,16 +125,16 @@ install(TARGETS CppSdl2
 	LIBRARY DESTINATION lib
 	ARCHIVE DESTINATION lib
 	RUNTIME DESTINATION bin
-	INCLUDES DESTINATION include
+	INCLUDES DESTINATION include/cppsdl2
 )
 
 install(DIRECTORY src/sdl/
-	DESTINATION include/CppSdl2/sdl
+	DESTINATION include/cppsdl2/sdl
 	FILES_MATCHING PATTERN "*.h"
 )
 install(FILES
-	${CMAKE_CURRENT_SOURCE_DIR}/src/cppsdl2.natstepfilter
-	DESTINATION include/CppSdl2
+	${CMAKE_CURRENT_SOURCE_DIR}/cppsdl2.natstepfilter
+	DESTINATION include/cppsdl2
 )
 
 include(CMakePackageConfigHelpers)
@@ -143,19 +143,19 @@ include(CMakePackageConfigHelpers)
 install(EXPORT CppSdl2Targets
 	FILE CppSdl2Targets.cmake
 	NAMESPACE CppSdl2::
-	DESTINATION share/cmake/CppSdl2
+	DESTINATION share/cmake/cppsdl2
 )
 
 # Generate the package configuration file
 configure_package_config_file(
 	${CMAKE_CURRENT_SOURCE_DIR}/CppSdl2Config.cmake.in
 	${CMAKE_CURRENT_BINARY_DIR}/CppSdl2Config.cmake
-	INSTALL_DESTINATION share/cmake/CppSdl2
+	INSTALL_DESTINATION share/cmake/cppsdl2
 )
 
 # Install the generated package configuration file
 install(FILES ${CMAKE_CURRENT_BINARY_DIR}/CppSdl2Config.cmake
-	DESTINATION share/cmake/CppSdl2
+	DESTINATION share/cmake/cppsdl2
 )
 
 # Install the package configuration file
@@ -166,7 +166,7 @@ write_basic_package_version_file(
 	COMPATIBILITY AnyNewerVersion
 )
 install(FILES ${CMAKE_CURRENT_BINARY_DIR}/CppSdl2ConfigVersion.cmake
-	DESTINATION share/cmake/CppSdl2
+	DESTINATION share/cmake/cppsdl2
 )
 
-install(FILES LICENSE.txt DESTINATION share/doc/CppSdl2)
+install(FILES LICENSE.txt DESTINATION share/doc/cppsdl2)

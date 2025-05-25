@@ -112,11 +112,11 @@ install(TARGETS ImGui
 # Install specific files from the misc directory
 install(FILES
 	${RemoteImGui_SOURCE_DIR}/misc/freetype/imgui_freetype.h
-	DESTINATION include/CppSdl2/Imgui/misc/freetype
+	DESTINATION include/cppsdl2/imgui/misc/freetype
 )
 install(FILES
 	${RemoteImGui_SOURCE_DIR}/misc/cpp/imgui_stdlib.h
-	DESTINATION include/CppSdl2/Imgui/misc/cpp
+	DESTINATION include/cppsdl2/imgui/misc/cpp
 )
 
 # Install specific files from the root of RemoteImGui_SOURCE_DIR
@@ -129,11 +129,11 @@ install(FILES
 	${RemoteImGui_SOURCE_DIR}/imstb_textedit.h
 	${CMAKE_CURRENT_SOURCE_DIR}/src/imconfig.h
 	${CMAKE_CURRENT_SOURCE_DIR}/src/imgui_user.h
-	DESTINATION include/CppSdl2/Imgui
+	DESTINATION include/cppsdl2/imgui
 )
 
 install(EXPORT CppSdl2Targets
 	FILE CppSdl2Targets.cmake
 	NAMESPACE CppSdl2::
-	DESTINATION share/cmake/CppSdl2
+	DESTINATION share/cmake/cppsdl2
 )
