@@ -52,7 +52,7 @@ target_include_directories(ImGui
 		$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src>
 		$<BUILD_INTERFACE:${RemoteImGui_SOURCE_DIR}>
 		$<BUILD_INTERFACE:${RemoteImGui_SOURCE_DIR}/backends>
-		$<INSTALL_INTERFACE:include/CppSdl2/Imgui>
+		$<INSTALL_INTERFACE:include/cppsdl2/imgui>
 )
 
 find_package(SDL2 CONFIG REQUIRED)
