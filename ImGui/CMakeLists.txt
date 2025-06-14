@@ -111,6 +111,11 @@ install(TARGETS ImGui
 
 # Install specific files from the misc directory
 install(FILES
+	${RemoteImGui_SOURCE_DIR}/misc/debuggers/imgui.natvis
+	${RemoteImGui_SOURCE_DIR}/misc/debuggers/imgui.natstepfilter
+	DESTINATION include/cppsdl2/imgui/misc/debuggers
+)
+install(FILES
 	${RemoteImGui_SOURCE_DIR}/misc/freetype/imgui_freetype.h
 	DESTINATION include/cppsdl2/imgui/misc/freetype
 )
